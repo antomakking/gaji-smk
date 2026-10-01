@@ -1,0 +1,8 @@
+{
+  "name": "V2 SIM GAJI - SMK IT Ibnul Qayyim Makassar",
+  "description": "Sistem Informasi Manajemen Penggajian dengan perhitungan tunjangan otomatis, integrasi rekap absensi, approval bertingkat, enkripsi data sensitif AES-256, dan cetak slip gaji PDF.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

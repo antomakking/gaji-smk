@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Eye-Catching Modern Scrollbar System
+   Seamlessly integrates with dark navy sidebar (#0f172a / #020617) & light views
+   ========================================================================== */
+
+/* Universal Scrollbar Baseline */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35); /* subtle slate */
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.65); /* modern indigo on hover */
+}
+
+/* Hide default browser scrollbar arrows/buttons completely */
+::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox standard support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+/* ==========================================================================
+   Dark Sidebar & Dark Elements Scrollbar (Seamless Dark Theme Blend)
+   ========================================================================== */
+#main-sidebar,
+#main-sidebar nav,
+.custom-scrollbar-dark,
+aside .custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.35) transparent;
+}
+
+#main-sidebar::-webkit-scrollbar,
+#main-sidebar nav::-webkit-scrollbar,
+.custom-scrollbar-dark::-webkit-scrollbar,
+aside .custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+#main-sidebar::-webkit-scrollbar-track,
+#main-sidebar nav::-webkit-scrollbar-track,
+.custom-scrollbar-dark::-webkit-scrollbar-track,
+aside .custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#main-sidebar::-webkit-scrollbar-thumb,
+#main-sidebar nav::-webkit-scrollbar-thumb,
+.custom-scrollbar-dark::-webkit-scrollbar-thumb,
+aside .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 6px rgba(99, 102, 241, 0.2);
+}
+
+#main-sidebar::-webkit-scrollbar-thumb:hover,
+#main-sidebar nav::-webkit-scrollbar-thumb:hover,
+.custom-scrollbar-dark::-webkit-scrollbar-thumb:hover,
+aside .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.75);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+}
+
+#main-sidebar::-webkit-scrollbar-button,
+#main-sidebar nav::-webkit-scrollbar-button,
+.custom-scrollbar-dark::-webkit-scrollbar-button,
+aside .custom-scrollbar::-webkit-scrollbar-button {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Custom Scrollbar Utilities for Light Tables and Modal Dialogs
+   ========================================================================== */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.4);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.45);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.65);
+}
+
+.custom-scrollbar::-webkit-scrollbar-button {
+  display: none !important;
+}
+
+/* Scrollbar Hide Utility */
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
