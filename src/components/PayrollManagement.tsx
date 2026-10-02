@@ -96,9 +96,14 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
     return r.pegawaiStatus === 'GTY' || r.pegawaiStatus === 'GTT' || (r.pegawaiJabatan && r.pegawaiJabatan.toLowerCase().includes('guru'));
   };
 
+  // Base Induk Records: Pegawai Non Induk tidak masuk dalam slip gaji SMK IT IQM
+  const indukRecords = useMemo(() => {
+    return records.filter(r => r.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(r.pegawaiId));
+  }, [records]);
+
   // Filter records by search term, status approval, and jenis pegawai (Guru/Tendik)
   const filteredRecords = useMemo(() => {
-    return records.filter((r) => {
+    return indukRecords.filter((r) => {
       // 1. Search filter
       const matchesSearch = 
         r.pegawaiNama.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -119,7 +124,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
 
       return matchesSearch && matchesStatus && matchesJenisPegawai;
     });
-  }, [records, searchTerm, statusFilter, jenisPegawaiFilter]);
+  }, [indukRecords, searchTerm, statusFilter, jenisPegawaiFilter]);
 
   // Grand Totals for Footer Row
   const grandTotals = useMemo(() => {
@@ -200,24 +205,23 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
     }
   };
 
-  // Statistics for Category & Status Tabs
+  // Statistics for Category & Status Tabs (Hanya Pegawai Induk)
   const counts = useMemo(() => {
-    const guruCount = records.filter(isTeacher).length;
-    const tendikCount = records.length - guruCount;
-
+    const guruCount = indukRecords.filter(isTeacher).length;
+    const tendikCount = indukRecords.length - guruCount;
 
     return {
-      total: records.length,
+      total: indukRecords.length,
       guru: guruCount,
       tendik: tendikCount,
-      draft: records.filter(r => r.status === 'draft').length,
-      pending_kepsek: records.filter(r => r.status === 'pending_kepsek').length,
-      pending_yayasan: records.filter(r => r.status === 'pending_yayasan').length,
-      approved: records.filter(r => r.status === 'approved').length,
-      transferred: records.filter(r => r.status === 'transferred').length,
-      rejected: records.filter(r => r.status === 'rejected').length,
+      draft: indukRecords.filter(r => r.status === 'draft').length,
+      pending_kepsek: indukRecords.filter(r => r.status === 'pending_kepsek').length,
+      pending_yayasan: indukRecords.filter(r => r.status === 'pending_yayasan').length,
+      approved: indukRecords.filter(r => r.status === 'approved').length,
+      transferred: indukRecords.filter(r => r.status === 'transferred').length,
+      rejected: indukRecords.filter(r => r.status === 'rejected').length,
     };
-  }, [records]);
+  }, [indukRecords]);
 
   // Visual Status Badge Renderer for Approval Stages
   const renderStatusBadge = (status: StatusPenggajian, emailSent?: boolean) => {

@@ -84,10 +84,12 @@ const generatePeriodPayrollRecords = (
     return PAYROLL_SEPTEMBER_2026;
   }
 
+  // Filter only Pegawai Induk (Pegawai Non Induk digaji di sekolah induk asal mereka, misal SMPIT)
+  const indukPegList = pegList.filter(peg => peg.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(peg.id));
+
   const formattedBulan = String(targetBulan).padStart(2, '0');
 
-
-  return pegList.map((peg, index) => {
+  return indukPegList.map((peg, index) => {
     let pres = prsList.find(p => p.pegawaiId === peg.id && p.bulan === targetBulan && p.tahun === targetTahun);
     if (!pres) {
       pres = {
@@ -313,8 +315,10 @@ export default function App() {
       const saved = localStorage.getItem('sim_gaji_payroll_records');
       if (saved) {
         const parsed: PenggajianRecord[] = JSON.parse(saved);
+        // Exclude non-induk records from payroll list (they are paid in their parent school)
+        const filteredSaved = parsed.filter(r => r.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(r.pegawaiId));
         // Ensure September 2026 official records are prioritized
-        const otherRecords = parsed.filter(r => !(r.bulan === 9 && r.tahun === 2026));
+        const otherRecords = filteredSaved.filter(r => !(r.bulan === 9 && r.tahun === 2026));
         return [...PAYROLL_SEPTEMBER_2026, ...otherRecords];
       }
     } catch (e) {}
@@ -782,12 +786,13 @@ export default function App() {
   }, [records, supabasePeriods]);
 
 
-  // Active records for currently selected period
+  // Active records for currently selected period (Hanya Pegawai Induk)
   const currentPeriodRecords = useMemo(() => {
-    const filtered = records.filter(r => r.bulan === selectedBulan && r.tahun === selectedTahun);
+    const isInduk = (r: PenggajianRecord) => r.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(r.pegawaiId);
+    const filtered = records.filter(r => r.bulan === selectedBulan && r.tahun === selectedTahun && isInduk(r));
     if (filtered.length > 0) return filtered;
     // Fallback if not yet populated
-    return records.filter(r => r.bulan === 8 && r.tahun === 2026);
+    return records.filter(r => r.bulan === 8 && r.tahun === 2026 && isInduk(r));
   }, [records, selectedBulan, selectedTahun]);
 
   // Active presensi for currently selected period

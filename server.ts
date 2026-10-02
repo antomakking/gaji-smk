@@ -167,6 +167,12 @@ function initializePayrollRecords() {
   });
 
 
+  // Filter only Pegawai Induk for payroll records
+  penggajianList = penggajianList.filter(p => {
+    const peg = pegawaiList.find(pl => pl.id === p.pegawaiId);
+    return !peg || (peg.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(peg.id));
+  });
+
   saveJson(PEGAWAI_FILE, pegawaiList);
   saveJson(PRESENSI_FILE, presensiList);
   saveJson(PENGGAJIAN_FILE, penggajianList);
@@ -479,8 +485,9 @@ async function startServer() {
     const forceOverwrite = req.body.forceOverwrite === true;
 
     const generatedResults: PenggajianRecord[] = [];
+    const targetPegawaiList = pegawaiList.filter(peg => peg.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(peg.id));
 
-    pegawaiList.forEach((peg, index) => {
+    targetPegawaiList.forEach((peg, index) => {
       // Find attendance or fallback
       let pres = presensiList.find(p => p.pegawaiId === peg.id && p.bulan === bulan && p.tahun === tahun);
       if (!pres) {
