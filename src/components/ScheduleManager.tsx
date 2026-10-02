@@ -130,6 +130,48 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
   });
 
   const [guruList, setGuruList] = useState<GuruInitialMap[]>(DEFAULT_GURU_INITIALS);
+
+  // Dynamic Guru & Staff Initial List built from pegawaiList merged with default initials
+  const effectiveGuruList = useMemo(() => {
+    const merged: GuruInitialMap[] = [...guruList];
+    const existingPegawaiIds = new Set(merged.map(g => g.pegawaiId).filter(Boolean));
+    const existingKodes = new Set(merged.map(g => g.kode.toUpperCase()));
+
+    if (pegawaiList && pegawaiList.length > 0) {
+      pegawaiList.forEach(peg => {
+        if (!existingPegawaiIds.has(peg.id)) {
+          const cleanName = peg.nama.replace(/^(Gr\.|Dr\.|Drs\.|H\.|Hj\.)\s+/i, '').trim();
+          const words = cleanName.split(/\s+/);
+          let code = '';
+          if (words.length >= 2) {
+            code = (words[0][0] + words[1][0]).toUpperCase();
+          } else if (words.length === 1 && words[0].length >= 2) {
+            code = words[0].substring(0, 2).toUpperCase();
+          } else {
+            code = (peg.nama.substring(0, 2) || 'PG').toUpperCase();
+          }
+
+          let uniqueCode = code;
+          let counter = 1;
+          while (existingKodes.has(uniqueCode)) {
+            uniqueCode = (code.substring(0, 1) + counter).toUpperCase();
+            counter++;
+          }
+          existingKodes.add(uniqueCode);
+
+          merged.push({
+            kode: uniqueCode,
+            nama: peg.nama,
+            pegawaiId: peg.id,
+            mataPelajaranUtama: peg.jabatanUtama || (peg.statusPegawai === 'GTY' || peg.statusPegawai === 'GTT' ? 'Pengajar' : 'Staf / Tendik'),
+            warnaBadge: peg.statusPegawai.includes('PT') ? 'bg-slate-700 text-white' : 'bg-emerald-700 text-white'
+          });
+        }
+      });
+    }
+
+    return merged;
+  }, [guruList, pegawaiList]);
   
   // Navigation & View Mode
   const [activeView, setActiveView] = useState<'matrix' | 'by_class' | 'by_teacher' | 'initials'>('matrix');
@@ -264,7 +306,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
 
   // Statistics per Teacher (Total JP excludes breaks / non-academic)
   const teacherStats = useMemo(() => {
-    return guruList.map(g => {
+    return effectiveGuruList.map(g => {
       // ONLY count slots that are genuine academic lessons (excluding breaks)
       const teacherSlots = slots.filter(s => s.kodeGuru === g.kode && !isSlotBreak(s));
       const breakSlots = slots.filter(s => s.kodeGuru === g.kode && isSlotBreak(s));
@@ -288,7 +330,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         slots: teacherSlots
       };
     }).sort((a, b) => b.totalJP - a.totalJP);
-  }, [guruList, slots]);
+  }, [effectiveGuruList, slots]);
 
   // Overall Totals
   const totalAcademicJP = useMemo(() => slots.filter(s => !isSlotBreak(s)).length, [slots]);
@@ -306,8 +348,8 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
       rentangWaktu: timeSlotObj ? timeSlotObj.rentangWaktu : '07:40 - 08:20',
       kelas: defaultKelas || (selectedKelas !== 'Semua' ? selectedKelas : '10-A'),
       mataPelajaran: asBreak ? 'Istirahat & Sholat Dhuha' : '',
-      kodeGuru: asBreak ? 'GP' : (guruList[0]?.kode || 'KH'),
-      guruNama: asBreak ? 'Guru Piket Sekolah' : (guruList[0]?.nama || ''),
+      kodeGuru: asBreak ? 'GP' : (effectiveGuruList[0]?.kode || 'KH'),
+      guruNama: asBreak ? 'Guru Piket Sekolah' : (effectiveGuruList[0]?.nama || ''),
       ruang: asBreak ? 'Masjid / Area Sekolah' : 'Lab RPL 1',
       tipeSlot: asBreak ? 'istirahat' : 'pelajaran',
       isIstirahat: asBreak,
@@ -338,7 +380,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
     }
 
     const isBreak = modalForm.tipeSlot === 'istirahat' || Boolean(modalForm.isIstirahat);
-    const selectedG = guruList.find(g => g.kode === modalForm.kodeGuru);
+    const selectedG = effectiveGuruList.find(g => g.kode === modalForm.kodeGuru);
     const guruNama = isBreak 
       ? (modalForm.guruNama || (modalForm.kodeGuru === 'GP' ? 'Guru Piket Sekolah' : selectedG?.nama || '-'))
       : (selectedG ? selectedG.nama : (modalForm.guruNama || modalForm.kodeGuru || '-'));
@@ -1568,7 +1610,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   value={modalForm.kodeGuru}
                   onChange={(e) => {
                     const selCode = e.target.value;
-                    const matchG = guruList.find(g => g.kode === selCode);
+                    const matchG = effectiveGuruList.find(g => g.kode === selCode);
                     setModalForm({
                       ...modalForm,
                       kodeGuru: selCode,
@@ -1581,7 +1623,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   {(modalForm.tipeSlot === 'istirahat' || modalForm.isIstirahat) && (
                     <option value="GP">[GP] Guru Piket Sekolah (Tanpa Beban JP)</option>
                   )}
-                  {guruList.map(g => (
+                  {effectiveGuruList.map(g => (
                     <option key={g.kode} value={g.kode}>
                       [{g.kode}] {g.nama} - {g.mataPelajaranUtama}
                     </option>

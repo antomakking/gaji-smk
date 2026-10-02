@@ -360,7 +360,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         type="checkbox"
                         checked={rememberMe}
                         onChange={(e) => setRememberMe(e.target.checked)}
-                        className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-600 cursor-pointer"
+                        className="w-4 h-4 accent-emerald-700 text-emerald-700 rounded border-slate-300 focus:ring-emerald-600 cursor-pointer"
                       />
                       <span>Ingat sesi saya di perangkat ini</span>
                     </label>

@@ -135,11 +135,11 @@ export const AutoLogoutGuard: React.FC<AutoLogoutGuardProps> = ({
         
         {/* Header Icon & Title */}
         <div className="flex items-start gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center shrink-0 shadow-xs">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center shrink-0 shadow-xs">
             <Clock className="w-6 h-6 animate-pulse" />
           </div>
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100/80 px-2 py-0.5 rounded-md inline-block mb-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-md inline-block mb-1 border border-emerald-200">
               Keamanan Sesi Aplikasi (15 Menit)
             </span>
             <h3 className="text-base font-bold text-slate-900 leading-tight">
@@ -152,12 +152,12 @@ export const AutoLogoutGuard: React.FC<AutoLogoutGuardProps> = ({
         </div>
 
         {/* Countdown Box */}
-        <div className="p-4 rounded-xl bg-gradient-to-br from-amber-50/90 via-orange-50/50 to-amber-100/60 border border-amber-200/80 text-center space-y-2">
+        <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-50/90 via-teal-50/50 to-emerald-100/60 border border-emerald-200/80 text-center space-y-2">
           <span className="text-xs font-semibold text-slate-700 block">
             Logout otomatis dalam:
           </span>
-          <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-xl bg-white border border-amber-300 shadow-sm">
-            <span className="text-2xl sm:text-3xl font-mono font-black text-amber-600 tracking-wider">
+          <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-xl bg-white border border-emerald-300 shadow-sm">
+            <span className="text-2xl sm:text-3xl font-mono font-black text-emerald-800 tracking-wider">
               00:{remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}
             </span>
           </div>
@@ -180,7 +180,7 @@ export const AutoLogoutGuard: React.FC<AutoLogoutGuardProps> = ({
           <button
             type="button"
             onClick={handleExtendSession}
-            className="w-full sm:flex-1 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-98 shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:flex-1 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 active:scale-98 shadow-md shadow-emerald-700/20 transition flex items-center justify-center gap-2 cursor-pointer"
           >
             <CheckCircle className="w-4 h-4" />
             <span>Saya Masih Aktif (Perpanjang Sesi)</span>

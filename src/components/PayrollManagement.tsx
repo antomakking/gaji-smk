@@ -29,7 +29,7 @@ import {
   Table,
   Sparkles
 } from 'lucide-react';
-import { PenggajianRecord, User, StatusPenggajian, AuditCategory, AuditActionType } from '../types';
+import { PenggajianRecord, Pegawai, User, StatusPenggajian, AuditCategory, AuditActionType } from '../types';
 import { formatRupiah, formatNumber, getPayrollCutoffDates } from '../utils/security';
 import { PeriodSelector, MONTH_NAMES_ID } from './PeriodSelector';
 import { exportBatchSlipsToZip } from '../utils/batchSlipZip';
@@ -38,6 +38,7 @@ import { PayrollAdjustmentMatrix } from './PayrollAdjustmentMatrix';
 
 interface PayrollManagementProps {
   records: PenggajianRecord[];
+  pegawaiList?: Pegawai[];
   currentUser: User;
   onGeneratePayroll: (bulan?: number, tahun?: number) => void;
   onApproveRecord: (recordId: string, action: 'approve' | 'reject' | 'submit_kepsek', notes?: string) => void;
@@ -58,6 +59,7 @@ interface PayrollManagementProps {
 
 export const PayrollManagement: React.FC<PayrollManagementProps> = ({
   records,
+  pegawaiList = [],
   currentUser,
   onGeneratePayroll,
   onApproveRecord,
@@ -100,10 +102,46 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
     return r.pegawaiStatus === 'GTY' || r.pegawaiStatus === 'GTT' || (r.pegawaiJabatan && r.pegawaiJabatan.toLowerCase().includes('guru'));
   };
 
-  // Base Induk Records: Pegawai Non Induk tidak masuk dalam slip gaji SMK IT IQM
+  // Enrich records dynamically with pegawaiList data (from Supabase/state) for Identitas Pegawai (Nama & Jabatan)
+  const enrichedRecords = useMemo(() => {
+    if (!pegawaiList || pegawaiList.length === 0) return records;
+
+    return records.map((record) => {
+      const matched = pegawaiList.find((p) => 
+        p.id === record.pegawaiId || 
+        (p.nip && record.pegawaiNip && (p.nip === record.pegawaiNip || p.niy === record.pegawaiNip)) ||
+        (p.nama && record.pegawaiNama && p.nama.toLowerCase().trim() === record.pegawaiNama.toLowerCase().trim())
+      );
+
+      if (!matched) return record;
+
+      // Construct formatted title/jabatan
+      let formattedJabatan = matched.jabatanUtama || '';
+      if (matched.jabatanTambahan && matched.jabatanTambahan.length > 0) {
+        const extra = matched.jabatanTambahan.filter(j => j && j !== 'Guru Pengampu Non Induk' && j !== 'Pembina Olahraga Non Induk');
+        if (extra.length > 0) {
+          formattedJabatan += ' / ' + extra.join(' / ');
+        }
+      }
+
+      return {
+        ...record,
+        pegawaiNama: matched.nama || record.pegawaiNama,
+        pegawaiJabatan: formattedJabatan || matched.jabatanUtama || record.pegawaiJabatan,
+        pegawaiStatus: matched.statusPegawai || record.pegawaiStatus,
+        pegawaiNip: matched.niy || matched.nip || record.pegawaiNip,
+        pegawaiEmail: matched.email || record.pegawaiEmail,
+        namaBank: matched.namaBank || record.namaBank,
+        nomorRekening: matched.nomorRekening || record.nomorRekening,
+        atasNamaRekening: matched.atasNamaRekening || record.atasNamaRekening,
+      };
+    });
+  }, [records, pegawaiList]);
+
+  // Base Records: Seluruh Guru & Staf terdaftar
   const indukRecords = useMemo(() => {
-    return records.filter(r => r.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(r.pegawaiId));
-  }, [records]);
+    return enrichedRecords;
+  }, [enrichedRecords]);
 
   // Filter records by search term, status approval, and jenis pegawai (Guru/Tendik)
   const filteredRecords = useMemo(() => {
@@ -543,6 +581,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
       {viewMode === 'matrix' ? (
         <PayrollAdjustmentMatrix
           records={indukRecords}
+          pegawaiList={pegawaiList}
           currentUser={currentUser}
           onUpdateRecord={onUpdateRecord}
           selectedBulan={selectedBulan}
@@ -698,7 +737,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                       type="checkbox"
                       onChange={handleSelectAll}
                       checked={selectedIds.length > 0 && selectedIds.length === filteredRecords.length}
-                      className="rounded text-emerald-700 focus:ring-emerald-600 cursor-pointer"
+                      className="accent-emerald-700 rounded text-emerald-700 focus:ring-emerald-600 cursor-pointer"
                     />
                     <span>No</span>
                   </div>
@@ -794,7 +833,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => handleToggleSelect(record.id)}
-                            className="rounded text-emerald-700 focus:ring-emerald-600 cursor-pointer"
+                            className="accent-emerald-700 rounded text-emerald-700 focus:ring-emerald-600 cursor-pointer"
                           />
                           <span className="text-[10px] font-mono text-slate-400 font-bold">{idx + 1}</span>
                         </div>

@@ -25,42 +25,63 @@ export const generateSlipPdfDocument = (record: PenggajianRecord): jsPDF => {
   doc.setLineWidth(0.4);
   doc.roundedRect(margin - 4, margin - 4, contentWidth + 8, 275, 3, 3, 'S');
 
-  // 1. KOP SURAT (Header Yayasan & Sekolah)
-  doc.setFillColor(30, 41, 59); // Slate 800
-  doc.rect(margin, margin, 14, 14, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.text('IQ', margin + 4, margin + 9.5);
-
-  doc.setTextColor(71, 85, 105);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.text('YAYASAN IBNUL QAYYIM MAKASSAR', pageWidth / 2, margin + 3, { align: 'center' });
-
-  doc.setTextColor(15, 23, 42);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(13);
-  doc.text('SMK IT IBNUL QAYYIM MAKASSAR', pageWidth / 2, margin + 8.5, { align: 'center' });
-
-  doc.setTextColor(67, 56, 202);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
-  doc.text('Program Keahlian: Rekayasa Perangkat Lunak (RPL) & Teknik Komputer Jaringan (TKJ)', pageWidth / 2, margin + 12.5, { align: 'center' });
-
-  doc.setTextColor(100, 116, 139);
-  doc.setFontSize(6.5);
-  doc.text('Jl. Hertasning Baru / Aroepala No. 88, Makassar, Sulawesi Selatan | NPSN: 69988771 | Telp: (0411) 891234', pageWidth / 2, margin + 16, { align: 'center' });
-
-  // Divider line
-  doc.setDrawColor(15, 23, 42);
+  // 1. KOP SURAT (Header Yayasan & Sekolah Resmi)
+  // Left Emblem (Green Islamic Star)
+  doc.setFillColor(11, 107, 44); // Green #0b6b2c
+  doc.rect(margin, margin, 16, 16, 'F');
+  doc.setDrawColor(234, 179, 8); // Gold border
   doc.setLineWidth(0.6);
-  doc.line(margin, margin + 19, pageWidth - margin, margin + 19);
+  doc.rect(margin, margin, 16, 16, 'S');
+  doc.setTextColor(254, 240, 138);
+  doc.setFont('times', 'bold');
+  doc.setFontSize(7);
+  doc.text('IQIS', margin + 8, margin + 7, { align: 'center' });
+  doc.setFontSize(5);
+  doc.text('مدرسة', margin + 8, margin + 12, { align: 'center' });
+
+  // Right Emblem (Slate Gray Islamic Star)
+  const rightLogoX = pageWidth - margin - 16;
+  doc.setFillColor(51, 65, 85); // Slate #334155
+  doc.rect(rightLogoX, margin, 16, 16, 'F');
+  doc.setDrawColor(148, 163, 184); // White/slate border
+  doc.setLineWidth(0.6);
+  doc.rect(rightLogoX, margin, 16, 16, 'S');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('times', 'bold');
+  doc.setFontSize(6.5);
+  doc.text('SMKIT', rightLogoX + 8, margin + 7, { align: 'center' });
+  doc.setFontSize(5);
+  doc.text('مدرسة', rightLogoX + 8, margin + 12, { align: 'center' });
+
+  // Center Text - Times New Roman / Serif style
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('times', 'bold');
+  doc.setFontSize(8.5);
+  doc.text('YAYASAN PENDIDIKAN ISLAM IBNUL QAYYIM SUDIANG MAKASSAR', pageWidth / 2, margin + 2.5, { align: 'center' });
+
+  doc.setFont('times', 'bold');
+  doc.setFontSize(12.5);
+  doc.text('SMK IT IBNUL QAYYIM MAKASSAR', pageWidth / 2, margin + 7.5, { align: 'center' });
+
+  doc.setFont('times', 'bold');
+  doc.setFontSize(8.5);
+  doc.text('Terakreditasi A', pageWidth / 2, margin + 11.5, { align: 'center' });
+
+  doc.setFont('times', 'normal');
+  doc.setFontSize(7);
+  doc.text('Jl. Goa Ria Taman Bunga 2, Laikang, Kec. Biringkanaya,', pageWidth / 2, margin + 15, { align: 'center' });
+  doc.text('Kota Makassar, Sulawesi Selatan 90242. Telpon: 0811 4411 432.', pageWidth / 2, margin + 18, { align: 'center' });
+  doc.text('Email : smkit@iqis.sch.id, Website: https://smkit.iqis.sch.id', pageWidth / 2, margin + 21, { align: 'center' });
+
+  // Double Underline Divider
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.8);
+  doc.line(margin, margin + 23.5, pageWidth - margin, margin + 23.5);
   doc.setLineWidth(0.2);
-  doc.line(margin, margin + 20, pageWidth - margin, margin + 20);
+  doc.line(margin, margin + 24.7, pageWidth - margin, margin + 24.7);
 
   // 2. DOCUMENT TITLE & PERIODE
-  let currentY = margin + 26;
+  let currentY = margin + 30;
   doc.setTextColor(15, 23, 42);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
@@ -296,7 +317,7 @@ export const generateSlipPdfDocument = (record: PenggajianRecord): jsPDF => {
   doc.text(`Makassar, 26 ${monthName} ${record.tahun}`, pageWidth - margin, currentY, { align: 'right' });
 
   currentY += 4;
-  const sigColWidth = contentWidth / 3;
+  const sigColWidth = contentWidth / 2;
 
   // Signature 1: Penerima
   doc.setTextColor(71, 85, 105);
@@ -310,42 +331,18 @@ export const generateSlipPdfDocument = (record: PenggajianRecord): jsPDF => {
   doc.setTextColor(100, 116, 139);
   doc.text(`NIP: ${record.pegawaiNip}`, margin + sigColWidth / 2, currentY + 22, { align: 'center' });
 
-  // Signature 2: Bendahara
+  // Signature 2: Kepala Sekolah
   const sig2X = margin + sigColWidth + sigColWidth / 2;
   doc.setFontSize(7);
   doc.setTextColor(71, 85, 105);
-  doc.text('Bendahara Keuangan,', sig2X, currentY, { align: 'center' });
-
-  // Circular seal stamp
-  doc.setDrawColor(67, 56, 202);
-  doc.setLineWidth(0.4);
-  doc.circle(sig2X, currentY + 9, 6.5);
-  doc.setFontSize(4.5);
-  doc.setTextColor(67, 56, 202);
-  doc.setFont('helvetica', 'bold');
-  doc.text('YAYASAN IQM', sig2X, currentY + 8, { align: 'center' });
-  doc.text('★ LUNAS ★', sig2X, currentY + 10.5, { align: 'center' });
-
+  doc.text('Mengetahui / Menyetujui,', sig2X, currentY, { align: 'center' });
   doc.setTextColor(15, 23, 42);
-  doc.setFontSize(7);
-  doc.text('Hj. Nurul Fatimah, S.E.', sig2X, currentY + 19, { align: 'center' });
+  doc.setFont('helvetica', 'bold');
+  doc.text('Anto, S.E.I., M.E., Gr., MCF.', sig2X, currentY + 19, { align: 'center' });
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6);
   doc.setTextColor(100, 116, 139);
-  doc.text('Bendahara Yayasan', sig2X, currentY + 22, { align: 'center' });
-
-  // Signature 3: Kepala Sekolah
-  const sig3X = margin + sigColWidth * 2 + sigColWidth / 2;
-  doc.setFontSize(7);
-  doc.setTextColor(71, 85, 105);
-  doc.text('Mengetahui / Menyetujui,', sig3X, currentY, { align: 'center' });
-  doc.setTextColor(15, 23, 42);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Anto, S.E.I., M.E., Gr., MCF.', sig3X, currentY + 19, { align: 'center' });
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(6);
-  doc.setTextColor(100, 116, 139);
-  doc.text('Kepala Sekolah SMK IT IQ', sig3X, currentY + 22, { align: 'center' });
+  doc.text('Kepala SMK IT Ibnul Qayyim', sig2X, currentY + 22, { align: 'center' });
 
   // 8. SECURITY & ENCRYPTION WATERMARK FOOTER
   doc.setFontSize(5.5);

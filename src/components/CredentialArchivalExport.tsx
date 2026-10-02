@@ -649,7 +649,7 @@ export const CredentialArchivalExport: React.FC<CredentialArchivalExportProps> =
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => toggleSelectUser(u.id)}
-                            className="w-4 h-4 text-emerald-700 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                            className="w-4 h-4 accent-emerald-700 text-emerald-700 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
                           />
                         </td>
                         <td className="p-2.5">
@@ -733,7 +733,7 @@ export const CredentialArchivalExport: React.FC<CredentialArchivalExportProps> =
                   type="checkbox"
                   checked={includeCommentsHeader}
                   onChange={(e) => setIncludeCommentsHeader(e.target.checked)}
-                  className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500"
+                  className="w-4 h-4 accent-emerald-700 text-emerald-700 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
                 />
                 <span>Sertakan Header Metadata Resmi & Komentar RFC 4180</span>
               </label>

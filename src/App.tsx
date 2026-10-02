@@ -84,12 +84,10 @@ const generatePeriodPayrollRecords = (
     return PAYROLL_SEPTEMBER_2026;
   }
 
-  // Filter only Pegawai Induk (Pegawai Non Induk digaji di sekolah induk asal mereka, misal SMPIT)
-  const indukPegList = pegList.filter(peg => peg.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(peg.id));
-
+  // Generate payroll for ALL registered teachers and staff (Guru dan Staff)
   const formattedBulan = String(targetBulan).padStart(2, '0');
 
-  return indukPegList.map((peg, index) => {
+  return pegList.map((peg, index) => {
     let pres = prsList.find(p => p.pegawaiId === peg.id && p.bulan === targetBulan && p.tahun === targetTahun);
     if (!pres) {
       pres = {
@@ -315,10 +313,8 @@ export default function App() {
       const saved = localStorage.getItem('sim_gaji_payroll_records');
       if (saved) {
         const parsed: PenggajianRecord[] = JSON.parse(saved);
-        // Exclude non-induk records from payroll list (they are paid in their parent school)
-        const filteredSaved = parsed.filter(r => r.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(r.pegawaiId));
         // Ensure September 2026 official records are prioritized
-        const otherRecords = filteredSaved.filter(r => !(r.bulan === 9 && r.tahun === 2026));
+        const otherRecords = parsed.filter(r => !(r.bulan === 9 && r.tahun === 2026));
         return [...PAYROLL_SEPTEMBER_2026, ...otherRecords];
       }
     } catch (e) {}
@@ -786,13 +782,12 @@ export default function App() {
   }, [records, supabasePeriods]);
 
 
-  // Active records for currently selected period (Hanya Pegawai Induk)
+  // Active records for currently selected period (Mencakup Seluruh Guru & Staf)
   const currentPeriodRecords = useMemo(() => {
-    const isInduk = (r: PenggajianRecord) => r.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(r.pegawaiId);
-    const filtered = records.filter(r => r.bulan === selectedBulan && r.tahun === selectedTahun && isInduk(r));
+    const filtered = records.filter(r => r.bulan === selectedBulan && r.tahun === selectedTahun);
     if (filtered.length > 0) return filtered;
     // Fallback if not yet populated
-    return records.filter(r => r.bulan === 8 && r.tahun === 2026 && isInduk(r));
+    return records.filter(r => r.bulan === 8 && r.tahun === 2026);
   }, [records, selectedBulan, selectedTahun]);
 
   // Active presensi for currently selected period
@@ -1760,18 +1755,43 @@ export default function App() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen w-screen bg-[#062c24] text-slate-100 font-sans antialiased selection:bg-emerald-600 selection:text-white">
-        {/* Toast Notification Banner */}
+        {/* Toast Notification Banner - Soft Green Aesthetic */}
         {toast && (
-          <div className="fixed top-5 right-5 z-60 flex items-center space-x-2 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 text-xs animate-in fade-in slide-in-from-top-3">
-            {toast.type === 'error' ? (
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-            ) : toast.type === 'info' ? (
-              <Info className="w-4 h-4 text-sky-400 shrink-0" />
-            ) : (
-              <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-            )}
-            <span className="font-medium">{toast.message}</span>
-            <button onClick={() => setToast(null)} className="text-slate-400 hover:text-white ml-2 cursor-pointer p-0.5">
+          <div 
+            role="alert"
+            className={`fixed top-5 right-5 z-60 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md text-xs transition-all duration-200 animate-in fade-in slide-in-from-top-3 max-w-md ${
+              toast.type === 'error'
+                ? 'bg-[#2b1216]/95 text-rose-50 border border-rose-500/40 shadow-rose-950/40'
+                : toast.type === 'info'
+                ? 'bg-[#062c24]/95 text-emerald-50 border border-emerald-500/40 shadow-emerald-950/60'
+                : 'bg-[#062c24]/95 text-emerald-50 border border-emerald-400/50 shadow-emerald-950/60'
+            }`}
+          >
+            <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
+              toast.type === 'error'
+                ? 'bg-rose-500/20 text-rose-300 border border-rose-400/30'
+                : 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30'
+            }`}>
+              {toast.type === 'error' ? (
+                <AlertCircle className="w-4 h-4" />
+              ) : toast.type === 'info' ? (
+                <Info className="w-4 h-4 text-emerald-300" />
+              ) : (
+                <CheckCircle className="w-4 h-4 text-emerald-300" />
+              )}
+            </div>
+            <span className="font-medium text-xs leading-relaxed flex-1 text-emerald-50">
+              {toast.message}
+            </span>
+            <button 
+              onClick={() => setToast(null)} 
+              className={`p-1 rounded-lg transition shrink-0 cursor-pointer ${
+                toast.type === 'error'
+                  ? 'text-rose-300/80 hover:text-white hover:bg-rose-800/40'
+                  : 'text-emerald-300/80 hover:text-white hover:bg-emerald-800/40'
+              }`}
+              title="Tutup Notifikasi"
+            >
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -1796,19 +1816,43 @@ export default function App() {
         warningSeconds={60}
       />
 
-      {/* Toast Notification Banner */}
-
+      {/* Toast Notification Banner - Soft Green Aesthetic */}
       {toast && (
-        <div className="fixed top-5 right-5 z-60 flex items-center space-x-2 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 text-xs animate-in fade-in slide-in-from-top-3">
-          {toast.type === 'error' ? (
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-          ) : toast.type === 'info' ? (
-            <Info className="w-4 h-4 text-sky-400 shrink-0" />
-          ) : (
-            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-          )}
-          <span className="font-medium">{toast.message}</span>
-          <button onClick={() => setToast(null)} className="text-slate-400 hover:text-white ml-2 cursor-pointer p-0.5">
+        <div 
+          role="alert"
+          className={`fixed top-5 right-5 z-60 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md text-xs transition-all duration-200 animate-in fade-in slide-in-from-top-3 max-w-md ${
+            toast.type === 'error'
+              ? 'bg-[#2b1216]/95 text-rose-50 border border-rose-500/40 shadow-rose-950/40'
+              : toast.type === 'info'
+              ? 'bg-[#062c24]/95 text-emerald-50 border border-emerald-500/40 shadow-emerald-950/60'
+              : 'bg-[#062c24]/95 text-emerald-50 border border-emerald-400/50 shadow-emerald-950/60'
+          }`}
+        >
+          <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
+            toast.type === 'error'
+              ? 'bg-rose-500/20 text-rose-300 border border-rose-400/30'
+              : 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30'
+          }`}>
+            {toast.type === 'error' ? (
+              <AlertCircle className="w-4 h-4" />
+            ) : toast.type === 'info' ? (
+              <Info className="w-4 h-4 text-emerald-300" />
+            ) : (
+              <CheckCircle className="w-4 h-4 text-emerald-300" />
+            )}
+          </div>
+          <span className="font-medium text-xs leading-relaxed flex-1 text-emerald-50">
+            {toast.message}
+          </span>
+          <button 
+            onClick={() => setToast(null)} 
+            className={`p-1 rounded-lg transition shrink-0 cursor-pointer ${
+              toast.type === 'error'
+                ? 'text-rose-300/80 hover:text-white hover:bg-rose-800/40'
+                : 'text-emerald-300/80 hover:text-white hover:bg-emerald-800/40'
+            }`}
+            title="Tutup Notifikasi"
+          >
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -1872,6 +1916,7 @@ export default function App() {
             {activeTab === 'payroll' && (
               <PayrollManagement
                 records={currentPeriodRecords}
+                pegawaiList={pegawaiList}
                 currentUser={currentUser}
                 onGeneratePayroll={() => handleGeneratePayroll(selectedBulan, selectedTahun)}
                 onApproveRecord={handleApproveRecord}
@@ -2008,6 +2053,7 @@ export default function App() {
       {selectedSlipRecord && (
         <SlipGajiModal
           record={selectedSlipRecord}
+          pegawaiList={pegawaiList}
           onClose={() => setSelectedSlipRecord(null)}
           onSendEmail={handleSendEmailSlip}
         />

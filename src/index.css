@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Global Soft Green Form Controls Accent Color */
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"] {
+  accent-color: #047857; /* Tailwind emerald-700 */
+}
+
 /* ==========================================================================
    Soft Green Aesthetic - Typography, Ambient Surfaces & Scrollbar System
    Designed with gentle sage, emerald, and mint tones for Indonesian school SIM

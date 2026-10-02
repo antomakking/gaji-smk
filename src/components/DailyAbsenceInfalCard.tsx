@@ -307,19 +307,10 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
     const hari = dayInfo.hari;
     const absentTeacherId = quickAssignModal.guruDigantikan.id;
 
-    // Filter to Guru Induk only (exclude absent teacher and non-induk teachers)
+    // Filter to candidate teachers and staff (exclude absent teacher/staff)
     const guruIndukList = pegawaiList.filter((p) => {
       if (p.id === absentTeacherId) return false;
-      if (p.statusInduk === 'Non Induk') return false;
-      
-      const isInduk = (p.statusInduk || '').toLowerCase().includes('induk');
-      const isTeacher = p.statusPegawai === 'GTY' || p.statusPegawai === 'GTT' ||
-        p.jabatanUtama.toLowerCase().includes('guru') ||
-        p.jabatanUtama.toLowerCase().includes('kepala') ||
-        p.jabatanUtama.toLowerCase().includes('wakil') ||
-        p.jabatanUtama.toLowerCase().includes('kaprog');
-
-      return isInduk && isTeacher;
+      return true;
     });
 
     // Check availability at this exact slot & calculate infal cut-off metrics

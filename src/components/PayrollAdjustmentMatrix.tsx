@@ -21,12 +21,13 @@ import {
   TrendingUp,
   ShieldCheck
 } from 'lucide-react';
-import { PenggajianRecord, User, AuditCategory, AuditActionType } from '../types';
+import { PenggajianRecord, Pegawai, User, AuditCategory, AuditActionType } from '../types';
 import { formatRupiah } from '../utils/security';
 import { updatePayrollMatrixAdjustmentRPC } from '../lib/supabase';
 
 interface PayrollAdjustmentMatrixProps {
   records: PenggajianRecord[];
+  pegawaiList?: Pegawai[];
   currentUser: User;
   onUpdateRecord?: (updatedRecord: PenggajianRecord) => void;
   onBatchUpdateRecords?: (updatedRecords: PenggajianRecord[]) => void;
@@ -41,6 +42,7 @@ interface PayrollAdjustmentMatrixProps {
 
 export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = ({
   records,
+  pegawaiList = [],
   currentUser,
   onUpdateRecord,
   onBatchUpdateRecords,
@@ -341,11 +343,37 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
     showToast?.('Matriks penggajian berhasil diekspor ke CSV!', 'success');
   };
 
-  // Filtered records
+  // Filtered records enriched with pegawaiList
   const filteredRecords = useMemo(() => {
     return records
-      .filter(r => r.statusInduk !== 'Non Induk' && !['peg-017', 'peg-018', 'peg-019', 'peg-020', 'peg-021', 'peg-022', 'peg-023'].includes(r.pegawaiId))
-      .map(r => draftRecords[r.id] || r)
+      .map(r => {
+        const draft = draftRecords[r.id] || r;
+        if (!pegawaiList || pegawaiList.length === 0) return draft;
+
+        const matched = pegawaiList.find(p => 
+          p.id === draft.pegawaiId || 
+          (p.nip && draft.pegawaiNip && (p.nip === draft.pegawaiNip || p.niy === draft.pegawaiNip)) ||
+          (p.nama && draft.pegawaiNama && p.nama.toLowerCase().trim() === draft.pegawaiNama.toLowerCase().trim())
+        );
+
+        if (!matched) return draft;
+
+        let formattedJabatan = matched.jabatanUtama || '';
+        if (matched.jabatanTambahan && matched.jabatanTambahan.length > 0) {
+          const extra = matched.jabatanTambahan.filter(j => j && j !== 'Guru Pengampu Non Induk' && j !== 'Pembina Olahraga Non Induk');
+          if (extra.length > 0) {
+            formattedJabatan += ' / ' + extra.join(' / ');
+          }
+        }
+
+        return {
+          ...draft,
+          pegawaiNama: matched.nama || draft.pegawaiNama,
+          pegawaiJabatan: formattedJabatan || matched.jabatanUtama || draft.pegawaiJabatan,
+          pegawaiStatus: matched.statusPegawai || draft.pegawaiStatus,
+          pegawaiNip: matched.niy || matched.nip || draft.pegawaiNip,
+        };
+      })
       .filter(r => {
         const matchesSearch = 
           r.pegawaiNama.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -362,7 +390,7 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
 
         return matchesSearch && matchesStatus && matchesRole;
       });
-  }, [records, draftRecords, searchQuery, statusFilter, roleFilter]);
+  }, [records, draftRecords, pegawaiList, searchQuery, statusFilter, roleFilter]);
 
   // Aggregate Calculations across filtered records
   const aggregates = useMemo(() => {

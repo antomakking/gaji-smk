@@ -11,7 +11,7 @@ import {
   QrCode,
   Sparkles
 } from 'lucide-react';
-import { PenggajianRecord } from '../types';
+import { PenggajianRecord, Pegawai } from '../types';
 import { formatRupiah, terbilang, maskData, getPayrollCutoffDates } from '../utils/security';
 import { MONTH_NAMES_ID } from './PeriodSelector';
 import { useSalaryPrivacy } from '../context/SalaryPrivacyContext';
@@ -20,12 +20,103 @@ import html2canvas from 'html2canvas-pro';
 
 interface SlipGajiModalProps {
   record: PenggajianRecord | null;
+  pegawaiList?: Pegawai[];
   onClose: () => void;
   onSendEmail: (recordId: string) => void;
 }
 
+// Official SVG Emblems for Kop Surat - 1:1 Authentic Logos
+const KopLogoLeft = () => (
+  <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 flex items-center justify-center">
+    <svg viewBox="0 0 140 140" className="w-full h-full drop-shadow-xs">
+      {/* Outer 8-Pointed Star (Rub El Hizb) */}
+      <g transform="translate(70 70)">
+        <rect x="-48" y="-42" width="96" height="84" rx="1.5" fill="#085c29" stroke="#eab308" strokeWidth="2.5" />
+        <rect x="-48" y="-42" width="96" height="84" rx="1.5" fill="#085c29" stroke="#eab308" strokeWidth="2.5" transform="rotate(45)" />
+        <rect x="-43" y="-37" width="86" height="74" fill="none" stroke="#fef08a" strokeWidth="1" />
+        <rect x="-43" y="-37" width="86" height="74" fill="none" stroke="#fef08a" strokeWidth="1" transform="rotate(45)" />
+      </g>
+
+      {/* Top Banner Text: IBNUL QAYYIM ISLAMIC SCHOOL */}
+      <text x="70" y="44" textAnchor="middle" fill="#fef08a" fontSize="6.2" fontWeight="900" fontFamily="Arial, Helvetica, sans-serif" letterSpacing="0.2">
+        IBNUL QAYYIM
+      </text>
+      <text x="70" y="51" textAnchor="middle" fill="#fef08a" fontSize="5.5" fontWeight="900" fontFamily="Arial, Helvetica, sans-serif" letterSpacing="0.2">
+        ISLAMIC SCHOOL
+      </text>
+
+      {/* Open Book Graphic in Center */}
+      <g transform="translate(70 68) scale(1.1)">
+        {/* Book Base & Spine */}
+        <path d="M-16,-2 Q-8,-6 0,-1 Q8,-6 16,-2 L16,11 Q8,7 0,12 Q-8,7 -16,11 Z" fill="#eab308" stroke="#ca8a04" strokeWidth="0.8" />
+        {/* Pages Left */}
+        <path d="M-15,-0.5 Q-7.5,-4.5 0,1 L0,12 Q-7.5,7 -15,11 Z" fill="#fef08a" />
+        {/* Pages Right */}
+        <path d="M15,-0.5 Q7.5,-4.5 0,1 L0,12 Q7.5,7 15,11 Z" fill="#fde047" />
+        {/* Page Inner Lines */}
+        <line x1="-12" y1="2" x2="-2" y2="2" stroke="#085c29" strokeWidth="0.6" opacity="0.6" />
+        <line x1="-12" y1="5" x2="-2" y2="5" stroke="#085c29" strokeWidth="0.6" opacity="0.6" />
+        <line x1="2" y1="2" x2="12" y2="2" stroke="#085c29" strokeWidth="0.6" opacity="0.6" />
+        <line x1="2" y1="5" x2="12" y2="5" stroke="#085c29" strokeWidth="0.6" opacity="0.6" />
+        <line x1="0" y1="1" x2="0" y2="12" stroke="#085c29" strokeWidth="1.2" />
+      </g>
+
+      {/* Arabic Calligraphy Banner Bottom: مدرسة ابن القيم */}
+      <rect x="28" y="86" width="84" height="13" rx="2" fill="#085c29" stroke="#eab308" strokeWidth="0.8" />
+      <text x="70" y="95" textAnchor="middle" fill="#fef08a" fontSize="8.5" fontWeight="bold" fontFamily="Traditional Arabic, Scheherazade, Noto Naskh Arabic, serif">
+        مدرسة ابن القيم
+      </text>
+    </svg>
+  </div>
+);
+
+const KopLogoRight = () => (
+  <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 flex items-center justify-center">
+    <svg viewBox="0 0 140 140" className="w-full h-full drop-shadow-xs">
+      {/* Outer 8-Pointed Star (Rub El Hizb) */}
+      <g transform="translate(70 70)">
+        <rect x="-48" y="-42" width="96" height="84" rx="1.5" fill="#3b4856" stroke="#ffffff" strokeWidth="2.5" />
+        <rect x="-48" y="-42" width="96" height="84" rx="1.5" fill="#3b4856" stroke="#ffffff" strokeWidth="2.5" transform="rotate(45)" />
+        <rect x="-43" y="-37" width="86" height="74" fill="none" stroke="#e2e8f0" strokeWidth="1" />
+        <rect x="-43" y="-37" width="86" height="74" fill="none" stroke="#e2e8f0" strokeWidth="1" transform="rotate(45)" />
+      </g>
+
+      {/* Top Banner Text: SMK ISLAM TERPADU IBNUL QAYYIM */}
+      <text x="70" y="43" textAnchor="middle" fill="#ffffff" fontSize="5.2" fontWeight="900" fontFamily="Arial, Helvetica, sans-serif" letterSpacing="0.2">
+        SMK ISLAM TERPADU
+      </text>
+      <text x="70" y="50" textAnchor="middle" fill="#ffffff" fontSize="5.8" fontWeight="900" fontFamily="Arial, Helvetica, sans-serif" letterSpacing="0.2">
+        IBNUL QAYYIM
+      </text>
+
+      {/* Open Book Graphic in Center */}
+      <g transform="translate(70 68) scale(1.1)">
+        {/* Book Base & Spine */}
+        <path d="M-16,-2 Q-8,-6 0,-1 Q8,-6 16,-2 L16,11 Q8,7 0,12 Q-8,7 -16,11 Z" fill="#ffffff" stroke="#cbd5e1" strokeWidth="0.8" />
+        {/* Pages Left */}
+        <path d="M-15,-0.5 Q-7.5,-4.5 0,1 L0,12 Q-7.5,7 -15,11 Z" fill="#f8fafc" />
+        {/* Pages Right */}
+        <path d="M15,-0.5 Q7.5,-4.5 0,1 L0,12 Q7.5,7 15,11 Z" fill="#f1f5f9" />
+        {/* Page Inner Lines */}
+        <line x1="-12" y1="2" x2="-2" y2="2" stroke="#3b4856" strokeWidth="0.6" opacity="0.6" />
+        <line x1="-12" y1="5" x2="-2" y2="5" stroke="#3b4856" strokeWidth="0.6" opacity="0.6" />
+        <line x1="2" y1="2" x2="12" y2="2" stroke="#3b4856" strokeWidth="0.6" opacity="0.6" />
+        <line x1="2" y1="5" x2="12" y2="5" stroke="#3b4856" strokeWidth="0.6" opacity="0.6" />
+        <line x1="0" y1="1" x2="0" y2="12" stroke="#3b4856" strokeWidth="1.2" />
+      </g>
+
+      {/* Arabic Calligraphy Banner Bottom: مدرسة ابن القيم */}
+      <rect x="28" y="86" width="84" height="13" rx="2" fill="#3b4856" stroke="#ffffff" strokeWidth="0.8" />
+      <text x="70" y="95" textAnchor="middle" fill="#ffffff" fontSize="8.5" fontWeight="bold" fontFamily="Traditional Arabic, Scheherazade, Noto Naskh Arabic, serif">
+        مدرسة ابن القيم
+      </text>
+    </svg>
+  </div>
+);
+
 export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
   record,
+  pegawaiList = [],
   onClose,
   onSendEmail,
 }) => {
@@ -35,6 +126,25 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
   const [emailSentStatus, setEmailSentStatus] = useState(false);
 
   if (!record) return null;
+
+  const matchedPegawai = pegawaiList?.find(p => 
+    p.id === record.pegawaiId || 
+    (p.nip && record.pegawaiNip && (p.nip === record.pegawaiNip || p.niy === record.pegawaiNip)) ||
+    (p.nama && record.pegawaiNama && p.nama.toLowerCase().trim() === record.pegawaiNama.toLowerCase().trim())
+  );
+
+  let formattedJabatan = matchedPegawai?.jabatanUtama || '';
+  if (matchedPegawai?.jabatanTambahan && matchedPegawai.jabatanTambahan.length > 0) {
+    const extra = matchedPegawai.jabatanTambahan.filter(j => j && j !== 'Guru Pengampu Non Induk' && j !== 'Pembina Olahraga Non Induk');
+    if (extra.length > 0) {
+      formattedJabatan += ' / ' + extra.join(' / ');
+    }
+  }
+
+  const displayNama = matchedPegawai?.nama || record.pegawaiNama;
+  const displayJabatan = formattedJabatan || matchedPegawai?.jabatanUtama || record.pegawaiJabatan;
+  const displayStatus = matchedPegawai?.statusPegawai || record.pegawaiStatus;
+  const displayNip = matchedPegawai?.niy || matchedPegawai?.nip || record.pegawaiNip;
 
   const cutoffInfo = getPayrollCutoffDates(record.bulan, record.tahun);
 
@@ -144,30 +254,32 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
             </div>
 
             {/* 1. Official School Letterhead (Kop Surat) */}
-            <div className="border-b-2 border-slate-900 pb-4 mb-5 text-center relative">
-              <div className="flex items-center justify-between gap-4">
-                <div className="w-14 h-14 rounded-xl bg-emerald-900 flex items-center justify-center text-white font-extrabold text-2xl shadow-sm shrink-0">
-                  IQ
-                </div>
-                <div className="flex-1 text-center">
-                  <div className="text-[10px] uppercase font-bold tracking-widest text-slate-600">
-                    YAYASAN IBNUL QAYYIM MAKASSAR
+            <div className="border-b-4 border-black pb-1 mb-5 text-center relative font-serif">
+              <div className="flex items-center justify-between gap-2 sm:gap-4 pb-2 border-b border-black">
+                <KopLogoLeft />
+
+                <div className="flex-1 text-center font-serif text-black leading-snug select-none">
+                  <div className="text-xs sm:text-sm font-bold uppercase tracking-normal">
+                    YAYASAN PENDIDIKAN ISLAM IBNUL QAYYIM SUDIANG MAKASSAR
                   </div>
-                  <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight uppercase mt-0.5">
+                  <h1 className="text-base sm:text-xl font-extrabold text-black tracking-tight uppercase mt-0.5 font-sans">
                     SMK IT IBNUL QAYYIM MAKASSAR
                   </h1>
-                  <div className="text-[10px] font-medium text-emerald-900">
-                    Program Keahlian: Rekayasa Perangkat Lunak (RPL) & Teknik Komputer Jaringan (TKJ)
+                  <div className="text-xs sm:text-sm font-bold text-black mt-0.5">
+                    Terakreditasi A
                   </div>
-                  <div className="text-[9px] text-slate-500 mt-1 leading-tight">
-                    Jl. Goa Ria Taman Bunga 2, Laikang, Kec. Biringkanaya, Kota Makassar, Sulawesi Selatan 90242 | NPSN: 69988771 | Telp: (0411) 891234
+                  <div className="text-[11px] sm:text-xs text-black font-normal mt-1 leading-tight">
+                    Jl. Goa Ria Taman Bunga 2, Laikang, Kec. Biringkanaya,
                   </div>
+                  <div className="text-[11px] sm:text-xs text-black font-normal leading-tight">
+                    Kota Makassar, Sulawesi Selatan 90242. Telpon: 0811 4411 432.
+                  </div>
+                  <div className="text-[11px] sm:text-xs text-black font-normal leading-tight">
+                    Email : smkit@iqis.sch.id, Website: https://smkit.iqis.sch.id
+                  </div>
+                </div>
 
-                </div>
-                <div className="w-14 h-14 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-[8px] font-bold text-slate-500 p-1 shrink-0">
-                  <QrCode className="w-7 h-7 text-slate-800" />
-                  <span>VERIFIED</span>
-                </div>
+                <KopLogoRight />
               </div>
             </div>
 
@@ -190,21 +302,21 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
             <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200 grid grid-cols-2 gap-x-4 gap-y-1.5 mb-4 text-xs">
               <div>
                 <span className="text-slate-500">Nama Pegawai:</span>{' '}
-                <strong className="text-slate-900 font-bold">{record.pegawaiNama}</strong>
+                <strong className="text-slate-900 font-bold">{displayNama}</strong>
               </div>
               <div>
                 <span className="text-slate-500">Status Pegawai:</span>{' '}
                 <strong className="text-slate-900">
-                  {record.pegawaiStatus} ({record.statusInduk || 'Induk'})
+                  {displayStatus} ({matchedPegawai?.statusInduk || record.statusInduk || 'Induk'})
                 </strong>
               </div>
               <div>
                 <span className="text-slate-500">NIP / NUPTK:</span>{' '}
-                <strong className="font-mono text-slate-900">{record.pegawaiNip}</strong>
+                <strong className="font-mono text-slate-900">{displayNip}</strong>
               </div>
               <div>
                 <span className="text-slate-500">Jabatan Utama:</span>{' '}
-                <strong className="text-slate-900">{record.pegawaiJabatan}</strong>
+                <strong className="text-slate-900">{displayJabatan}</strong>
               </div>
             </div>
 
@@ -421,36 +533,21 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
                 Makassar, 26 {MONTH_NAMES_ID[record.bulan - 1] || 'Agustus'} {record.tahun}
               </div>
 
-              <div className="grid grid-cols-3 gap-4 text-center text-[10px]">
+              <div className="grid grid-cols-2 gap-8 text-center text-[10px]">
                 {/* Penerima */}
                 <div>
-                  <div className="text-slate-500 mb-10">Penerima Gaji,</div>
-                  <div className="font-bold text-slate-900 border-b border-slate-400 pb-0.5 inline-block min-w-[120px]">
-                    {record.pegawaiNama}
+                  <div className="text-slate-500 mb-12">Penerima Gaji,</div>
+                  <div className="font-bold text-slate-900 border-b border-slate-400 pb-0.5 inline-block min-w-[140px]">
+                    {displayNama}
                   </div>
-                  <div className="text-slate-500 font-mono mt-0.5">NIP: {record.pegawaiNip}</div>
-                </div>
-
-                {/* Bendahara Yayasan */}
-                <div className="relative">
-                  <div className="text-slate-500 mb-2">Bendahara Keuangan,</div>
-                  {/* Digital Stamp Simulation */}
-                  <div className="w-16 h-16 mx-auto my-1 border-2 border-emerald-700 text-emerald-800 rounded-full flex flex-col items-center justify-center font-bold text-[7px] rotate-[-12deg] opacity-80 select-none">
-                    <span>YAYASAN IQM</span>
-                    <span>★ LUNAS ★</span>
-                    <span>MAKASSAR</span>
-                  </div>
-                  <div className="font-bold text-slate-900 border-b border-slate-400 pb-0.5 inline-block min-w-[120px]">
-                    Hj. Nurul Fatimah, S.E.
-                  </div>
-                  <div className="text-slate-500 mt-0.5">Bendahara Yayasan</div>
+                  <div className="text-slate-500 font-mono mt-0.5">NIP: {displayNip}</div>
                 </div>
 
                 {/* Kepala Sekolah */}
                 <div>
-                  <div className="text-slate-500 mb-10">Mengetahui / Menyetujui,</div>
-                  <div className="font-bold text-slate-900 border-b border-slate-400 pb-0.5 inline-block min-w-[120px]">
-                    Drs. H. Syamsuddin Nur, M.Pd.
+                  <div className="text-slate-500 mb-12">Mengetahui / Menyetujui,</div>
+                  <div className="font-bold text-slate-900 border-b border-slate-400 pb-0.5 inline-block min-w-[140px]">
+                    Anto, S.E.I., M.E., Gr., MCF.
                   </div>
                   <div className="text-slate-500 mt-0.5">Kepala SMK IT Ibnul Qayyim</div>
                 </div>

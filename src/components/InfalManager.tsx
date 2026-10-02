@@ -72,9 +72,9 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
 
   const totalNominalCalculated = formData.jumlahJp * (formData.tarifPerJp || 7500);
 
-  // List of only teachers (GTY & GTT)
+  // List of all teachers & staff (Guru dan Tendik)
   const guruList = useMemo(() => {
-    return pegawaiList.filter(p => p.statusPegawai === 'GTY' || p.statusPegawai === 'GTT');
+    return pegawaiList;
   }, [pegawaiList]);
 
   // Filtered infal list
