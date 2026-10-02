@@ -23,12 +23,15 @@ import {
   Check,
   GraduationCap,
   Briefcase,
-  Users
+  Users,
+  Edit3,
+  Pencil
 } from 'lucide-react';
 import { PenggajianRecord, User, StatusPenggajian, AuditCategory, AuditActionType } from '../types';
 import { formatRupiah, formatNumber, getPayrollCutoffDates } from '../utils/security';
 import { PeriodSelector, MONTH_NAMES_ID } from './PeriodSelector';
 import { exportBatchSlipsToZip } from '../utils/batchSlipZip';
+import { EditSlipGajiModal } from './EditSlipGajiModal';
 
 interface PayrollManagementProps {
   records: PenggajianRecord[];
@@ -41,6 +44,7 @@ interface PayrollManagementProps {
   onBatchEmail: (ids: string[]) => void;
   onViewSlip: (record: PenggajianRecord) => void;
   onInspectFormula: (record: PenggajianRecord) => void;
+  onUpdateRecord?: (updatedRecord: PenggajianRecord) => void;
   selectedBulan?: number;
   selectedTahun?: number;
   onSelectPeriod?: (bulan: number, tahun: number) => void;
@@ -60,6 +64,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
   onBatchEmail,
   onViewSlip,
   onInspectFormula,
+  onUpdateRecord,
   selectedBulan = (new Date().getMonth() + 1),
   selectedTahun = (new Date().getFullYear()),
   onSelectPeriod,
@@ -75,9 +80,14 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
   const [rejectTargetId, setRejectTargetId] = useState<string | null>(null);
   const [rejectNotes, setRejectNotes] = useState('');
 
+  // Edit Slip Gaji Modal State
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<PenggajianRecord | null>(null);
+
   // Batch Zip Export State
   const [isDownloadingZip, setIsDownloadingZip] = useState(false);
   const [zipProgress, setZipProgress] = useState<{ current: number; total: number; name: string } | null>(null);
+
 
   const cutoffInfo = getPayrollCutoffDates(selectedBulan, selectedTahun);
 
@@ -111,10 +121,90 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
     });
   }, [records, searchTerm, statusFilter, jenisPegawaiFilter]);
 
+  // Grand Totals for Footer Row
+  const grandTotals = useMemo(() => {
+    return filteredRecords.reduce((acc, r) => {
+      const tunjKepsek = r.tunjanganKepsek || 0;
+      const tunjWakasek = r.tunjanganWakasek || 0;
+      const tunjWaliKelas = r.tunjanganWaliKelas || 0;
+      const tunjAsrama = r.tunjanganAsrama || 0;
+      const gajiPokok = r.gajiPokokNominal || r.gajiPokok || 0;
+      const tunjKehadiran = r.tunjanganKehadiran || 0;
+      const jp = r.jumlahJp ?? r.jamMengajarRealisasi ?? 0;
+      const tarifJp = r.nominalPerJp || 18000;
+      const honorJp = r.totalHonorJp || (jp * tarifJp);
+      const honorInval = r.honorInval ?? r.honorInfal ?? 0;
+      const tambahanLainnya = r.tambahanLainnya || 0;
+      const totalTambahan = r.totalTambahan || (gajiPokok + tunjKepsek + tunjWakasek + tunjWaliKelas + tunjAsrama + tunjKehadiran + honorJp + honorInval + tambahanLainnya);
+      const potTerlambat = r.potonganTerlambat || 0;
+      const potKas = r.potonganKas || 0;
+      const potLainnya = r.potonganLainnya || 0;
+      const totalPotongan = r.totalPotongan || (potTerlambat + potKas + potLainnya);
+      const thp = r.takeHomePay || (totalTambahan - totalPotongan);
+
+      return {
+        tunjKepsek: acc.tunjKepsek + tunjKepsek,
+        tunjWakasek: acc.tunjWakasek + tunjWakasek,
+        tunjWaliKelas: acc.tunjWaliKelas + tunjWaliKelas,
+        tunjAsrama: acc.tunjAsrama + tunjAsrama,
+        gajiPokok: acc.gajiPokok + gajiPokok,
+        tunjKehadiran: acc.tunjKehadiran + tunjKehadiran,
+        jumlahJp: acc.jumlahJp + jp,
+        honorJp: acc.honorJp + honorJp,
+        honorInval: acc.honorInval + honorInval,
+        tambahanLainnya: acc.tambahanLainnya + tambahanLainnya,
+        totalTambahan: acc.totalTambahan + totalTambahan,
+        potTerlambat: acc.potTerlambat + potTerlambat,
+        potKas: acc.potKas + potKas,
+        potLainnya: acc.potLainnya + potLainnya,
+        totalPotongan: acc.totalPotongan + totalPotongan,
+        thp: acc.thp + thp,
+      };
+    }, {
+      tunjKepsek: 0,
+      tunjWakasek: 0,
+      tunjWaliKelas: 0,
+      tunjAsrama: 0,
+      gajiPokok: 0,
+      tunjKehadiran: 0,
+      jumlahJp: 0,
+      honorJp: 0,
+      honorInval: 0,
+      tambahanLainnya: 0,
+      totalTambahan: 0,
+      potTerlambat: 0,
+      potKas: 0,
+      potLainnya: 0,
+      totalPotongan: 0,
+      thp: 0,
+    });
+  }, [filteredRecords]);
+
+  const handleOpenEditModal = (record: PenggajianRecord) => {
+    setEditingRecord(record);
+    setEditModalOpen(true);
+  };
+
+  const handleSaveEditRecord = (updatedRecord: PenggajianRecord) => {
+    if (onUpdateRecord) {
+      onUpdateRecord(updatedRecord);
+    }
+    if (onAuditLog) {
+      onAuditLog(
+        'penggajian',
+        'EDIT_RECORD',
+        'Pembaruan Rincian Slip Gaji',
+        updatedRecord.pegawaiNama,
+        `Pembaruan rincian slip gaji ${updatedRecord.kodeSlip} (Take Home Pay: ${formatRupiah(updatedRecord.gajiBersih)})`
+      );
+    }
+  };
+
   // Statistics for Category & Status Tabs
   const counts = useMemo(() => {
     const guruCount = records.filter(isTeacher).length;
     const tendikCount = records.length - guruCount;
+
 
     return {
       total: records.length,
@@ -503,210 +593,331 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
       {/* Main Table */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-slate-50 sticky top-0 border-b border-slate-200">
-              <tr>
-                <th className="py-3 px-4 w-10 text-center">
-                  <input
-                    type="checkbox"
-                    onChange={handleSelectAll}
-                    checked={selectedIds.length > 0 && selectedIds.length === filteredRecords.length}
-                    className="rounded text-indigo-600 focus:ring-indigo-500"
-                  />
+          <table className="w-full text-left border-collapse text-xs">
+            {/* Multi-tier Header */}
+            <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 z-10 select-none">
+              {/* Level 1: Category Groups */}
+              <tr className="border-b border-slate-200 text-[10px] uppercase font-bold tracking-wider">
+                <th colSpan={3} className="py-2 px-3 bg-slate-100 text-slate-700 text-center border-r border-slate-200">
+                  Identitas Pegawai
                 </th>
-                <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Kode Slip & Pegawai</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Jabatan & Vokasi</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Presensi & JP</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Penerimaan</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Potongan</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Gaji Bersih (THP)</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Status Alur</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Tindakan</th>
+                <th colSpan={4} className="py-2 px-3 bg-indigo-50 text-indigo-900 text-center border-r border-slate-200">
+                  Kelompok Tunjangan Jabatan
+                </th>
+                <th colSpan={4} className="py-2 px-3 bg-emerald-50 text-emerald-900 text-center border-r border-slate-200">
+                  Kelompok Penerimaan & Kinerja
+                </th>
+                <th colSpan={2} className="py-2 px-3 bg-sky-50 text-sky-900 text-center border-r border-slate-200">
+                  Kelompok Tambahan
+                </th>
+                <th colSpan={4} className="py-2 px-3 bg-rose-50 text-rose-900 text-center border-r border-slate-200">
+                  Kelompok Potongan
+                </th>
+                <th colSpan={3} className="py-2 px-3 bg-slate-100 text-slate-800 text-center">
+                  Hasil Akhir & Alur
+                </th>
+              </tr>
+
+              {/* Level 2: Exact Column Details */}
+              <tr className="text-[10px] font-bold text-slate-600 bg-slate-50 divide-x divide-slate-200">
+                {/* 1. No & Checkbox */}
+                <th className="py-2.5 px-3 w-12 text-center whitespace-nowrap">
+                  <div className="flex items-center justify-center gap-1.5">
+                    <input
+                      type="checkbox"
+                      onChange={handleSelectAll}
+                      checked={selectedIds.length > 0 && selectedIds.length === filteredRecords.length}
+                      className="rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                    />
+                    <span>No</span>
+                  </div>
+                </th>
+                
+                {/* 2. Nama Pegawai */}
+                <th className="px-3 py-2.5 min-w-[150px]">Nama Pegawai</th>
+                
+                {/* 3. Jabatan */}
+                <th className="px-3 py-2.5 min-w-[120px]">Jabatan</th>
+
+                {/* 4-7. Kelompok Tunjangan Jabatan */}
+                <th className="px-3 py-2.5 text-right bg-indigo-50/40 min-w-[100px]" title="tunjangan_kepsek">Kepala Sekolah</th>
+                <th className="px-3 py-2.5 text-right bg-indigo-50/40 min-w-[95px]" title="tunjangan_wakasek">Wakasek</th>
+                <th className="px-3 py-2.5 text-right bg-indigo-50/40 min-w-[95px]" title="tunjangan_wali_kelas">Wali Kelas</th>
+                <th className="px-3 py-2.5 text-right bg-indigo-50/40 min-w-[100px]" title="tunjangan_asrama">Asrama/Musyrif</th>
+
+                {/* 8-11. Kelompok Penerimaan & Kinerja */}
+                <th className="px-3 py-2.5 text-right bg-emerald-50/40 min-w-[110px]" title="gaji_pokok_nominal">Gaji Pokok</th>
+                <th className="px-3 py-2.5 text-right bg-emerald-50/40 min-w-[95px]" title="tunjangan_kehadiran">Kehadiran</th>
+                <th className="px-3 py-2.5 text-center bg-emerald-50/40 min-w-[140px]" title="jumlah_jp * nominal_per_jp = total_honor_jp">
+                  Jam Mengajar / JP
+                </th>
+                <th className="px-3 py-2.5 text-right bg-emerald-50/40 min-w-[100px]" title="honor_inval">Inval / Pengganti</th>
+
+                {/* 12-13. Kelompok Tambahan */}
+                <th className="px-3 py-2.5 text-right bg-sky-50/40 min-w-[105px]" title="tambahan_lainnya">Tambahan Lainnya</th>
+                <th className="px-3 py-2.5 text-right bg-sky-50/70 font-black text-sky-950 min-w-[115px]" title="total_tambahan">Total Tambahan</th>
+
+                {/* 14-17. Kelompok Potongan */}
+                <th className="px-3 py-2.5 text-right bg-rose-50/40 min-w-[95px]" title="potongan_terlambat">Terlambat</th>
+                <th className="px-3 py-2.5 text-right bg-rose-50/40 min-w-[95px]" title="potongan_kas">Kas / Pinjaman</th>
+                <th className="px-3 py-2.5 text-right bg-rose-50/40 min-w-[95px]" title="potongan_lainnya">Pot. Lainnya</th>
+                <th className="px-3 py-2.5 text-right bg-rose-50/70 font-black text-rose-950 min-w-[105px]" title="total_potongan">Total Potongan</th>
+
+                {/* 18-20. Hasil Akhir & Aksi */}
+                <th className="px-3 py-2.5 text-right bg-emerald-100/60 font-black text-emerald-950 min-w-[125px]" title="take_home_pay">
+                  Diterima (THP)
+                </th>
+                <th className="px-3 py-2.5 text-center min-w-[110px]">Status</th>
+                <th className="px-3 py-2.5 text-center min-w-[100px]">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+
+            {/* Table Body */}
+            <tbody className="divide-y divide-slate-100 bg-white">
               {filteredRecords.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-8 text-center text-slate-400 text-xs">
-                    Tidak ada data penggajian yang sesuai dengan filter.
+                  <td colSpan={20} className="py-10 text-center text-slate-400 text-xs">
+                    Tidak ada data penggajian yang sesuai dengan kriteria filter.
                   </td>
                 </tr>
               ) : (
-                filteredRecords.map((record) => {
+                filteredRecords.map((record, idx) => {
                   const isSelected = selectedIds.includes(record.id);
+
+                  // Extract and calculate exact component values
+                  const tunjKepsek = record.tunjanganKepsek || 0;
+                  const tunjWakasek = record.tunjanganWakasek || 0;
+                  const tunjWaliKelas = record.tunjanganWaliKelas || 0;
+                  const tunjAsrama = record.tunjanganAsrama || 0;
+                  
+                  const gajiPokok = record.gajiPokokNominal || record.gajiPokok || 0;
+                  const tunjKehadiran = record.tunjanganKehadiran || 0;
+                  
+                  const jp = record.jumlahJp ?? record.jamMengajarRealisasi ?? 0;
+                  const tarifJp = record.nominalPerJp || 18000;
+                  const totalHonorJp = record.totalHonorJp || (jp * tarifJp);
+                  
+                  const honorInval = record.honorInval ?? record.honorInfal ?? 0;
+                  const tambahanLainnya = record.tambahanLainnya || 0;
+                  
+                  const totalTambahan = record.totalTambahan || (gajiPokok + tunjKepsek + tunjWakasek + tunjWaliKelas + tunjAsrama + tunjKehadiran + totalHonorJp + honorInval + tambahanLainnya);
+                  
+                  const potTerlambat = record.potonganTerlambat || 0;
+                  const potKas = record.potonganKas || 0;
+                  const potLainnya = record.potonganLainnya || 0;
+                  const totalPotongan = record.totalPotongan || (potTerlambat + potKas + potLainnya);
+                  
+                  const takeHomePay = record.takeHomePay || (totalTambahan - totalPotongan);
+
                   return (
-                    <tr key={record.id} className={`hover:bg-slate-50/70 transition ${isSelected ? 'bg-indigo-50/30' : ''}`}>
-                      {/* Checkbox */}
-                      <td className="py-3.5 px-4 text-center">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => handleToggleSelect(record.id)}
-                          className="rounded text-indigo-600 focus:ring-indigo-500"
-                        />
+                    <tr 
+                      key={record.id} 
+                      className={`hover:bg-slate-50/80 transition divide-x divide-slate-100 ${
+                        isSelected ? 'bg-indigo-50/30' : ''
+                      }`}
+                    >
+                      {/* 1. Checkbox & No */}
+                      <td className="py-2.5 px-3 text-center">
+                        <div className="flex items-center justify-center gap-1.5">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleToggleSelect(record.id)}
+                            className="rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                          />
+                          <span className="text-[10px] font-mono text-slate-400 font-bold">{idx + 1}</span>
+                        </div>
                       </td>
 
-                      {/* Pegawai Info */}
-                      <td className="py-3.5 px-4">
+                      {/* 2. Nama Pegawai */}
+                      <td className="py-2.5 px-3">
                         <div className="font-bold text-slate-900 text-xs">{record.pegawaiNama}</div>
-                        <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono mt-0.5">
-                          <span className="text-indigo-600 font-semibold">{record.kodeSlip}</span>
-                          <span>•</span>
-                          <span>NIP: {record.pegawaiNip}</span>
+                        <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                          <span className="text-indigo-600 font-medium">{record.kodeSlip}</span>
                         </div>
                       </td>
 
-                      {/* Jabatan */}
-                      <td className="py-3.5 px-4 text-slate-700 text-xs">
-                        <div className="font-medium text-slate-800">{record.pegawaiJabatan}</div>
-                        <div className="flex items-center gap-1 mt-1 flex-wrap">
-                          <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-slate-100 text-slate-600">
-                            {record.pegawaiStatus}
-                          </span>
-                          {record.statusInduk === 'Non Induk' && (
-                            <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-100 text-amber-900 border border-amber-200">
-                              Non-Induk (Murni JP)
+                      {/* 3. Jabatan */}
+                      <td className="py-2.5 px-3 text-slate-700">
+                        <div className="font-medium text-slate-800 text-[11px] leading-tight">{record.pegawaiJabatan}</div>
+                        <span className="inline-block mt-0.5 px-1.5 py-0.2 text-[9px] font-bold rounded bg-slate-100 text-slate-600">
+                          {record.pegawaiStatus}
+                        </span>
+                      </td>
+
+                      {/* 4. Kepala Sekolah */}
+                      <td className="py-2.5 px-3 text-right font-mono bg-indigo-50/20 text-slate-700">
+                        {tunjKepsek > 0 ? formatRupiah(tunjKepsek) : <span className="text-slate-300">-</span>}
+                      </td>
+
+                      {/* 5. Wakasek */}
+                      <td className="py-2.5 px-3 text-right font-mono bg-indigo-50/20 text-slate-700">
+                        {tunjWakasek > 0 ? formatRupiah(tunjWakasek) : <span className="text-slate-300">-</span>}
+                      </td>
+
+                      {/* 6. Wali Kelas */}
+                      <td className="py-2.5 px-3 text-right font-mono bg-indigo-50/20 text-slate-700">
+                        {tunjWaliKelas > 0 ? formatRupiah(tunjWaliKelas) : <span className="text-slate-300">-</span>}
+                      </td>
+
+                      {/* 7. Asrama/Musyrif */}
+                      <td className="py-2.5 px-3 text-right font-mono bg-indigo-50/20 text-slate-700">
+                        {tunjAsrama > 0 ? formatRupiah(tunjAsrama) : <span className="text-slate-300">-</span>}
+                      </td>
+
+                      {/* 8. Gaji Pokok */}
+                      <td className="py-2.5 px-3 text-right font-mono font-bold bg-emerald-50/20 text-slate-900">
+                        {gajiPokok > 0 ? formatRupiah(gajiPokok) : <span className="text-slate-300">-</span>}
+                      </td>
+
+                      {/* 9. Kehadiran */}
+                      <td className="py-2.5 px-3 text-right font-mono bg-emerald-50/20 text-slate-700">
+                        {tunjKehadiran > 0 ? formatRupiah(tunjKehadiran) : <span className="text-slate-300">-</span>}
+                      </td>
+
+                      {/* 10. Jam Mengajar / JP */}
+                      <td className="py-2.5 px-3 text-center bg-emerald-50/20">
+                        {jp > 0 ? (
+                          <div className="inline-flex flex-col items-center">
+                            <span className="font-mono font-bold text-emerald-800 text-[11px]">
+                              {formatRupiah(totalHonorJp)}
                             </span>
-                          )}
-                          {record.tunjanganVokasiIT > 0 && (
-                            <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-indigo-50 text-indigo-700 border border-indigo-100">
-                              Sertifikasi IT
+                            <span className="text-[9px] text-slate-500 font-mono">
+                              {jp} JP × {formatNumber(tarifJp)}
                             </span>
-                          )}
-                        </div>
+                          </div>
+                        ) : (
+                          <span className="text-slate-300">-</span>
+                        )}
                       </td>
 
-                      {/* Presensi & JP */}
-                      <td className="py-3.5 px-4 text-center text-xs">
-                        <div className="inline-flex flex-col items-center">
-                          <span className="font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded text-[11px]">
-                            {record.jamMengajarRealisasi} JP
-                          </span>
-                          <span className="text-[10px] text-slate-500 mt-1">
-                            Hadir: {record.presensiHadir} | A: {record.presensiAlpha} | T: {record.presensiTerlambatMenit}m
-                          </span>
-                        </div>
+                      {/* 11. Inval / Pengganti */}
+                      <td className="py-2.5 px-3 text-right font-mono bg-emerald-50/20 text-slate-700">
+                        {honorInval > 0 ? (
+                          <span className="text-emerald-700 font-semibold">+{formatRupiah(honorInval)}</span>
+                        ) : (
+                          <span className="text-slate-300">-</span>
+                        )}
                       </td>
 
-                      {/* Penerimaan */}
-                      <td className="py-3.5 px-4 text-right text-xs">
-                        <div className="font-semibold text-slate-800">
-                          {formatRupiah(record.totalPenerimaan)}
-                        </div>
-                        <div className="text-[10px] text-slate-400 flex items-center justify-end gap-1 mt-0.5">
-                          {record.statusInduk === 'Non Induk' ? (
-                            <span className="text-indigo-700 font-semibold">Honor JP: {formatRupiah(record.honorJamMengajar)}</span>
-                          ) : (
-                            <span>Pokok: {formatRupiah(record.gajiPokok)}</span>
-                          )}
-                          {record.honorInfal > 0 && (
-                            <span className="text-emerald-700 bg-emerald-50 px-1 rounded font-bold" title={`Honor Infal Menggantikan: ${record.jpMenggantikan} JP`}>
-                              +{formatRupiah(record.honorInfal)} Infal
-                            </span>
-                          )}
-                        </div>
+                      {/* 12. Tambahan Lainnya */}
+                      <td className="py-2.5 px-3 text-right font-mono bg-sky-50/20 text-slate-700">
+                        {tambahanLainnya > 0 ? formatRupiah(tambahanLainnya) : <span className="text-slate-300">-</span>}
                       </td>
 
-                      {/* Potongan */}
-                      <td className="py-3.5 px-4 text-right text-xs">
-                        <div className="font-semibold text-rose-600">
-                          -{formatRupiah(record.totalPotongan)}
-                        </div>
-                        <div className="text-[10px] text-slate-400 flex items-center justify-end gap-1 mt-0.5">
-                          {record.statusInduk === 'Non Induk' && record.totalPotongan === 0 ? (
-                            <span className="text-slate-400 italic">Murni JP (Tanpa Potongan)</span>
-                          ) : (
-                            <span>BPJS & Denda</span>
-                          )}
-                          {record.potonganInfal > 0 && (
-                            <span className="text-rose-700 bg-rose-50 px-1 rounded font-bold" title={`Potongan Infal Digantikan: ${record.jpDigantikan} JP`}>
-                              -{formatRupiah(record.potonganInfal)} Infal
-                            </span>
-                          )}
-                        </div>
+                      {/* 13. Total Tambahan / Bruto */}
+                      <td className="py-2.5 px-3 text-right font-mono font-black bg-sky-50/40 text-sky-950">
+                        {formatRupiah(totalTambahan)}
                       </td>
 
-                      {/* Gaji Bersih */}
-                      <td className="py-3.5 px-4 text-right text-xs">
-                        <div className="font-bold text-emerald-700 text-xs">
-                          {formatRupiah(record.gajiBersih)}
-                        </div>
-                        <button
-                          onClick={() => onInspectFormula(record)}
-                          className="text-[10px] text-indigo-600 hover:text-indigo-800 underline font-medium"
-                        >
-                          Rincian Rumus
-                        </button>
+                      {/* 14. Potongan Terlambat */}
+                      <td className="py-2.5 px-3 text-right font-mono bg-rose-50/20 text-rose-700">
+                        {potTerlambat > 0 ? `-${formatRupiah(potTerlambat)}` : <span className="text-slate-300">-</span>}
                       </td>
 
-                      {/* Status Approval Stage Visual Badge */}
-                      <td className="py-3.5 px-4 text-center">
+                      {/* 15. Potongan Kas */}
+                      <td className="py-2.5 px-3 text-right font-mono bg-rose-50/20 text-rose-700">
+                        {potKas > 0 ? `-${formatRupiah(potKas)}` : <span className="text-slate-300">-</span>}
+                      </td>
+
+                      {/* 16. Potongan Lainnya */}
+                      <td className="py-2.5 px-3 text-right font-mono bg-rose-50/20 text-rose-700">
+                        {potLainnya > 0 ? `-${formatRupiah(potLainnya)}` : <span className="text-slate-300">-</span>}
+                      </td>
+
+                      {/* 17. Total Potongan */}
+                      <td className="py-2.5 px-3 text-right font-mono font-bold bg-rose-50/40 text-rose-700">
+                        {totalPotongan > 0 ? `-${formatRupiah(totalPotongan)}` : <span className="text-slate-300">Rp 0</span>}
+                      </td>
+
+                      {/* 18. Diterima / Take Home Pay */}
+                      <td className="py-2.5 px-3 text-right font-mono font-black text-xs bg-emerald-50/60 text-emerald-800">
+                        {formatRupiah(takeHomePay)}
+                      </td>
+
+                      {/* 19. Status Approval */}
+                      <td className="py-2.5 px-3 text-center">
                         {renderStatusBadge(record.status, record.emailSent)}
                       </td>
 
-
-                      {/* Tindakan Workflow & Cetak */}
-                      <td className="py-3.5 px-4 text-center">
+                      {/* 20. Tindakan / Aksi */}
+                      <td className="py-2.5 px-3 text-center">
                         <div className="flex items-center justify-center gap-1">
+                          {/* Edit Detail Slip Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditModal(record)}
+                            title="Edit & Sesuaikan Rincian Slip Gaji"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer"
+                          >
+                            <Edit3 className="w-3.5 h-3.5 text-indigo-600" />
+                          </button>
+
                           {/* View / Print Slip */}
                           <button
+                            type="button"
                             onClick={() => onViewSlip(record)}
                             title="Buka & Cetak Slip Gaji PDF Resmi"
-                            className="p-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"
+                            className="p-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition cursor-pointer"
                           >
-                            <FileText className="w-4 h-4" />
+                            <FileText className="w-3.5 h-3.5" />
                           </button>
 
                           {/* Approval Actions by Role */}
                           {currentUser.role === 'kepala_sekolah' && (record.status === 'draft' || record.status === 'pending_kepsek') && (
                             <button
+                              type="button"
                               onClick={() => onApproveRecord(record.id, 'approve')}
                               title="Setujui sebagai Kepala Sekolah"
-                              className="p-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                              className="p-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition cursor-pointer"
                             >
-                              <CheckCircle className="w-4 h-4" />
+                              <CheckCircle className="w-3.5 h-3.5" />
                             </button>
                           )}
 
                           {currentUser.role === 'ketua_yayasan' && record.status === 'pending_yayasan' && (
                             <button
+                              type="button"
                               onClick={() => onApproveRecord(record.id, 'approve')}
                               title="Setujui & Otorisasi Anggaran Yayasan"
-                              className="p-1.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition"
+                              className="p-1.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition cursor-pointer"
                             >
-                              <CheckCheck className="w-4 h-4" />
+                              <CheckCheck className="w-3.5 h-3.5" />
                             </button>
                           )}
 
                           {canTransfer && record.status === 'approved' && (
                             <button
+                              type="button"
                               onClick={() => onTransferRecord(record.id)}
                               title="Eksekusi Transfer Bank Bendahara"
-                              className="p-1.5 rounded-lg bg-amber-600 text-white hover:bg-amber-700 transition"
+                              className="p-1.5 rounded-lg bg-amber-600 text-white hover:bg-amber-700 transition cursor-pointer"
                             >
-                              <CreditCard className="w-4 h-4" />
+                              <CreditCard className="w-3.5 h-3.5" />
                             </button>
                           )}
 
                           {/* Email Single Trigger */}
                           {(record.status === 'transferred' || record.status === 'approved') && (
                             <button
+                              type="button"
                               onClick={() => onSendEmailSlip(record.id)}
                               title="Kirim Notifikasi Email Slip Gaji"
-                              className="p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
+                              className="p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer"
                             >
-                              <Send className="w-4 h-4" />
+                              <Send className="w-3.5 h-3.5" />
                             </button>
                           )}
 
                           {/* Reject Option for Approvers */}
                           {canApprove && (record.status === 'pending_kepsek' || record.status === 'pending_yayasan') && (
                             <button
+                              type="button"
                               onClick={() => openRejectDialog(record.id)}
                               title="Tolak / Minta Revisi"
-                              className="p-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 transition"
+                              className="p-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 transition cursor-pointer"
                             >
-                              <XCircle className="w-4 h-4" />
+                              <XCircle className="w-3.5 h-3.5" />
                             </button>
                           )}
                         </div>
@@ -716,9 +927,94 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                 })
               )}
             </tbody>
+
+            {/* Sticky Table Footer: Grand Total Row */}
+            {filteredRecords.length > 0 && (
+              <tfoot className="bg-slate-900 text-white font-bold sticky bottom-0 z-10 divide-x divide-slate-800 text-[11px]">
+                <tr>
+                  <td colSpan={3} className="py-3 px-3 text-center font-bold uppercase tracking-wider bg-slate-950 text-slate-200">
+                    Grand Total ({filteredRecords.length} Pegawai)
+                  </td>
+                  
+                  {/* Tunjangan Jabatan */}
+                  <td className="py-3 px-3 text-right font-mono text-indigo-300">
+                    {formatRupiah(grandTotals.tunjKepsek)}
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-indigo-300">
+                    {formatRupiah(grandTotals.tunjWakasek)}
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-indigo-300">
+                    {formatRupiah(grandTotals.tunjWaliKelas)}
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-indigo-300">
+                    {formatRupiah(grandTotals.tunjAsrama)}
+                  </td>
+
+                  {/* Penerimaan & Kinerja */}
+                  <td className="py-3 px-3 text-right font-mono text-emerald-300 font-extrabold">
+                    {formatRupiah(grandTotals.gajiPokok)}
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-emerald-300">
+                    {formatRupiah(grandTotals.tunjKehadiran)}
+                  </td>
+                  <td className="py-3 px-3 text-center font-mono text-emerald-300">
+                    <span className="block font-bold">{formatRupiah(grandTotals.honorJp)}</span>
+                    <span className="text-[9px] text-slate-400 font-normal">({grandTotals.jumlahJp} JP Total)</span>
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-emerald-300">
+                    {formatRupiah(grandTotals.honorInval)}
+                  </td>
+
+                  {/* Tambahan */}
+                  <td className="py-3 px-3 text-right font-mono text-sky-300">
+                    {formatRupiah(grandTotals.tambahanLainnya)}
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono font-black text-sky-200 bg-sky-950">
+                    {formatRupiah(grandTotals.totalTambahan)}
+                  </td>
+
+                  {/* Potongan */}
+                  <td className="py-3 px-3 text-right font-mono text-rose-300">
+                    -{formatRupiah(grandTotals.potTerlambat)}
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-rose-300">
+                    -{formatRupiah(grandTotals.potKas)}
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-rose-300">
+                    -{formatRupiah(grandTotals.potLainnya)}
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono font-black text-rose-200 bg-rose-950">
+                    -{formatRupiah(grandTotals.totalPotongan)}
+                  </td>
+
+                  {/* Grand Total Take Home Pay */}
+                  <td className="py-3 px-3 text-right font-mono font-black text-sm bg-emerald-950 text-emerald-300">
+                    {formatRupiah(grandTotals.thp)}
+                  </td>
+
+                  {/* Empty space for Status & Action columns */}
+                  <td colSpan={2} className="py-3 px-3 text-center text-[10px] text-slate-400 bg-slate-950">
+                    SMK IT IQM Payroll
+                  </td>
+                </tr>
+              </tfoot>
+            )}
           </table>
         </div>
       </div>
+
+      {/* Edit Slip Gaji Modal */}
+      <EditSlipGajiModal
+        record={editingRecord}
+        isOpen={editModalOpen}
+        onClose={() => {
+          setEditModalOpen(false);
+          setEditingRecord(null);
+        }}
+        onSaveSuccess={handleSaveEditRecord}
+        showToast={showToast}
+      />
+
 
       {/* Reject Modal Dialog */}
       {rejectModalOpen && (

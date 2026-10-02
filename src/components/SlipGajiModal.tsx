@@ -160,8 +160,9 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
                     Program Keahlian: Rekayasa Perangkat Lunak (RPL) & Teknik Komputer Jaringan (TKJ)
                   </div>
                   <div className="text-[9px] text-slate-500 mt-1 leading-tight">
-                    Jl. Hertasning Baru / Aroepala No. 88, Makassar, Sulawesi Selatan | NPSN: 69988771 | Telp: (0411) 891234
+                    Jl. Goa Ria Taman Bunga 2, Laikang, Kec. Biringkanaya, Kota Makassar, Sulawesi Selatan 90242 | NPSN: 69988771 | Telp: (0411) 891234
                   </div>
+
                 </div>
                 <div className="w-14 h-14 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-[8px] font-bold text-slate-500 p-1 shrink-0">
                   <QrCode className="w-7 h-7 text-slate-800" />

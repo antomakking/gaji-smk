@@ -204,20 +204,22 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           <div className="lg:col-span-6 text-white space-y-6 hidden lg:block">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              Sistem Penggajian & Tata Kelola Kepegawaian Vokasi
+              Sistem Penggajian & Tata Kelola Kepegawaian
             </div>
+
 
             <div className="space-y-3">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                Portal Penggajian Resmi <br />
+                Portal Penggajian <br />
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 via-sky-300 to-emerald-400">
                   SMK IT Ibnul Qayyim
                 </span>
               </h1>
               <p className="text-sm text-slate-300 leading-relaxed max-w-lg">
-                Sistem terpadu perhitungan gaji pokok, tunjangan kejuruan, rekap presensi jam tatap muka riil, lembur, infal pengganti, dan alur persetujuan transfer multi-level Yayasan.
+                Sistem terpadu perhitungan gaji pokok, tunjangan, rekap presensi jam tatap muka riil, lembur, infal pengganti, dan alur persetujuan transfer multi-level Yayasan.
               </p>
             </div>
+
 
             {/* Feature Highlights Grid */}
             <div className="grid grid-cols-2 gap-3 pt-2">
@@ -257,8 +259,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             {/* School Address */}
             <div className="flex items-center gap-2 text-xs text-slate-400 pt-1">
               <Building2 className="w-4 h-4 text-indigo-400 shrink-0" />
-              <span>Jl. Borong Raya No. 12, Antang, Kec. Manggala, Kota Makassar</span>
+              <span>Jl. Goa Ria Taman Bunga 2, Laikang, Kec. Biringkanaya, Kota Makassar, Sulawesi Selatan 90242</span>
             </div>
+
           </div>
 
           {/* Right Login Card */}
@@ -394,62 +397,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   </button>
                 </form>
 
-                {/* Interactive Demo Quick Access Cards */}
-                <div className="pt-2 border-t border-slate-100">
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                      <KeyRound className="w-3.5 h-3.5 text-indigo-600" />
-                      Pilih Akun Demo (Klik untuk Isi Otomatis)
-                    </span>
-                    <span className="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-semibold border border-indigo-100">
-                      6 Akun Tersedia
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
-                    {users.map((u) => {
-                      const cred = DEMO_CREDENTIALS[u.id];
-                      const isSelected = identifier.toLowerCase() === u.username.toLowerCase();
-                      
-                      return (
-                        <button
-                          key={u.id}
-                          type="button"
-                          onClick={() => handleQuickSelectUser(u)}
-                          className={`p-2.5 rounded-xl border text-left transition flex items-start gap-2.5 cursor-pointer group ${
-                            isSelected
-                              ? 'bg-indigo-50/90 border-indigo-300 ring-2 ring-indigo-500/20'
-                              : 'bg-slate-50/70 hover:bg-slate-100/90 border-slate-200'
-                          }`}
-                        >
-                          <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center font-black text-xs text-indigo-700 shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                            {u.nama.slice(0, 2).toUpperCase()}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center justify-between gap-1">
-                              <p className="text-xs font-bold text-slate-900 truncate">
-                                {u.nama.split(',')[0]}
-                              </p>
-                              {isSelected && (
-                                <Check className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                              )}
-                            </div>
-                            <p className="text-[10px] text-slate-500 truncate">
-                              {u.username} • <span className="font-mono text-slate-600">{cred?.passwordDefault || 'admin123'}</span>
-                            </p>
-                            <span className={`inline-block text-[9px] font-bold px-1.5 py-0.2 rounded border mt-1 truncate max-w-full ${getRoleBadgeStyle(u.role)}`}>
-                              {u.role.replace('_', ' ').toUpperCase()}
-                            </span>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
               </div>
 
               {/* Card Footer */}
+
               <div className="px-6 sm:px-8 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
                 <span className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -465,9 +416,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
       {/* Footer */}
       <footer className="relative z-10 px-6 py-4 border-t border-slate-800/80 bg-slate-900/40 backdrop-blur-md text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
-        <p>© 2026 Yayasan Pendidikan & Vokasi SMK IT Ibnul Qayyim Makassar. Hak Cipta Dilindungi.</p>
-        <p className="text-slate-400">Sistem Informasi Penggajian Terpadu & Akuntansi Syariah</p>
+        <p>© 2026 SMK IT Ibnul Qayyim Makassar. Hak Cipta Dilindungi.</p>
+        <p className="text-slate-400">Sistem Informasi Penggajian Terpadu</p>
       </footer>
+
+
     </div>
   );
 };

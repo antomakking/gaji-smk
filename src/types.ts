@@ -277,13 +277,14 @@ export interface PenggajianRecord {
   
   // Rincian Penerimaan Sesuai Dokumen Resmi
   gajiPokok: number;
+  gajiPokokNominal?: number; // Alias gaji_pokok_nominal
   tunjanganJabatan: number; // Total Tunjangan Jabatan
-  tunjanganKepsek?: number; // KS
-  tunjanganWakasek?: number; // WKS
-  tunjanganWaliKelas: number; // WK
+  tunjanganKepsek?: number; // KS (tunjangan_kepsek)
+  tunjanganWakasek?: number; // WKS (tunjangan_wakasek)
+  tunjanganWaliKelas?: number; // WK (tunjangan_wali_kelas)
   tunjanganItOfficer?: number; // IT
   tunjanganDkm?: number; // DKM
-  tunjanganAsrama?: number; // Asrama
+  tunjanganAsrama?: number; // Asrama (tunjangan_asrama)
   tunjanganBendahara?: number; // BD
   tunjanganPj?: number; // PJ
   tunjanganIjazahJenjang?: string; // S2, S1, D3, SMA, etc
@@ -295,36 +296,48 @@ export interface PenggajianRecord {
   tahunMasaKerja?: number; // Tahun Masa Kerja (TMK)
   tunjanganMasaKerja?: number; // Tahun x Rp 50.000
   tunjanganKinerja?: number; // Kinerja
-  tunjanganKehadiran: number; // Hadir x Rp 20.000 (25 hari = 500.000)
-  tunjanganKehadiranTransport: number; // Backward-compat
-  honorJamMengajar: number; // Jam Mengajar x Rp 18.000
-  honorLembur: number; // Jam Lembur x Tarif Lembur
-  honorInfal: number; // Tambahan Mengganti JP (JP x Rp 7.500)
-  jpMenggantikan: number; // Jumlah JP Menggantikan
+  tunjanganKehadiran: number; // Hadir x Rp 20.000 (tunjangan_kehadiran)
+  tunjanganKehadiranTransport?: number; // Backward-compat
+  
+  // JP Mengajar & Inval
+  jumlahJp?: number; // jumlah_jp (alias jamMengajarRealisasi)
+  nominalPerJp?: number; // nominal_per_jp (e.g. 18.000 / 25.000)
+  totalHonorJp?: number; // total_honor_jp = jumlah_jp * nominal_per_jp
+  honorJamMengajar?: number; // Jam Mengajar x Tarif JP
+  honorLembur?: number; // Jam Lembur x Tarif Lembur
+  honorInfal?: number; // Tambahan Mengganti JP (honor_inval)
+  honorInval?: number; // Alias honor_inval
+  jpMenggantikan?: number; // Jumlah JP Menggantikan
   insentifKajianMuslimah?: number; // Tambahan Insentif Kajian Muslimah
   koreksiPenerimaan?: number; // Koreksi Tambahan Penerimaan
-  tunjanganVokasiIT: number;
-  tunjanganLainnya: number;
+  tambahanLainnya?: number; // tambahan_lainnya (Workshop / Lainnya)
+  tunjanganVokasiIT?: number;
+  tunjanganLainnya?: number;
+  totalTambahan?: number; // total_tambahan (Bruto)
   totalPenerimaan: number;
   
   // Rincian Potongan Sesuai Dokumen Resmi
-  potonganKeterlambatan: number; // Denda Terlambat (Rupiah)
-  potonganTidakMasuk: number; // Tidak Masuk (Hari x Rp 20.000)
-  potonganAlpha: number; // Backward-compat
-  potonganIzin: number; // Potongan izin pribadi/tanpa SKD
-  potonganInfal: number; // Potongan Diganti JP (JP x Rp 7.500)
-  jpDigantikan: number; // Jumlah JP Digantikan
+  potonganTerlambat?: number; // potongan_terlambat
+  potonganKeterlambatan?: number; // Denda Terlambat (Rupiah)
+  potonganKas?: number; // potongan_kas (Kas / Pinjaman)
+  potonganTidakMasuk?: number; // Tidak Masuk (Hari x Rp 20.000)
+  potonganAlpha?: number; // Backward-compat
+  potonganIzin?: number; // Potongan izin pribadi/tanpa SKD
+  potonganInfal?: number; // Potongan Diganti JP (JP x Rp 7.500)
+  jpDigantikan?: number; // Jumlah JP Digantikan
   koreksiPotongan?: number; // Koreksi Pengurang
   potonganPinjaman?: number; // Pinjaman
-  potonganBpjsKesehatan: number;
-  potonganBpjsKetenagakerjaan: number;
-  potonganKasSekolah: number;
-  potonganKoperasi: number;
-  potonganLainnya: number;
-  totalPotongan: number;
+  potonganBpjsKesehatan?: number;
+  potonganBpjsKetenagakerjaan?: number;
+  potonganKasSekolah?: number;
+  potonganKoperasi?: number;
+  potonganLainnya?: number; // potongan_lainnya
+  totalPotongan: number; // total_potongan
   
   // Take Home Pay
+  takeHomePay?: number; // take_home_pay (alias gajiBersih)
   gajiBersih: number;
+
   
   // Status Approval & Transaksi
   status: StatusPenggajian;
@@ -349,7 +362,7 @@ export interface PenggajianRecord {
   buktiTransferUrl?: string;
   
   // Email notification metadata
-  emailSent: boolean;
+  emailSent?: boolean;
   emailSentAt?: string;
   emailRecipient?: string;
   
@@ -359,7 +372,7 @@ export interface PenggajianRecord {
   qrVerificationUrl: string;
   
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface EmailLog {
@@ -475,7 +488,9 @@ export type AuditActionType =
   | 'IMPORT_BACKUP'
   | 'RESET_SYSTEM'
   | 'LOGIN_SUCCESS'
-  | 'LOGOUT';
+  | 'LOGOUT'
+  | 'AUTO_LOGOUT_TIMEOUT';
+
 
 export interface AuditLogEntry {
   id: string;

@@ -30,6 +30,8 @@ import {
 } from './types';
 import { INITIAL_SCHEDULE_SLOTS } from './data/scheduleData';
 import { PAYROLL_JULI_2026, PRESENSI_JULI_2026 } from './data/july2026PayrollData';
+import { PAYROLL_SEPTEMBER_2026 } from './data/september2026PayrollData';
+
 import { kalkulasiPenggajian, getPayrollCutoffDates } from './utils/security';
 import { Sidebar, TopHeader } from './components/Navbar';
 import { DashboardOverview } from './components/DashboardOverview';
@@ -43,7 +45,9 @@ import { TechnicalDocViewer } from './components/TechnicalDocViewer';
 import { FormulaInspectorModal } from './components/FormulaInspectorModal';
 import { SettingsDataBackup } from './components/SettingsDataBackup';
 import { LoginPage } from './components/LoginPage';
+import { AutoLogoutGuard } from './components/AutoLogoutGuard';
 import { MONTH_NAMES_ID } from './components/PeriodSelector';
+
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
 import { useSalaryPrivacy } from './context/SalaryPrivacyContext';
 import { SystemBackupData } from './types';
@@ -76,8 +80,12 @@ const generatePeriodPayrollRecords = (
   if (targetTahun === 2026 && targetBulan === 7) {
     return PAYROLL_JULI_2026;
   }
+  if (targetTahun === 2026 && targetBulan === 9) {
+    return PAYROLL_SEPTEMBER_2026;
+  }
 
   const formattedBulan = String(targetBulan).padStart(2, '0');
+
 
   return pegList.map((peg, index) => {
     let pres = prsList.find(p => p.pegawaiId === peg.id && p.bulan === targetBulan && p.tahun === targetTahun);
@@ -213,15 +221,10 @@ export default function App() {
   const [attendanceSubTab, setAttendanceSubTab] = useState<'input_harian' | 'infal' | 'rekap' | 'harian' | 'cuti' | 'lembur' | 'mesin'>('input_harian');
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   
-  // Active Selected Period State: Langsung menyesuaikan dengan bulan & tahun saat aplikasi dibuka
-  const [selectedBulan, setSelectedBulan] = useState<number>(() => {
-    const now = new Date();
-    return now.getMonth() + 1; // 1 - 12
-  });
-  const [selectedTahun, setSelectedTahun] = useState<number>(() => {
-    const now = new Date();
-    return now.getFullYear();
-  });
+  // Active Selected Period State: Default ke September 2026 (23 Agustus - 22 September 2026)
+  const [selectedBulan, setSelectedBulan] = useState<number>(9);
+  const [selectedTahun, setSelectedTahun] = useState<number>(2026);
+
 
   // Data States with LocalStorage Persistence
   const [pegawaiList, setPegawaiList] = useState<Pegawai[]>(() => {
@@ -308,7 +311,12 @@ export default function App() {
   const [records, setRecords] = useState<PenggajianRecord[]>(() => {
     try {
       const saved = localStorage.getItem('sim_gaji_payroll_records');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed: PenggajianRecord[] = JSON.parse(saved);
+        // Ensure September 2026 official records are prioritized
+        const otherRecords = parsed.filter(r => !(r.bulan === 9 && r.tahun === 2026));
+        return [...PAYROLL_SEPTEMBER_2026, ...otherRecords];
+      }
     } catch (e) {}
     const initialPresensiWithInfal = INITIAL_PRESENSI.map(p => {
       const copy = { ...p };
@@ -324,20 +332,13 @@ export default function App() {
       });
       return copy;
     });
-    const now = new Date();
-    const curMonth = now.getMonth() + 1;
-    const curYear = now.getFullYear();
 
     const augRecords = generatePeriodPayrollRecords(8, 2026, INITIAL_PEGAWAI, initialPresensiWithInfal);
     const julRecords = PAYROLL_JULI_2026;
     
-    let combined = [...augRecords, ...julRecords];
-    if (!(curYear === 2026 && (curMonth === 7 || curMonth === 8))) {
-      const currentMonthRecords = generatePeriodPayrollRecords(curMonth, curYear, INITIAL_PEGAWAI, initialPresensiWithInfal);
-      combined = [...currentMonthRecords, ...combined];
-    }
-    return combined;
+    return [...PAYROLL_SEPTEMBER_2026, ...augRecords, ...julRecords];
   });
+
 
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>(() => {
     try {
@@ -425,7 +426,7 @@ export default function App() {
     setAuditLogs(prev => [newEntry, ...prev]);
   };
 
-  const handleLogout = () => {
+  const handleLogout = (isTimeout: boolean = false) => {
     const newEntry: AuditLogEntry = {
       id: `adt-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       timestamp: new Date().toISOString(),
@@ -433,18 +434,26 @@ export default function App() {
       userName: currentUser.nama,
       userRole: currentUser.role,
       category: 'sistem',
-      action: 'LOGOUT',
-      actionLabel: 'Pengguna Keluar (Logout)',
+      action: isTimeout ? 'AUTO_LOGOUT_TIMEOUT' : 'LOGOUT',
+      actionLabel: isTimeout ? 'Sesi Berakhir Otomatis (Inactivity 15 Menit)' : 'Pengguna Keluar (Logout)',
       target: `Pengguna: ${currentUser.nama}`,
-      details: `Sesi login untuk ${currentUser.username} (${currentUser.role}) telah diakhiri secara aman.`,
+      details: isTimeout
+        ? `Sesi login untuk ${currentUser.username} (${currentUser.role}) ditutup otomatis oleh sistem setelah 15 menit tanpa aktivitas demi perlindungan data penggajian.`
+        : `Sesi login untuk ${currentUser.username} (${currentUser.role}) telah diakhiri secara aman.`,
       ipAddress: '192.168.1.100',
     };
     setAuditLogs(prev => [newEntry, ...prev]);
     localStorage.removeItem('sim_gaji_auth_session');
     sessionStorage.removeItem('sim_gaji_auth_session');
     setIsAuthenticated(false);
-    showToast('Anda telah keluar dari akun SIM GAJI dengan aman.', 'info');
+
+    if (isTimeout) {
+      showToast('Sesi Anda telah berakhir secara otomatis karena tidak ada aktivitas selama 15 menit demi keamanan.', 'info');
+    } else {
+      showToast('Anda telah keluar dari akun SIM GAJI dengan aman.', 'info');
+    }
   };
+
 
   const handleResetDataToDefault = () => {
     if (window.confirm('Reset seluruh data ke pengaturan awal (Default Demo SMK IT Ibnul Qayyim)? Semua perubahan input presensi, jadwal, pegawai, dan gaji akan dikembalikan ke data awal.')) {
@@ -789,9 +798,9 @@ export default function App() {
 
   // Compute Dynamic Dashboard Stats for Selected Period
   const dashboardStats: DashboardStats = {
-    totalGajiBulanIni: currentPeriodRecords.reduce((acc, curr) => acc + curr.gajiBersih, 0),
-    totalPenerimaanKotor: currentPeriodRecords.reduce((acc, curr) => acc + curr.totalPenerimaan, 0),
-    totalPotongan: currentPeriodRecords.reduce((acc, curr) => acc + curr.totalPotongan, 0),
+    totalGajiBulanIni: currentPeriodRecords.reduce((acc, curr) => acc + (curr.takeHomePay ?? curr.gajiBersih ?? 0), 0),
+    totalPenerimaanKotor: currentPeriodRecords.reduce((acc, curr) => acc + (curr.totalTambahan ?? curr.totalPenerimaan ?? 0), 0),
+    totalPotongan: currentPeriodRecords.reduce((acc, curr) => acc + (curr.totalPotongan ?? 0), 0),
     totalPegawai: pegawaiList.length,
     totalGuru: pegawaiList.filter(p => p.statusPegawai === 'GTY' || p.statusPegawai === 'GTT').length,
     totalTendik: pegawaiList.filter(p => p.statusPegawai === 'PTY' || p.statusPegawai === 'PTT').length,
@@ -1774,7 +1783,16 @@ export default function App() {
 
   return (
     <div className="flex h-screen w-screen bg-slate-100 text-slate-900 overflow-hidden font-sans antialiased">
+      {/* 15-Minute Inactivity Auto Logout Guard */}
+      <AutoLogoutGuard
+        isAuthenticated={isAuthenticated}
+        onLogout={handleLogout}
+        timeoutMinutes={15}
+        warningSeconds={60}
+      />
+
       {/* Toast Notification Banner */}
+
       {toast && (
         <div className="fixed top-5 right-5 z-60 flex items-center space-x-2 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 text-xs animate-in fade-in slide-in-from-top-3">
           {toast.type === 'error' ? (
@@ -1858,7 +1876,11 @@ export default function App() {
                 onBatchEmail={handleBatchEmail}
                 onViewSlip={setSelectedSlipRecord}
                 onInspectFormula={setSelectedFormulaRecord}
+                onUpdateRecord={(updatedRecord) => {
+                  setRecords(prev => prev.map(r => r.id === updatedRecord.id ? updatedRecord : r));
+                }}
                 selectedBulan={selectedBulan}
+
                 selectedTahun={selectedTahun}
                 onSelectPeriod={handleSelectPeriod}
                 availablePeriods={availablePeriods}
@@ -1947,8 +1969,10 @@ export default function App() {
                   showToast('Seluruh riwayat audit trail telah dibersihkan.', 'info');
                 }}
                 onRefreshFromSupabase={() => fetchAllData(selectedBulan, selectedTahun)}
+                onAddAuditLog={addAuditLog}
                 showToast={showToast}
               />
+
             )}
 
 
@@ -1959,7 +1983,7 @@ export default function App() {
           <footer className="bg-white border-t border-slate-200/90 py-3 px-4 sm:px-6 lg:px-8 text-xs text-slate-500 shrink-0">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
               <div>
-                <strong>SIM GAJI</strong> • SMK IT Ibnul Qayyim Makassar
+                <strong>SIM GAJI</strong> • © 2026 SMK IT Ibnul Qayyim Makassar. Hak Cipta Dilindungi.
               </div>
               <div className="flex items-center space-x-3 text-[11px]">
                 <span className="flex items-center gap-1.5">
@@ -1971,6 +1995,7 @@ export default function App() {
               </div>
             </div>
           </footer>
+
         </div>
       </div>
 

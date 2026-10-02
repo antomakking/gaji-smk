@@ -47,6 +47,7 @@ import {
   AuditLogEntry
 } from '../types';
 import { AuditTrailViewer } from './AuditTrailViewer';
+import { CredentialArchivalExport } from './CredentialArchivalExport';
 import { 
   getSupabaseCredentials,
   saveSupabaseCredentials,
@@ -74,6 +75,7 @@ interface SettingsDataBackupProps {
   onResetToDefault: () => void;
   onClearAuditLogs?: () => void;
   onRefreshFromSupabase?: () => Promise<void>;
+  onAddAuditLog?: (category: any, action: any, actionLabel: string, target: string, details: string) => void;
   showToast: (msg: string, type?: 'success' | 'info' | 'error') => void;
 }
 
@@ -93,9 +95,11 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
   onResetToDefault,
   onClearAuditLogs,
   onRefreshFromSupabase,
+  onAddAuditLog,
   showToast,
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'export' | 'import' | 'supabase' | 'audit' | 'reset'>('export');
+  const [activeSubTab, setActiveSubTab] = useState<'export' | 'import' | 'credentials' | 'supabase' | 'audit' | 'reset'>('export');
+
   const [copied, setCopied] = useState(false);
   const [copiedSql, setCopiedSql] = useState(false);
   
@@ -489,7 +493,19 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
             <span>Impor & Pemulihan</span>
           </button>
           <button
+            onClick={() => setActiveSubTab('credentials')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
+              activeSubTab === 'credentials'
+                ? 'bg-white text-emerald-600 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <KeyRound className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Arsip Kredensial (CSV)</span>
+          </button>
+          <button
             onClick={() => setActiveSubTab('supabase')}
+
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
               activeSubTab === 'supabase'
                 ? 'bg-white text-emerald-600 shadow-xs'
@@ -828,7 +844,21 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
         </div>
       )}
 
+      {/* SUB-TAB 2.5: ENCRYPTED CREDENTIALS ARCHIVAL EXPORT */}
+      {activeSubTab === 'credentials' && (
+        <CredentialArchivalExport
+          currentUser={currentUser}
+          showToast={showToast}
+          onAuditLog={(action, actionLabel, target, details) => {
+            if (onAddAuditLog) {
+              onAddAuditLog('sistem', 'EXPORT_BACKUP', actionLabel, target, details);
+            }
+          }}
+        />
+      )}
+
       {/* SUB-TAB 3: SUPABASE CLOUD CONFIG & TOOLS */}
+
       {activeSubTab === 'supabase' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-5">

@@ -389,20 +389,23 @@ export async function fetchPayrollRecordsSupabase(namaPeriode?: string): Promise
     let query = client
       .from('slip_gaji')
       .select(`
-        id,
-        realisasi_jp,
-        gaji_bersih,
-        status_approval,
+        *,
         pegawai (
           id,
           nip,
           niy,
           nama_lengkap,
+          nama,
           jabatan,
+          jabatan_utama,
           jenis_pegawai,
-          gaji_pokok_nominal
+          status_pegawai,
+          status_induk,
+          gaji_pokok_nominal,
+          gaji_pokok_default
         )
       `);
+
 
     if (namaPeriode) {
       query = query.eq('nama_periode', namaPeriode);

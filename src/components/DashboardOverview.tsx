@@ -23,8 +23,10 @@ import { formatRupiah, formatNumber, getPayrollCutoffDates } from '../utils/secu
 import { PeriodSelector, MONTH_NAMES_ID } from './PeriodSelector';
 import { DailyAbsenceInfalCard } from './DailyAbsenceInfalCard';
 import { SalaryTrendWidget } from './SalaryTrendWidget';
+import { PayrollProjectionSection } from './PayrollProjectionSection';
 
 interface DashboardOverviewProps {
+
 
   stats: DashboardStats;
   records: PenggajianRecord[];
@@ -211,6 +213,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         selectedTahun={selectedTahun}
         availablePeriods={availablePeriods}
       />
+
+      {/* Upcoming Month Payroll Cost Projection Section */}
+      <PayrollProjectionSection
+        currentRecords={records}
+        pegawaiList={pegawaiList}
+        scheduleList={scheduleList}
+        infalList={infalList}
+        dailyLogs={dailyLogs}
+        leaveRequests={leaveRequests}
+        selectedBulan={selectedBulan}
+        selectedTahun={selectedTahun}
+      />
+
 
       {/* Real-Time Daily Attendance & Substitute Teacher (Infal) Monitoring Widget */}
       <DailyAbsenceInfalCard

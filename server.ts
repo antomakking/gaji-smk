@@ -5,7 +5,9 @@ import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 import { INITIAL_USERS, INITIAL_PEGAWAI, INITIAL_PRESENSI, INITIAL_EMAIL_LOGS, INITIAL_INFAL, INITIAL_DAILY_LOGS } from './src/data/initialData';
 import { PAYROLL_JULI_2026, PRESENSI_JULI_2026 } from './src/data/july2026PayrollData';
+import { PAYROLL_SEPTEMBER_2026 } from './src/data/september2026PayrollData';
 import { INITIAL_SCHEDULE_SLOTS } from './src/data/scheduleData';
+
 import { Pegawai, RekapPresensi, PenggajianRecord, EmailLog, StatusPenggajian, LogInfal, SlotJadwalPelajaran, LogPresensiHarian } from './src/types';
 import { kalkulasiPenggajian, generateChecksum, getPayrollCutoffDates } from './src/utils/security';
 
@@ -144,7 +146,7 @@ function initializePayrollRecords() {
     }
   });
 
-  // Ensure July 2026 records exist
+  // Ensure July & September 2026 records exist
   PRESENSI_JULI_2026.forEach(pj => {
     if (!presensiList.some(p => p.pegawaiId === pj.pegawaiId && p.bulan === 7 && p.tahun === 2026)) {
       presensiList.push(pj);
@@ -155,6 +157,15 @@ function initializePayrollRecords() {
       penggajianList.push(py);
     }
   });
+  PAYROLL_SEPTEMBER_2026.forEach(ps => {
+    const idx = penggajianList.findIndex(p => p.pegawaiId === ps.pegawaiId && p.bulan === 9 && p.tahun === 2026);
+    if (idx >= 0) {
+      penggajianList[idx] = { ...ps };
+    } else {
+      penggajianList.push(ps);
+    }
+  });
+
 
   saveJson(PEGAWAI_FILE, pegawaiList);
   saveJson(PRESENSI_FILE, presensiList);
