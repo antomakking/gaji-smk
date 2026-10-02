@@ -148,50 +148,50 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const getRoleBadgeStyle = (role: UserRole) => {
     switch (role) {
       case 'super_admin':
-        return 'bg-indigo-100 text-indigo-800 border-indigo-200';
+        return 'bg-emerald-100 text-emerald-900 border-emerald-300';
       case 'kepala_sekolah':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-teal-100 text-teal-900 border-teal-300';
       case 'ketua_yayasan':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'bg-emerald-200/70 text-emerald-950 border-emerald-300';
       case 'bendahara_yayasan':
-        return 'bg-amber-100 text-amber-800 border-amber-200';
+        return 'bg-amber-100 text-amber-900 border-amber-300';
       default:
         return 'bg-slate-100 text-slate-800 border-slate-200';
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-between selection:bg-indigo-500 selection:text-white relative overflow-hidden">
-      {/* Subtle Background Glows */}
-      <div className="absolute top-0 -left-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 -right-40 w-96 h-96 bg-emerald-600/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-br from-[#062c24] via-[#051d18] to-slate-950 flex flex-col justify-between selection:bg-emerald-600 selection:text-white relative overflow-hidden">
+      {/* Subtle Background Glows in Soft Emerald & Teal */}
+      <div className="absolute top-0 -left-40 w-96 h-96 bg-emerald-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 -right-40 w-96 h-96 bg-teal-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-700/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Brand Bar */}
-      <header className="relative z-10 px-6 py-4 flex items-center justify-between border-b border-slate-800/80 bg-slate-900/40 backdrop-blur-md">
+      <header className="relative z-10 px-6 py-4 flex items-center justify-between border-b border-[#0e3a30] bg-[#07241e]/70 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-indigo-600/30 border border-indigo-400/40">
+          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-600 to-teal-800 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-emerald-950/60 border border-emerald-400/40">
             IQ
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-white font-bold text-base tracking-wide">SIM GAJI</span>
-              <span className="text-[11px] font-semibold bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/30">
+              <span className="text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-md border border-emerald-500/30">
                 v2.4 Production
               </span>
             </div>
-            <p className="text-xs text-slate-400">SMK IT Ibnul Qayyim Makassar</p>
+            <p className="text-xs text-emerald-300/70">SMK IT Ibnul Qayyim Makassar</p>
           </div>
         </div>
 
-        <div className="hidden sm:flex items-center gap-3 text-xs text-slate-400">
-          <div className="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60">
+        <div className="hidden sm:flex items-center gap-3 text-xs text-emerald-200/80">
+          <div className="flex items-center gap-1.5 bg-[#092b23] px-3 py-1.5 rounded-lg border border-[#14483c]">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span className="text-slate-300">Enkripsi Gaji AES-256</span>
+            <span className="text-emerald-100">Enkripsi Gaji AES-256</span>
           </div>
-          <div className="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60">
-            <Building2 className="w-4 h-4 text-indigo-400" />
-            <span className="text-slate-300">Tahun Ajaran 2026/2027</span>
+          <div className="flex items-center gap-1.5 bg-[#092b23] px-3 py-1.5 rounded-lg border border-[#14483c]">
+            <Building2 className="w-4 h-4 text-emerald-400" />
+            <span className="text-emerald-100">Tahun Ajaran 2026/2027</span>
           </div>
         </div>
       </header>
@@ -202,8 +202,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           
           {/* Left Hero / Brand Info Card */}
           <div className="lg:col-span-6 text-white space-y-6 hidden lg:block">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
               Sistem Penggajian & Tata Kelola Kepegawaian
             </div>
 
@@ -211,11 +211,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             <div className="space-y-3">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
                 Portal Penggajian <br />
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 via-sky-300 to-emerald-400">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-300 via-teal-200 to-emerald-100">
                   SMK IT Ibnul Qayyim
                 </span>
               </h1>
-              <p className="text-sm text-slate-300 leading-relaxed max-w-lg">
+              <p className="text-sm text-emerald-100/80 leading-relaxed max-w-lg">
                 Sistem terpadu perhitungan gaji pokok, tunjangan, rekap presensi jam tatap muka riil, lembur, infal pengganti, dan alur persetujuan transfer multi-level Yayasan.
               </p>
             </div>
@@ -223,42 +223,42 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
             {/* Feature Highlights Grid */}
             <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-xs">
-                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-2">
+              <div className="p-3.5 rounded-xl bg-[#092b23]/80 border border-[#14483c] backdrop-blur-xs">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center mb-2">
                   <FileCheck2 className="w-4 h-4" />
                 </div>
-                <h2 className="text-xs font-bold text-slate-200">2-Tier Persetujuan</h2>
-                <p className="text-[11px] text-slate-400 mt-0.5">Kepala Sekolah & Ketua Yayasan sebelum eksekusi transfer</p>
+                <h2 className="text-xs font-bold text-emerald-100">2-Tier Persetujuan</h2>
+                <p className="text-[11px] text-emerald-300/70 mt-0.5">Kepala Sekolah & Ketua Yayasan sebelum eksekusi transfer</p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-xs">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-2">
+              <div className="p-3.5 rounded-xl bg-[#092b23]/80 border border-[#14483c] backdrop-blur-xs">
+                <div className="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-300 flex items-center justify-center mb-2">
                   <Clock className="w-4 h-4" />
                 </div>
-                <h2 className="text-xs font-bold text-slate-200">Presensi & Infal Riil</h2>
-                <p className="text-[11px] text-slate-400 mt-0.5">Sinkronisasi otomatis log harian & honor guru piket/infal</p>
+                <h2 className="text-xs font-bold text-emerald-100">Presensi & Infal Riil</h2>
+                <p className="text-[11px] text-emerald-300/70 mt-0.5">Sinkronisasi otomatis log harian & honor guru piket/infal</p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-xs">
-                <div className="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center mb-2">
+              <div className="p-3.5 rounded-xl bg-[#092b23]/80 border border-[#14483c] backdrop-blur-xs">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center mb-2">
                   <Mail className="w-4 h-4" />
                 </div>
-                <h2 className="text-xs font-bold text-slate-200">Slip PDF Otomatis</h2>
-                <p className="text-[11px] text-slate-400 mt-0.5">Distribusi slip gaji digital terenkripsi via email & cetak batch</p>
+                <h2 className="text-xs font-bold text-emerald-100">Slip PDF Otomatis</h2>
+                <p className="text-[11px] text-emerald-300/70 mt-0.5">Distribusi slip gaji digital terenkripsi via email & cetak batch</p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-xs">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center mb-2">
+              <div className="p-3.5 rounded-xl bg-[#092b23]/80 border border-[#14483c] backdrop-blur-xs">
+                <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center mb-2">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
-                <h2 className="text-xs font-bold text-slate-200">Audit Trail Lengkap</h2>
-                <p className="text-[11px] text-slate-400 mt-0.5">Pelacakan riwayat modifikasi data & histori transaksi</p>
+                <h2 className="text-xs font-bold text-emerald-100">Audit Trail Lengkap</h2>
+                <p className="text-[11px] text-emerald-300/70 mt-0.5">Pelacakan riwayat modifikasi data & histori transaksi</p>
               </div>
             </div>
 
             {/* School Address */}
-            <div className="flex items-center gap-2 text-xs text-slate-400 pt-1">
-              <Building2 className="w-4 h-4 text-indigo-400 shrink-0" />
+            <div className="flex items-center gap-2 text-xs text-emerald-300/70 pt-1">
+              <Building2 className="w-4 h-4 text-emerald-400 shrink-0" />
               <span>Jl. Goa Ria Taman Bunga 2, Laikang, Kec. Biringkanaya, Kota Makassar, Sulawesi Selatan 90242</span>
             </div>
 
@@ -266,15 +266,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
           {/* Right Login Card */}
           <div className="lg:col-span-6">
-            <div className="bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-2xl border border-emerald-100 overflow-hidden">
               
               {/* Form Card Header */}
-              <div className="p-6 sm:p-8 pb-4 border-b border-slate-100 bg-linear-to-b from-slate-50 to-white">
+              <div className="p-6 sm:p-8 pb-4 border-b border-emerald-100 bg-linear-to-b from-emerald-50/60 to-white">
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                     Masuk ke SIM GAJI
                   </h2>
-                  <div className="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center text-emerald-700">
                     <KeyRound className="w-5 h-5" />
                   </div>
                 </div>
@@ -311,7 +311,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         value={identifier}
                         onChange={(e) => setIdentifier(e.target.value)}
                         placeholder="Contoh: admin.hr atau kepsek.iq"
-                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition"
                         autoComplete="username"
                         required
                       />
@@ -338,7 +338,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full pl-10 pr-11 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        className="w-full pl-10 pr-11 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition"
                         autoComplete="current-password"
                         required
                       />
@@ -360,7 +360,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         type="checkbox"
                         checked={rememberMe}
                         onChange={(e) => setRememberMe(e.target.checked)}
-                        className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer"
+                        className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-600 cursor-pointer"
                       />
                       <span>Ingat sesi saya di perangkat ini</span>
                     </label>
@@ -370,7 +370,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                       onClick={() => {
                         alert('Silakan pilih salah satu kartu akun demo di bawah untuk login instan atau hubungi Administrator IT (admin.hr).');
                       }}
-                      className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer hover:underline"
+                      className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold cursor-pointer hover:underline"
                     >
                       Bantuan Masuk?
                     </button>
@@ -381,7 +381,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     id="btn-login-submit"
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold text-sm rounded-xl shadow-md shadow-indigo-600/30 transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed mt-2"
+                    className="w-full py-3 px-4 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-bold text-sm rounded-xl shadow-md shadow-emerald-900/30 transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed mt-2"
                   >
                     {isLoading ? (
                       <>
@@ -401,12 +401,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
               {/* Card Footer */}
 
-              <div className="px-6 sm:px-8 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+              <div className="px-6 sm:px-8 py-3.5 bg-emerald-50/50 border-t border-emerald-100 flex items-center justify-between text-[11px] text-slate-500">
                 <span className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   Server Gaji Online & Siap
                 </span>
-                <span>BSI Rekening Payroll Terintegrasi</span>
+                <span className="text-emerald-800 font-medium">BSI Rekening Payroll Terintegrasi</span>
               </div>
             </div>
           </div>
@@ -415,9 +415,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 px-6 py-4 border-t border-slate-800/80 bg-slate-900/40 backdrop-blur-md text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <footer className="relative z-10 px-6 py-4 border-t border-[#0e3a30] bg-[#07241e]/70 backdrop-blur-md text-center text-xs text-emerald-300/70 flex flex-col sm:flex-row items-center justify-between gap-2">
         <p>© 2026 SMK IT Ibnul Qayyim Makassar. Hak Cipta Dilindungi.</p>
-        <p className="text-slate-400">Sistem Informasi Penggajian Terpadu</p>
+        <p className="text-emerald-200/80">Sistem Informasi Penggajian Terpadu</p>
       </footer>
 
 

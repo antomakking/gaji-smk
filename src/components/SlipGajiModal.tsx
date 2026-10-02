@@ -84,7 +84,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
         {/* Action Header Bar */}
         <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-sm">
+            <div className="w-9 h-9 rounded-lg bg-emerald-700 flex items-center justify-center font-bold text-white shadow-sm">
               IQ
             </div>
             <div>
@@ -97,7 +97,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
             <button
               onClick={handleDownloadPdf}
               disabled={isGeneratingPdf}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 disabled:opacity-50"
+              className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>{isGeneratingPdf ? 'Memproses...' : 'Unduh PDF'}</span>
@@ -105,7 +105,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
 
             <button
               onClick={handlePrint}
-              className="hidden sm:flex bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-700 transition items-center gap-1.5"
+              className="hidden sm:flex bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-700 transition items-center gap-1.5 cursor-pointer"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Cetak</span>
@@ -113,7 +113,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
 
             <button
               onClick={handleSendEmailClick}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm"
+              className="bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm cursor-pointer"
             >
               <Send className="w-3.5 h-3.5" />
               <span>{emailSentStatus ? 'Email Terkirim!' : 'Kirim Email'}</span>
@@ -121,7 +121,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
 
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition"
+              className="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -146,7 +146,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
             {/* 1. Official School Letterhead (Kop Surat) */}
             <div className="border-b-2 border-slate-900 pb-4 mb-5 text-center relative">
               <div className="flex items-center justify-between gap-4">
-                <div className="w-14 h-14 rounded-xl bg-indigo-900 flex items-center justify-center text-white font-extrabold text-2xl shadow-sm shrink-0">
+                <div className="w-14 h-14 rounded-xl bg-emerald-900 flex items-center justify-center text-white font-extrabold text-2xl shadow-sm shrink-0">
                   IQ
                 </div>
                 <div className="flex-1 text-center">
@@ -156,7 +156,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
                   <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight uppercase mt-0.5">
                     SMK IT IBNUL QAYYIM MAKASSAR
                   </h1>
-                  <div className="text-[10px] font-medium text-indigo-900">
+                  <div className="text-[10px] font-medium text-emerald-900">
                     Program Keahlian: Rekayasa Perangkat Lunak (RPL) & Teknik Komputer Jaringan (TKJ)
                   </div>
                   <div className="text-[9px] text-slate-500 mt-1 leading-tight">
@@ -180,7 +180,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
                 Nomor: <strong className="text-slate-900">{record.kodeSlip}</strong> | Periode: <strong className="text-slate-900">{record.periodeLabel}</strong>
               </div>
               <div className="mt-1 flex items-center justify-center gap-3 text-[10px] text-slate-500">
-                <span>Cut-Off Data: <strong className="text-indigo-900 font-semibold">{record.periodeCutoffLabel || cutoffInfo.cutoffLabelLong}</strong></span>
+                <span>Cut-Off Data: <strong className="text-emerald-950 font-semibold">{record.periodeCutoffLabel || cutoffInfo.cutoffLabelLong}</strong></span>
                 <span>•</span>
                 <span>Jadwal Bayar: <strong className="text-emerald-800 font-semibold">Mulai {cutoffInfo.paymentLabel}</strong></span>
               </div>
@@ -209,7 +209,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
             </div>
 
             {/* 3. Attendance Snapshot Sub-card */}
-            <div className="mb-4 bg-indigo-50/50 p-2.5 rounded-lg border border-indigo-100 flex items-center justify-between text-[11px] text-indigo-950">
+            <div className="mb-4 bg-emerald-50/50 p-2.5 rounded-lg border border-emerald-100 flex items-center justify-between text-[11px] text-emerald-950">
               <span className="font-semibold">Rekap Absensi Terintegrasi:</span>
               <div className="space-x-2 font-mono">
                 <span>Hadir: <strong>{record.presensiHadir}</strong> hr</span>
@@ -282,7 +282,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
                   {record.honorJamMengajar > 0 && (
                     <div className="flex justify-between">
                       <span className="text-slate-600">Honor Mengajar ({record.jamMengajarRealisasi} JP):</span>
-                      <span className="font-semibold text-indigo-700">{formatRupiah(record.honorJamMengajar)}</span>
+                      <span className="font-semibold text-emerald-800">{formatRupiah(record.honorJamMengajar)}</span>
                     </div>
                   )}
                   {(record.insentifKajianMuslimah ?? 0) > 0 && (
@@ -397,7 +397,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
             <div className="bg-slate-900 text-white rounded-xl p-4 mb-5 shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-[10px] uppercase tracking-wider font-semibold text-indigo-200">
+                  <div className="text-[10px] uppercase tracking-wider font-semibold text-emerald-300">
                     GAJI BERSIH DITERIMA (TAKE HOME PAY = A - B)
                   </div>
                   <div className="text-lg sm:text-xl font-black tracking-tight text-white mt-0.5">
@@ -435,7 +435,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
                 <div className="relative">
                   <div className="text-slate-500 mb-2">Bendahara Keuangan,</div>
                   {/* Digital Stamp Simulation */}
-                  <div className="w-16 h-16 mx-auto my-1 border-2 border-indigo-700 text-indigo-800 rounded-full flex flex-col items-center justify-center font-bold text-[7px] rotate-[-12deg] opacity-80 select-none">
+                  <div className="w-16 h-16 mx-auto my-1 border-2 border-emerald-700 text-emerald-800 rounded-full flex flex-col items-center justify-center font-bold text-[7px] rotate-[-12deg] opacity-80 select-none">
                     <span>YAYASAN IQM</span>
                     <span>★ LUNAS ★</span>
                     <span>MAKASSAR</span>
@@ -459,7 +459,7 @@ export const SlipGajiModal: React.FC<SlipGajiModalProps> = ({
               {/* Bottom Security Cryptographic Checksum */}
               <div className="mt-6 pt-2 border-t border-dashed border-slate-200 flex flex-col sm:flex-row items-center justify-between text-[9px] text-slate-400 font-mono">
                 <div className="flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Security Signature: {record.securityChecksum}</span>
                 </div>
                 <span>Dokumen Digital Sah Diterbitkan Sistem SIM GAJI IQM</span>

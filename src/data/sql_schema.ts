@@ -990,6 +990,182 @@ CREATE POLICY "Allow all on lembur_pegawai" ON public.lembur_pegawai FOR ALL USI
 CREATE POLICY "Allow all on jadwal_pelajaran" ON public.jadwal_pelajaran FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all on email_logs" ON public.email_logs FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all on audit_logs" ON public.audit_logs FOR ALL USING (true) WITH CHECK (true);
+
+-- ============================================================================
+-- SUPABASE RPC STORED PROCEDURE: update_payroll_matrix_adjustment
+-- Digunakan oleh PayrollAdjustmentMatrix.tsx untuk live update data & kalkulasi
+-- ============================================================================
+CREATE OR REPLACE FUNCTION update_payroll_matrix_adjustment(
+  p_record_id TEXT,
+  p_gaji_pokok NUMERIC DEFAULT NULL,
+  p_tunjangan_jabatan NUMERIC DEFAULT NULL,
+  p_tunjangan_wali_kelas NUMERIC DEFAULT NULL,
+  p_tunjangan_ijazah NUMERIC DEFAULT NULL,
+  p_tunjangan_kinerja NUMERIC DEFAULT NULL,
+  p_tunjangan_kehadiran NUMERIC DEFAULT NULL,
+  p_honor_jam_mengajar NUMERIC DEFAULT NULL,
+  p_honor_infal NUMERIC DEFAULT NULL,
+  p_tunjangan_lainnya NUMERIC DEFAULT NULL,
+  p_potongan_keterlambatan NUMERIC DEFAULT NULL,
+  p_potongan_alpha NUMERIC DEFAULT NULL,
+  p_potongan_izin NUMERIC DEFAULT NULL,
+  p_potongan_infal NUMERIC DEFAULT NULL,
+  p_potongan_kas_sekolah NUMERIC DEFAULT NULL,
+  p_potongan_bpjs_kesehatan NUMERIC DEFAULT NULL,
+  p_potongan_bpjs_ketenagakerjaan NUMERIC DEFAULT NULL,
+  p_potongan_lainnya NUMERIC DEFAULT NULL,
+  p_total_penerimaan NUMERIC DEFAULT NULL,
+  p_total_potongan NUMERIC DEFAULT NULL,
+  p_gaji_bersih NUMERIC DEFAULT NULL,
+  p_take_home_pay NUMERIC DEFAULT NULL,
+  p_modified_by TEXT DEFAULT NULL
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_result JSONB;
+BEGIN
+  UPDATE slip_gaji
+  SET
+    gaji_pokok = COALESCE(p_gaji_pokok, gaji_pokok),
+    tunjangan_jabatan = COALESCE(p_tunjangan_jabatan, tunjangan_jabatan),
+    tunjangan_wali_kelas = COALESCE(p_tunjangan_wali_kelas, tunjangan_wali_kelas),
+    tunjangan_ijazah = COALESCE(p_tunjangan_ijazah, tunjangan_ijazah),
+    tunjangan_kinerja = COALESCE(p_tunjangan_kinerja, tunjangan_kinerja),
+    tunjangan_kehadiran = COALESCE(p_tunjangan_kehadiran, tunjangan_kehadiran),
+    honor_jam_mengajar = COALESCE(p_honor_jam_mengajar, honor_jam_mengajar),
+    honor_infal = COALESCE(p_honor_infal, honor_infal),
+    tunjangan_lainnya = COALESCE(p_tunjangan_lainnya, tunjangan_lainnya),
+    potongan_keterlambatan = COALESCE(p_potongan_keterlambatan, potongan_keterlambatan),
+    potongan_alpha = COALESCE(p_potongan_alpha, potongan_alpha),
+    potongan_izin = COALESCE(p_potongan_izin, potongan_izin),
+    potongan_infal = COALESCE(p_potongan_infal, potongan_infal),
+    potongan_kas_sekolah = COALESCE(p_potongan_kas_sekolah, potongan_kas_sekolah),
+    potongan_bpjs_kesehatan = COALESCE(p_potongan_bpjs_kesehatan, potongan_bpjs_kesehatan),
+    potongan_bpjs_ketenagakerjaan = COALESCE(p_potongan_bpjs_ketenagakerjaan, potongan_bpjs_ketenagakerjaan),
+    potongan_lainnya = COALESCE(p_potongan_lainnya, potongan_lainnya),
+    total_penerimaan = COALESCE(p_total_penerimaan, total_penerimaan),
+    gaji_kotor = COALESCE(p_total_penerimaan, gaji_kotor),
+    total_tambahan = COALESCE(p_total_penerimaan, total_tambahan),
+    total_potongan = COALESCE(p_total_potongan, total_potongan),
+    gaji_bersih = COALESCE(p_gaji_bersih, p_take_home_pay, gaji_bersih),
+    take_home_pay = COALESCE(p_take_home_pay, p_gaji_bersih, take_home_pay),
+    updated_at = NOW()
+  WHERE id = p_record_id;
+
+  v_result := jsonb_build_object(
+    'success', true,
+    'record_id', p_record_id,
+    'modified_by', p_modified_by,
+    'timestamp', NOW()
+  );
+  RETURN v_result;
+END;
+$$;
+
+-- ============================================================================
+-- SUPABASE RPC STORED PROCEDURE: update_pegawai_master_data
+-- Digunakan oleh Editdata.tsx untuk update data master guru & pegawai realtime
+-- ============================================================================
+CREATE OR REPLACE FUNCTION update_pegawai_master_data(
+  p_pegawai_id TEXT,
+  p_nip TEXT DEFAULT NULL,
+  p_niy TEXT DEFAULT NULL,
+  p_nik TEXT DEFAULT NULL,
+  p_nuptk TEXT DEFAULT NULL,
+  p_nama_lengkap TEXT DEFAULT NULL,
+  p_email TEXT DEFAULT NULL,
+  p_no_hp TEXT DEFAULT NULL,
+  p_status_pegawai TEXT DEFAULT NULL,
+  p_jabatan_utama TEXT DEFAULT NULL,
+  p_jabatan_tambahan TEXT DEFAULT NULL,
+  p_pendidikan_terakhir TEXT DEFAULT NULL,
+  p_jurusan TEXT DEFAULT NULL,
+  p_status_induk TEXT DEFAULT NULL,
+  p_keterangan_induk TEXT DEFAULT NULL,
+  p_jenis_kelamin TEXT DEFAULT NULL,
+  p_tempat_lahir TEXT DEFAULT NULL,
+  p_tanggal_lahir TEXT DEFAULT NULL,
+  p_tmt TEXT DEFAULT NULL,
+  p_masa_kerja TEXT DEFAULT NULL,
+  p_gaji_pokok_nominal NUMERIC DEFAULT NULL,
+  p_tunjangan_jabatan NUMERIC DEFAULT NULL,
+  p_tunjangan_wali_kelas NUMERIC DEFAULT NULL,
+  p_tunjangan_ijazah NUMERIC DEFAULT NULL,
+  p_tunjangan_kinerja NUMERIC DEFAULT NULL,
+  p_tarif_per_jam_mengajar NUMERIC DEFAULT NULL,
+  p_tarif_transport_harian NUMERIC DEFAULT NULL,
+  p_nama_bank TEXT DEFAULT NULL,
+  p_nomor_rekening TEXT DEFAULT NULL,
+  p_atas_nama_rekening TEXT DEFAULT NULL,
+  p_npwp TEXT DEFAULT NULL,
+  p_is_linier_kompetensi BOOLEAN DEFAULT NULL,
+  p_tahun_pengalaman NUMERIC DEFAULT NULL,
+  p_tahun_masa_kerja NUMERIC DEFAULT NULL,
+  p_is_active BOOLEAN DEFAULT NULL,
+  p_modified_by TEXT DEFAULT NULL
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_result JSONB;
+BEGIN
+  UPDATE pegawai
+  SET
+    nip = COALESCE(p_nip, nip),
+    niy = COALESCE(p_niy, niy),
+    nik = COALESCE(p_nik, nik),
+    nuptk = COALESCE(p_nuptk, nuptk),
+    nama_lengkap = COALESCE(p_nama_lengkap, nama_lengkap),
+    nama = COALESCE(p_nama_lengkap, nama),
+    email = COALESCE(p_email, email),
+    no_hp = COALESCE(p_no_hp, no_hp),
+    status_pegawai = COALESCE(p_status_pegawai, status_pegawai),
+    jenis_pegawai = COALESCE(p_status_pegawai, jenis_pegawai),
+    jabatan_utama = COALESCE(p_jabatan_utama, jabatan_utama),
+    jabatan = COALESCE(p_jabatan_utama, jabatan),
+    jabatan_tambahan = COALESCE(p_jabatan_tambahan, jabatan_tambahan),
+    pendidikan_terakhir = COALESCE(p_pendidikan_terakhir, pendidikan_terakhir),
+    jurusan = COALESCE(p_jurusan, jurusan),
+    status_induk = COALESCE(p_status_induk, status_induk),
+    keterangan_induk = COALESCE(p_keterangan_induk, keterangan_induk),
+    jenis_kelamin = COALESCE(p_jenis_kelamin, jenis_kelamin),
+    tempat_lahir = COALESCE(p_tempat_lahir, tempat_lahir),
+    tanggal_lahir = COALESCE(p_tanggal_lahir, tanggal_lahir),
+    tmt = COALESCE(p_tmt, tmt),
+    masa_kerja = COALESCE(p_masa_kerja, masa_kerja),
+    gaji_pokok_nominal = COALESCE(p_gaji_pokok_nominal, gaji_pokok_nominal),
+    gaji_pokok_default = COALESCE(p_gaji_pokok_nominal, gaji_pokok_default),
+    tunjangan_jabatan_default = COALESCE(p_tunjangan_jabatan, tunjangan_jabatan_default),
+    tunjangan_wali_kelas = COALESCE(p_tunjangan_wali_kelas, tunjangan_wali_kelas),
+    tunjangan_ijazah_default = COALESCE(p_tunjangan_ijazah, tunjangan_ijazah_default),
+    tunjangan_kinerja_default = COALESCE(p_tunjangan_kinerja, tunjangan_kinerja_default),
+    tarif_per_jam_mengajar = COALESCE(p_tarif_per_jam_mengajar, tarif_per_jam_mengajar),
+    tarif_transport_harian = COALESCE(p_tarif_transport_harian, tarif_transport_harian),
+    nama_bank = COALESCE(p_nama_bank, nama_bank),
+    nomor_rekening = COALESCE(p_nomor_rekening, nomor_rekening),
+    atas_nama_rekening = COALESCE(p_atas_nama_rekening, atas_nama_rekening),
+    npwp = COALESCE(p_npwp, npwp),
+    is_linier_kompetensi = COALESCE(p_is_linier_kompetensi, is_linier_kompetensi),
+    tahun_pengalaman = COALESCE(p_tahun_pengalaman, tahun_pengalaman),
+    tahun_masa_kerja = COALESCE(p_tahun_masa_kerja, tahun_masa_kerja),
+    is_active = COALESCE(p_is_active, is_active),
+    updated_at = NOW()
+  WHERE id = p_pegawai_id;
+
+  v_result := jsonb_build_object(
+    'success', true,
+    'pegawai_id', p_pegawai_id,
+    'modified_by', p_modified_by,
+    'timestamp', NOW()
+  );
+  RETURN v_result;
+END;
+$$;
 `;
 
 

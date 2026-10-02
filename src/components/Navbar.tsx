@@ -79,11 +79,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const getRoleBadge = (role: UserRole) => {
     switch (role) {
       case 'super_admin':
-        return { label: 'Super Admin / HR', badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' };
+        return { label: 'Super Admin / HR', badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' };
       case 'kepala_sekolah':
-        return { label: 'Kepala Sekolah (Approver 1)', badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30' };
+        return { label: 'Kepala Sekolah (Approver 1)', badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30' };
       case 'ketua_yayasan':
-        return { label: 'Ketua Yayasan (Approver 2)', badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30' };
+        return { label: 'Ketua Yayasan (Approver 2)', badgeColor: 'bg-emerald-600/20 text-emerald-200 border-emerald-500/30' };
       case 'bendahara_yayasan':
         return { label: 'Bendahara (Transfer)', badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30' };
       case 'pegawai':
@@ -103,35 +103,35 @@ export const Sidebar: React.FC<SidebarProps> = ({
         />
       )}
 
-      {/* Sidebar Container: flush on left, seamless full-height */}
+      {/* Sidebar Container: flush on left, seamless full-height with Soft Green Aesthetic */}
       <aside 
         id="main-sidebar"
         className={`
-          fixed inset-y-0 left-0 z-50 w-72 bg-slate-900 text-slate-200 flex flex-col shrink-0 border-r border-slate-800 transition-transform duration-300 ease-in-out select-none
+          fixed inset-y-0 left-0 z-50 w-72 bg-[#07241e] text-emerald-100 flex flex-col shrink-0 border-r border-[#0e3a30] transition-transform duration-300 ease-in-out select-none shadow-xl
           md:static md:translate-x-0
           ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
         `}
       >
         {/* Brand Header */}
-        <div className="h-16 px-5 border-b border-slate-800/90 flex items-center justify-between bg-slate-950/40">
+        <div className="h-16 px-5 border-b border-[#0e3a30] flex items-center justify-between bg-[#051c17]">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 bg-linear-to-br from-indigo-500 to-indigo-700 rounded-xl flex items-center justify-center font-black text-white text-lg shadow-md shadow-indigo-600/30 border border-indigo-400/30 shrink-0">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-teal-800 rounded-xl flex items-center justify-center font-black text-white text-lg shadow-md shadow-emerald-950/60 border border-emerald-400/40 shrink-0">
               IQ
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-white font-bold text-sm tracking-wide">SIM GAJI</span>
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-semibold px-1.5 py-0.5 rounded-sm border border-emerald-500/30">
+                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-semibold px-1.5 py-0.5 rounded-sm border border-emerald-500/30">
                   v2.4
                 </span>
               </div>
-              <p className="text-slate-400 text-xs truncate">SMK IT Ibnul Qayyim</p>
+              <p className="text-emerald-300/70 text-xs truncate">SMK IT Ibnul Qayyim</p>
             </div>
           </div>
 
           <button 
             onClick={() => setMobileMenuOpen(false)}
-            className="text-slate-400 hover:text-white md:hidden p-1.5 rounded-lg hover:bg-slate-800 transition cursor-pointer"
+            className="text-emerald-300/70 hover:text-white md:hidden p-1.5 rounded-lg hover:bg-[#0c362c] transition cursor-pointer"
             aria-label="Tutup Menu"
           >
             <X className="w-5 h-5" />
@@ -139,8 +139,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* School Info Sub-badge */}
-        <div className="px-4 py-2.5 bg-slate-850/60 border-b border-slate-800/60 flex items-center gap-2 text-xs text-slate-400">
-          <Building2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+        <div className="px-4 py-2.5 bg-[#041713] border-b border-[#0e3a30] flex items-center gap-2 text-xs text-emerald-300/80">
+          <Building2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
           <span className="truncate text-[11px]">Makassar, Sulawesi Selatan</span>
         </div>
 
@@ -148,7 +148,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <nav className="flex-1 pl-3 pr-2 py-4 space-y-5 overflow-y-auto custom-scrollbar-dark">
           {navSections.map((sec, secIdx) => (
             <div key={secIdx} className="space-y-1">
-              <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+              <p className="px-3 text-[10px] font-bold text-emerald-400/70 uppercase tracking-wider mb-2">
                 {sec.title}
               </p>
               {sec.items.map((tab) => {
@@ -164,12 +164,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     }}
                     className={`w-full px-3.5 py-2.5 rounded-xl flex items-center justify-between text-xs sm:text-sm font-medium transition-all duration-150 cursor-pointer text-left ${
                       isActive
-                        ? 'bg-indigo-600 text-white font-semibold shadow-lg shadow-indigo-600/25'
-                        : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                        ? 'bg-emerald-700 text-white font-semibold shadow-md shadow-emerald-950/60 border border-emerald-500/40'
+                        : 'text-emerald-100/75 hover:bg-[#0d3b31] hover:text-white'
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-emerald-300/70'}`} />
                       <span className="truncate">{tab.label}</span>
                     </div>
                     {tab.badge && (
@@ -185,32 +185,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
 
         {/* Current Active Role Card & Switcher in Sidebar Footer */}
-        <div className="p-3 bg-slate-950/60 border-t border-slate-800/80">
+        <div className="p-3 bg-[#051c17] border-t border-[#0e3a30]">
           <div className="relative">
             <button
               onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-              className="w-full p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 transition flex items-center justify-between text-left cursor-pointer group"
+              className="w-full p-2.5 rounded-xl bg-[#0a2f26] hover:bg-[#0e3d32] border border-[#14483c] transition flex items-center justify-between text-left cursor-pointer group"
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-lg bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 flex items-center justify-center font-bold text-xs shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 flex items-center justify-center font-bold text-xs shrink-0">
                   {currentUser.nama.slice(0, 2).toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-white truncate group-hover:text-indigo-200">
+                  <p className="text-xs font-semibold text-white truncate group-hover:text-emerald-200">
                     {currentUser.nama}
                   </p>
-                  <p className="text-[10px] text-slate-400 truncate">
+                  <p className="text-[10px] text-emerald-300/70 truncate">
                     {roleInfo.label.split('(')[0]}
                   </p>
                 </div>
               </div>
-              <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${roleDropdownOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-emerald-400 transition-transform ${roleDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Quick Multi-Role Switcher Menu */}
             {roleDropdownOpen && (
-              <div className="absolute bottom-full left-0 right-0 mb-2 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl py-1.5 z-50 max-h-60 overflow-y-auto custom-scrollbar-dark">
-                <div className="px-3 py-1.5 border-b border-slate-700/80 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              <div className="absolute bottom-full left-0 right-0 mb-2 bg-[#092b23] border border-[#14483c] rounded-xl shadow-2xl py-1.5 z-50 max-h-60 overflow-y-auto custom-scrollbar-dark">
+                <div className="px-3 py-1.5 border-b border-[#0e3a30] text-[10px] font-bold text-emerald-300/70 uppercase tracking-wider">
                   Simulasi Peran Pengguna
                 </div>
                 {allUsers.map((user) => (
@@ -220,21 +220,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       onSelectUser(user);
                       setRoleDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-3 py-2 flex items-center justify-between text-xs hover:bg-slate-700/60 transition cursor-pointer ${
-                      user.id === currentUser.id ? 'bg-indigo-600/20 text-indigo-300 font-semibold' : 'text-slate-300'
+                    className={`w-full text-left px-3 py-2 flex items-center justify-between text-xs hover:bg-[#0e3d32] transition cursor-pointer ${
+                      user.id === currentUser.id ? 'bg-emerald-600/30 text-emerald-200 font-semibold' : 'text-emerald-100/80'
                     }`}
                   >
                     <div className="min-w-0">
                       <p className="truncate font-medium">{user.nama}</p>
-                      <p className="text-[10px] text-slate-400 truncate">{user.jabatan}</p>
+                      <p className="text-[10px] text-emerald-300/60 truncate">{user.jabatan}</p>
                     </div>
                     {user.id === currentUser.id && (
-                      <UserCheck className="w-3.5 h-3.5 text-indigo-400 shrink-0 ml-1.5" />
+                      <UserCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1.5" />
                     )}
                   </button>
                 ))}
                 {onLogout && (
-                  <div className="pt-1 mt-1 border-t border-slate-700/80">
+                  <div className="pt-1 mt-1 border-t border-[#0e3a30]">
                     <button
                       id="sidebar-logout-btn"
                       onClick={() => {
@@ -252,7 +252,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             )}
           </div>
 
-          <div className="mt-2.5 flex items-center justify-between px-1 text-[10px] text-slate-400">
+          <div className="mt-2.5 flex items-center justify-between px-1 text-[10px] text-emerald-300/70">
             <span className="flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block"></span>
               AES-256 Validated
@@ -260,7 +260,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {onLogout ? (
               <button
                 onClick={onLogout}
-                className="text-slate-400 hover:text-rose-300 flex items-center gap-1 transition cursor-pointer"
+                className="text-emerald-300/70 hover:text-rose-300 flex items-center gap-1 transition cursor-pointer"
                 title="Keluar dari akun"
               >
                 <LogOut className="w-3 h-3" />
@@ -357,12 +357,12 @@ export const TopHeader: React.FC<HeaderProps> = ({
   const { title, subtitle } = getHeaderDetails();
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200/90 flex items-center justify-between px-4 sm:px-6 lg:px-8 shrink-0 z-30 shadow-xs">
+    <header className="h-16 bg-white border-b border-emerald-100/90 flex items-center justify-between px-4 sm:px-6 lg:px-8 shrink-0 z-30 shadow-xs">
       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
         {/* Mobile menu trigger */}
         <button
           onClick={() => setMobileMenuOpen(true)}
-          className="md:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition cursor-pointer"
+          className="md:hidden p-2 text-emerald-800 hover:text-emerald-950 hover:bg-emerald-50 rounded-xl transition cursor-pointer"
           aria-label="Buka Menu Navigasi"
         >
           <Menu className="w-5 h-5" />
@@ -388,9 +388,9 @@ export const TopHeader: React.FC<HeaderProps> = ({
             availablePeriods={availablePeriods}
           />
         ) : (
-          <div className="flex items-center gap-1.5 text-xs bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">
-            <Clock className="w-3.5 h-3.5 text-slate-500" />
-            <span>Periode: <strong className="text-slate-900 font-semibold">Agustus 2026</strong></span>
+          <div className="flex items-center gap-1.5 text-xs bg-emerald-50/80 text-emerald-900 px-3 py-1.5 rounded-lg border border-emerald-200/80 font-medium">
+            <Clock className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Periode: <strong className="text-emerald-950 font-semibold">Agustus 2026</strong></span>
           </div>
         )}
 
@@ -444,14 +444,14 @@ export const TopHeader: React.FC<HeaderProps> = ({
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1.5 rounded-xl hover:bg-slate-50 border border-slate-200 transition text-left cursor-pointer"
           >
-            <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs border border-indigo-200 shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs border border-emerald-200 shrink-0">
               {currentUser.nama.slice(0, 2).toUpperCase()}
             </div>
             <div className="hidden md:block text-left min-w-0">
               <div className="text-xs font-bold text-slate-900 leading-tight truncate max-w-[130px]">
                 {currentUser.nama}
               </div>
-              <div className="text-[10px] text-indigo-600 font-medium truncate capitalize">
+              <div className="text-[10px] text-emerald-700 font-semibold truncate capitalize">
                 {currentUser.role.replace('_', ' ')}
               </div>
             </div>
@@ -477,10 +477,10 @@ export const TopHeader: React.FC<HeaderProps> = ({
                       setDropdownOpen(false);
                     }}
                     className={`w-full text-left px-4 py-2.5 flex items-center gap-3 hover:bg-slate-50 transition cursor-pointer ${
-                      user.id === currentUser.id ? 'bg-indigo-50/80 text-indigo-900 font-semibold' : 'text-slate-700'
+                      user.id === currentUser.id ? 'bg-emerald-50 text-emerald-900 font-semibold' : 'text-slate-700'
                     }`}
                   >
-                    <div className="w-7 h-7 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-bold text-slate-700 shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-100 border border-emerald-200 flex items-center justify-center text-xs font-bold text-emerald-800 shrink-0">
                       {user.nama.slice(0, 2).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -488,7 +488,7 @@ export const TopHeader: React.FC<HeaderProps> = ({
                       <p className="text-[10px] text-slate-400 truncate">{user.jabatan}</p>
                     </div>
                     {user.id === currentUser.id && (
-                      <UserCheck className="w-4 h-4 text-indigo-600 shrink-0" />
+                      <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                     )}
                   </button>
                 ))}

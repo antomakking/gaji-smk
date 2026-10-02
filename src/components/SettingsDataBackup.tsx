@@ -454,7 +454,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
       <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
               <Database className="w-5 h-5" />
             </div>
             <div>
@@ -474,7 +474,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
             onClick={() => setActiveSubTab('export')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
               activeSubTab === 'export'
-                ? 'bg-white text-indigo-600 shadow-xs'
+                ? 'bg-white text-emerald-800 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -485,7 +485,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
             onClick={() => setActiveSubTab('import')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
               activeSubTab === 'import'
-                ? 'bg-white text-indigo-600 shadow-xs'
+                ? 'bg-white text-emerald-800 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -496,7 +496,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
             onClick={() => setActiveSubTab('credentials')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
               activeSubTab === 'credentials'
-                ? 'bg-white text-emerald-600 shadow-xs'
+                ? 'bg-white text-emerald-700 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -508,7 +508,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
 
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
               activeSubTab === 'supabase'
-                ? 'bg-white text-emerald-600 shadow-xs'
+                ? 'bg-white text-emerald-700 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -522,7 +522,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
             onClick={() => setActiveSubTab('audit')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
               activeSubTab === 'audit'
-                ? 'bg-white text-purple-600 shadow-xs'
+                ? 'bg-white text-teal-700 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -533,7 +533,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
             onClick={() => setActiveSubTab('reset')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
               activeSubTab === 'reset'
-                ? 'bg-white text-red-600 shadow-xs'
+                ? 'bg-white text-rose-700 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -557,7 +557,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                     Buat snapshot lengkap dari semua entitas aplikasi untuk diarsipkan, dicadangkan, atau dipindahkan.
                   </p>
                 </div>
-                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
                   JSON Standar v2.5
                 </span>
               </div>
@@ -565,7 +565,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
               {/* Data Breakdown Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
-                  <div className="flex items-center gap-2 text-indigo-600 mb-1">
+                  <div className="flex items-center gap-2 text-emerald-700 mb-1">
                     <Users className="w-4 h-4" />
                     <span className="text-xs font-bold text-slate-700">Data Pegawai</span>
                   </div>
@@ -581,7 +581,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
-                  <div className="flex items-center gap-2 text-blue-600 mb-1">
+                  <div className="flex items-center gap-2 text-teal-600 mb-1">
                     <CalendarCheck className="w-4 h-4" />
                     <span className="text-xs font-bold text-slate-700">Rekap Presensi</span>
                   </div>
@@ -597,7 +597,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
-                  <div className="flex items-center gap-2 text-purple-600 mb-1">
+                  <div className="flex items-center gap-2 text-emerald-700 mb-1">
                     <CalendarDays className="w-4 h-4" />
                     <span className="text-xs font-bold text-slate-700">Jadwal Pelajaran</span>
                   </div>
@@ -605,7 +605,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
-                  <div className="flex items-center gap-2 text-pink-600 mb-1">
+                  <div className="flex items-center gap-2 text-teal-700 mb-1">
                     <Clock className="w-4 h-4" />
                     <span className="text-xs font-bold text-slate-700">Infal, Cuti & Lembur</span>
                   </div>
@@ -618,7 +618,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                 <button
                   id="btn-export-backup-json"
                   onClick={handleExportDownload}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-2 cursor-pointer"
+                  className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md shadow-emerald-700/20 transition flex items-center gap-2 cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   <span>Unduh File Cadangan JSON (.json)</span>
@@ -627,7 +627,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                 <button
                   onClick={handleExportDirectFromSupabase}
                   disabled={isExportingSupabase}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md shadow-teal-700/20 transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {isExportingSupabase ? <Loader2 className="w-4 h-4 animate-spin" /> : <CloudCheck className="w-4 h-4" />}
                   <span>Ekspor Riil dari Supabase DB</span>
@@ -644,11 +644,11 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
             </div>
 
             {/* Info Box */}
-            <div className="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4 flex items-start gap-3">
-              <Info className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
-              <div className="text-xs text-indigo-950 space-y-1">
+            <div className="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-4 flex items-start gap-3">
+              <Info className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+              <div className="text-xs text-emerald-950 space-y-1">
                 <p className="font-semibold">Format Portabel & Kompatibilitas Tinggi</p>
-                <p className="text-indigo-900/80 leading-relaxed">
+                <p className="text-emerald-900/80 leading-relaxed">
                   File hasil ekspor dapat disimpan di penyimpanan eksternal, Google Drive, atau dibagikan ke bendahara/kepala sekolah. Berkas ini dapat langsung diimpor kembali ke SIM GAJI atau disinkronkan ke PostgreSQL Supabase.
                 </p>
               </div>
@@ -657,7 +657,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
 
           <div className="space-y-4">
             <div className="bg-slate-900 text-white rounded-2xl p-5 border border-slate-800 shadow-sm">
-              <div className="flex items-center gap-2 text-indigo-400 text-xs font-bold mb-3">
+              <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold mb-3">
                 <ShieldCheck className="w-4 h-4" />
                 <span className="uppercase tracking-wider">Integritas & Keamanan</span>
               </div>
@@ -679,7 +679,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                 </div>
                 <div className="flex justify-between py-1.5 text-slate-400">
                   <span>Operator:</span>
-                  <span className="text-indigo-300 font-semibold">{currentUser.nama}</span>
+                  <span className="text-emerald-300 font-semibold">{currentUser.nama}</span>
                 </div>
               </div>
             </div>
@@ -713,7 +713,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
               {/* Upload Dropzone */}
               <div 
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-300 hover:border-indigo-500 hover:bg-indigo-50/20 rounded-2xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2"
+                className="border-2 border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/20 rounded-2xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2"
               >
                 <input 
                   type="file" 
@@ -722,7 +722,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                   accept=".json,application/json" 
                   className="hidden" 
                 />
-                <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
                   <Upload className="w-6 h-6" />
                 </div>
                 <div className="text-xs text-slate-700 font-semibold">
@@ -746,7 +746,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                   }}
                   rows={4}
                   placeholder='{"appName": "SIM GAJI SMK IT Ibnul Qayyim", "data": { ... }}'
-                  className="w-full font-mono text-xs p-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="w-full font-mono text-xs p-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                 />
               </div>
 
@@ -791,25 +791,25 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                   <div className="pt-2 border-t border-emerald-200/60 space-y-2">
                     <span className="block font-semibold text-slate-800 text-xs">Pilih Mode Pemulihan:</span>
                     <div className="flex flex-col sm:flex-row gap-2">
-                      <label className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs cursor-pointer ${restoreMode === 'replace' ? 'bg-indigo-50 border-indigo-400 font-bold text-indigo-900' : 'bg-white border-slate-200 text-slate-700'}`}>
+                      <label className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs cursor-pointer ${restoreMode === 'replace' ? 'bg-emerald-50 border-emerald-400 font-bold text-emerald-950' : 'bg-white border-slate-200 text-slate-700'}`}>
                         <input
                           type="radio"
                           name="restoreMode"
                           value="replace"
                           checked={restoreMode === 'replace'}
                           onChange={() => setRestoreMode('replace')}
-                          className="text-indigo-600"
+                          className="text-emerald-700"
                         />
                         <span>Timpa Penuh (Full Replace)</span>
                       </label>
-                      <label className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs cursor-pointer ${restoreMode === 'merge' ? 'bg-indigo-50 border-indigo-400 font-bold text-indigo-900' : 'bg-white border-slate-200 text-slate-700'}`}>
+                      <label className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs cursor-pointer ${restoreMode === 'merge' ? 'bg-emerald-50 border-emerald-400 font-bold text-emerald-950' : 'bg-white border-slate-200 text-slate-700'}`}>
                         <input
                           type="radio"
                           name="restoreMode"
                           value="merge"
                           checked={restoreMode === 'merge'}
                           onChange={() => setRestoreMode('merge')}
-                          className="text-indigo-600"
+                          className="text-emerald-700"
                         />
                         <span>Gabung & Sinkron (Merge)</span>
                       </label>
@@ -939,7 +939,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                 <button
                   onClick={handleSeedSupabaseDatabase}
                   disabled={isSeedingDb}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-emerald-700/20 transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {isSeedingDb ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
                   <span>Inisialisasi / Seed DB Supabase (1-Klik)</span>
@@ -980,27 +980,27 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
               </div>
               <div className="space-y-2 text-xs">
                 <div className="p-2 rounded-lg bg-slate-800/80 flex items-center justify-between border border-slate-700/60">
-                  <span className="font-mono text-indigo-300">periode_penggajian</span>
+                  <span className="font-mono text-emerald-300">periode_penggajian</span>
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">Aktif</span>
                 </div>
                 <div className="p-2 rounded-lg bg-slate-800/80 flex items-center justify-between border border-slate-700/60">
-                  <span className="font-mono text-indigo-300">pegawai</span>
+                  <span className="font-mono text-emerald-300">pegawai</span>
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">Master</span>
                 </div>
                 <div className="p-2 rounded-lg bg-slate-800/80 flex items-center justify-between border border-slate-700/60">
-                  <span className="font-mono text-indigo-300">slip_gaji</span>
+                  <span className="font-mono text-emerald-300">slip_gaji</span>
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">Approval</span>
                 </div>
                 <div className="p-2 rounded-lg bg-slate-800/80 flex items-center justify-between border border-slate-700/60">
-                  <span className="font-mono text-indigo-300">guru_inval</span>
+                  <span className="font-mono text-emerald-300">guru_inval</span>
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">JP Inval</span>
                 </div>
                 <div className="p-2 rounded-lg bg-slate-800/80 flex items-center justify-between border border-slate-700/60">
-                  <span className="font-mono text-indigo-300">presensi_harian_jp</span>
+                  <span className="font-mono text-emerald-300">presensi_harian_jp</span>
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">Biometrik</span>
                 </div>
                 <div className="p-2 rounded-lg bg-slate-800/80 flex items-center justify-between border border-slate-700/60">
-                  <span className="font-mono text-indigo-300">rekap_presensi</span>
+                  <span className="font-mono text-emerald-300">rekap_presensi</span>
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">Bulanan</span>
                 </div>
               </div>
@@ -1008,7 +1008,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
 
             <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-2 text-xs text-slate-600 leading-relaxed">
               <h4 className="font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                <KeyRound className="w-3.5 h-3.5 text-indigo-600" />
+                <KeyRound className="w-3.5 h-3.5 text-emerald-700" />
                 <span>Petunjuk Supabase</span>
               </h4>
               <p>
@@ -1087,7 +1087,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                 Konfirmasi Pemulihan Data Sistem
               </h3>
               <p className="text-xs text-slate-500 leading-relaxed">
-                Anda akan memulihkan data sistem dengan mode: <strong className="text-indigo-600 uppercase">{restoreMode === 'replace' ? 'Timpa Penuh (Full Replace)' : 'Gabung & Sinkron'}</strong>.
+                Anda akan memulihkan data sistem dengan mode: <strong className="text-emerald-700 uppercase">{restoreMode === 'replace' ? 'Timpa Penuh (Full Replace)' : 'Gabung & Sinkron'}</strong>.
               </p>
             </div>
 
@@ -1124,7 +1124,7 @@ export const SettingsDataBackup: React.FC<SettingsDataBackupProps> = ({
                 id="btn-confirm-execute-restore"
                 onClick={handleExecuteRestore}
                 disabled={isRestoring}
-                className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+                className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 shadow-md shadow-emerald-700/20 transition cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
               >
                 {isRestoring ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
                 <span>{isRestoring ? 'Memproses...' : 'Ya, Pulihkan Sistem Sekarang'}</span>

@@ -1759,7 +1759,7 @@ export default function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen w-screen bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white">
+      <div className="min-h-screen w-screen bg-[#062c24] text-slate-100 font-sans antialiased selection:bg-emerald-600 selection:text-white">
         {/* Toast Notification Banner */}
         {toast && (
           <div className="fixed top-5 right-5 z-60 flex items-center space-x-2 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 text-xs animate-in fade-in slide-in-from-top-3">
@@ -1787,7 +1787,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen bg-slate-100 text-slate-900 overflow-hidden font-sans antialiased">
+    <div className="flex h-screen w-screen bg-[#f4f7f5] text-slate-900 overflow-hidden font-sans antialiased selection:bg-emerald-600 selection:text-white">
       {/* 15-Minute Inactivity Auto Logout Guard */}
       <AutoLogoutGuard
         isAuthenticated={isAuthenticated}
@@ -1828,7 +1828,7 @@ export default function App() {
       />
 
       {/* Integrated Right Viewport Area */}
-      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-slate-100/70">
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-[#f4f7f5]">
         {/* Top Header - flush with top and right edges */}
         <TopHeader
           currentUser={currentUser}
@@ -1984,8 +1984,8 @@ export default function App() {
             {activeTab === 'architecture' && <TechnicalDocViewer />}
           </main>
 
-          {/* Seamless Bottom Footer */}
-          <footer className="bg-white border-t border-slate-200/90 py-3 px-4 sm:px-6 lg:px-8 text-xs text-slate-500 shrink-0">
+          {/* Seamless Bottom Footer with Soft Green Aesthetic */}
+          <footer className="bg-white border-t border-emerald-100/90 py-3 px-4 sm:px-6 lg:px-8 text-xs text-slate-500 shrink-0">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
               <div>
                 <strong>SIM GAJI</strong> • © 2026 SMK IT Ibnul Qayyim Makassar. Hak Cipta Dilindungi.

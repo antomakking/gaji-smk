@@ -102,7 +102,7 @@ export async function updateApprovalStatus(
               MERMAID_ERD;
             handleCopy(currentCode);
           }}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-sm transition flex items-center gap-2"
+          className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-xs transition flex items-center gap-2 cursor-pointer"
         >
           {copied ? <Check className="w-4 h-4 text-emerald-200" /> : <Copy className="w-4 h-4" />}
           <span>{copied ? 'Tersalin ke Clipboard!' : 'Salin Kode Aktif'}</span>
@@ -125,10 +125,10 @@ export async function updateApprovalStatus(
             <button
               key={tab.id}
               onClick={() => setActiveSubTab(tab.id as any)}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
                 isActive
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                  ? 'bg-emerald-800 text-white shadow-xs'
+                  : 'bg-white text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200'
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
@@ -165,7 +165,7 @@ export async function updateApprovalStatus(
             <span>mysql_schema.sql (MySQL 8.0+ DDL)</span>
             <span>InnoDB Engine • utf8mb4_unicode_ci</span>
           </div>
-          <pre className="text-indigo-400/90 whitespace-pre">{MYSQL_DDL_SCHEMA}</pre>
+          <pre className="text-teal-300/90 whitespace-pre">{MYSQL_DDL_SCHEMA}</pre>
         </div>
       )}
 
@@ -193,7 +193,7 @@ export async function updateApprovalStatus(
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
               Alur Workflow Persetujuan Gaji
             </h3>
-            <pre className="bg-slate-950 text-indigo-400 p-4 rounded-lg font-mono text-xs overflow-x-auto">
+            <pre className="bg-slate-950 text-teal-300 p-4 rounded-lg font-mono text-xs overflow-x-auto">
               {MERMAID_WORKFLOW}
             </pre>
           </div>

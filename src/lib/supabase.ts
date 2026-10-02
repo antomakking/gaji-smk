@@ -808,6 +808,176 @@ export async function bulkUpdateGajiPokokSupabase(
   }
 }
 
+/**
+ * Update penyesuaian matriks penggajian menggunakan Supabase RPC Stored Procedure `update_payroll_matrix_adjustment`
+ * dengan fallback otomatis ke direct table update pada tabel `slip_gaji`.
+ */
+export async function updatePayrollMatrixAdjustmentRPC(
+  record: PenggajianRecord,
+  modifiedBy?: string
+): Promise<{ success: boolean; error?: string; viaRpc?: boolean; data?: any }> {
+  const client = getSupabase();
+  if (!client) {
+    return { success: false, error: 'Supabase client belum terhubung. Konfigurasi kredensial terlebih dahulu.' };
+  }
+
+  // 1. Eksekusi melalui Supabase RPC Function
+  try {
+    const rpcPayload = {
+      p_record_id: record.id,
+      p_gaji_pokok: Number(record.gajiPokok || 0),
+      p_tunjangan_jabatan: Number(record.tunjanganJabatan || 0),
+      p_tunjangan_wali_kelas: Number(record.tunjanganWaliKelas || 0),
+      p_tunjangan_ijazah: Number(record.tunjanganIjazah || 0),
+      p_tunjangan_kinerja: Number(record.tunjanganKinerja || 0),
+      p_tunjangan_kehadiran: Number(record.tunjanganKehadiran || 0),
+      p_honor_jam_mengajar: Number(record.honorJamMengajar || 0),
+      p_honor_infal: Number(record.honorInfal || 0),
+      p_tunjangan_lainnya: Number(record.tunjanganLainnya || 0),
+      p_potongan_keterlambatan: Number(record.potonganKeterlambatan || 0),
+      p_potongan_alpha: Number(record.potonganAlpha || 0),
+      p_potongan_izin: Number(record.potonganIzin || 0),
+      p_potongan_infal: Number(record.potonganInfal || 0),
+      p_potongan_kas_sekolah: Number(record.potonganKasSekolah || 0),
+      p_potongan_bpjs_kesehatan: Number(record.potonganBpjsKesehatan || 0),
+      p_potongan_bpjs_ketenagakerjaan: Number(record.potonganBpjsKetenagakerjaan || 0),
+      p_potongan_lainnya: Number(record.potonganLainnya || 0),
+      p_total_penerimaan: Number(record.totalPenerimaan || 0),
+      p_total_potongan: Number(record.totalPotongan || 0),
+      p_gaji_bersih: Number(record.gajiBersih || record.takeHomePay || 0),
+      p_take_home_pay: Number(record.takeHomePay || record.gajiBersih || 0),
+      p_modified_by: modifiedBy || 'Admin Keuangan',
+    };
+
+    const { data, error: rpcError } = await (client as any).rpc('update_payroll_matrix_adjustment', rpcPayload);
+
+    if (!rpcError) {
+      console.log(`✅ [Supabase RPC] Berhasil update via stored procedure: ${record.kodeSlip}`);
+      return { success: true, viaRpc: true, data };
+    }
+
+    console.warn('⚠️ [Supabase RPC] RPC update_payroll_matrix_adjustment belum dibuat atau error:', rpcError.message, '-> Beralih ke direct table update.');
+  } catch (err: any) {
+    console.warn('⚠️ [Supabase RPC Exception]:', err?.message);
+  }
+
+  // 2. Graceful Fallback: Direct Table Update ke tabel `slip_gaji`
+  try {
+    const tablePayload: Record<string, any> = {
+      gaji_pokok: Number(record.gajiPokok || 0),
+      tunjangan_jabatan: Number(record.tunjanganJabatan || 0),
+      tunjangan_wali_kelas: Number(record.tunjanganWaliKelas || 0),
+      tunjangan_ijazah: Number(record.tunjanganIjazah || 0),
+      tunjangan_kinerja: Number(record.tunjanganKinerja || 0),
+      tunjangan_kehadiran: Number(record.tunjanganKehadiran || 0),
+      honor_jam_mengajar: Number(record.honorJamMengajar || 0),
+      honor_infal: Number(record.honorInfal || 0),
+      tunjangan_lainnya: Number(record.tunjanganLainnya || 0),
+      potongan_keterlambatan: Number(record.potonganKeterlambatan || 0),
+      potongan_alpha: Number(record.potonganAlpha || 0),
+      potongan_izin: Number(record.potonganIzin || 0),
+      potongan_infal: Number(record.potonganInfal || 0),
+      potongan_kas_sekolah: Number(record.potonganKasSekolah || 0),
+      potongan_bpjs_kesehatan: Number(record.potonganBpjsKesehatan || 0),
+      potongan_bpjs_ketenagakerjaan: Number(record.potonganBpjsKetenagakerjaan || 0),
+      potongan_lainnya: Number(record.potonganLainnya || 0),
+      total_penerimaan: Number(record.totalPenerimaan || 0),
+      gaji_kotor: Number(record.totalPenerimaan || 0),
+      total_tambahan: Number(record.totalPenerimaan || 0),
+      total_potongan: Number(record.totalPotongan || 0),
+      gaji_bersih: Number(record.gajiBersih || record.takeHomePay || 0),
+      take_home_pay: Number(record.takeHomePay || record.gajiBersih || 0),
+      updated_at: new Date().toISOString(),
+    };
+
+    const { error: tableError } = await client
+      .from('slip_gaji')
+      .update(tablePayload)
+      .eq('id', record.id);
+
+    if (tableError) {
+      console.error('❌ [Supabase] Direct table update error:', tableError.message);
+      return { success: false, error: tableError.message };
+    }
+
+    console.log(`✅ [Supabase Table Update] Berhasil update data tabel slip_gaji: ${record.kodeSlip}`);
+    return { success: true, viaRpc: false };
+  } catch (err: any) {
+    console.error('❌ [Supabase] Direct update exception:', err);
+    return { success: false, error: err?.message || 'Gagal menyimpan pembaruan data gaji ke Supabase' };
+  }
+}
+
+/**
+ * Update data master pegawai menggunakan Supabase RPC Stored Procedure `update_pegawai_master_data`
+ * dengan fallback otomatis ke direct table upsert pada tabel `pegawai`.
+ */
+export async function updatePegawaiMasterDataRPC(
+  pegawai: Pegawai,
+  modifiedBy?: string
+): Promise<{ success: boolean; error?: string; viaRpc?: boolean; data?: any }> {
+  const client = getSupabase();
+  if (!client) {
+    return { success: false, error: 'Supabase client belum terhubung. Konfigurasi kredensial terlebih dahulu.' };
+  }
+
+  // 1. Eksekusi melalui Supabase RPC Function `update_pegawai_master_data`
+  try {
+    const rpcPayload = {
+      p_pegawai_id: pegawai.id,
+      p_nip: pegawai.nip || '',
+      p_niy: pegawai.niy || '',
+      p_nik: pegawai.nik || '',
+      p_nuptk: pegawai.nuptk || '',
+      p_nama_lengkap: pegawai.nama || '',
+      p_email: pegawai.email || '',
+      p_no_hp: pegawai.noHp || '',
+      p_status_pegawai: pegawai.statusPegawai || 'GTT',
+      p_jabatan_utama: pegawai.jabatanUtama || '',
+      p_jabatan_tambahan: Array.isArray(pegawai.jabatanTambahan) ? JSON.stringify(pegawai.jabatanTambahan) : (pegawai.jabatanTambahan || '[]'),
+      p_pendidikan_terakhir: pegawai.pendidikanTerakhir || 'S1',
+      p_jurusan: pegawai.jurusan || '',
+      p_status_induk: pegawai.statusInduk || 'Induk',
+      p_keterangan_induk: pegawai.keteranganInduk || '',
+      p_jenis_kelamin: pegawai.jenisKelamin || 'L',
+      p_tempat_lahir: pegawai.tempatLahir || '',
+      p_tanggal_lahir: pegawai.tanggalLahir || '',
+      p_tmt: pegawai.tmt || '',
+      p_masa_kerja: pegawai.masaKerja || '',
+      p_gaji_pokok_nominal: Number(pegawai.gajiPokokDefault || 0),
+      p_tunjangan_jabatan: Number(pegawai.tunjanganJabatanDefault || 0),
+      p_tunjangan_wali_kelas: Number(pegawai.tunjanganWaliKelas || 0),
+      p_tunjangan_ijazah: Number(pegawai.tunjanganIjazahDefault || 0),
+      p_tunjangan_kinerja: Number(pegawai.tunjanganKinerjaDefault || 0),
+      p_tarif_per_jam_mengajar: Number(pegawai.tarifPerJamMengajar || 18000),
+      p_tarif_transport_harian: Number(pegawai.tarifTransportHarian || 20000),
+      p_nama_bank: pegawai.namaBank || 'Bank Syariah Indonesia (BSI)',
+      p_nomor_rekening: pegawai.nomorRekening || '',
+      p_atas_nama_rekening: pegawai.atasNamaRekening || pegawai.nama || '',
+      p_npwp: pegawai.npwp || '',
+      p_is_linier_kompetensi: Boolean(pegawai.isLinierKompetensi),
+      p_tahun_pengalaman: Number(pegawai.tahunPengalaman || 0),
+      p_tahun_masa_kerja: Number(pegawai.tahunMasaKerja || 0),
+      p_is_active: pegawai.isActive !== false,
+      p_modified_by: modifiedBy || 'Admin Kepegawaian',
+    };
+
+    const { data, error: rpcError } = await (client as any).rpc('update_pegawai_master_data', rpcPayload);
+
+    if (!rpcError) {
+      console.log(`✅ [Supabase RPC] Berhasil update master pegawai via RPC: ${pegawai.nama}`);
+      return { success: true, viaRpc: true, data };
+    }
+
+    console.warn('⚠️ [Supabase RPC] RPC update_pegawai_master_data belum dibuat atau error:', rpcError.message, '-> Beralih ke direct table upsert.');
+  } catch (err: any) {
+    console.warn('⚠️ [Supabase RPC Exception]:', err?.message);
+  }
+
+  // 2. Graceful Fallback: Eksekusi direct upsert pada tabel pegawai
+  return upsertPegawaiSupabase(pegawai);
+}
+
 
 /**
  * Update langsung status approval di kolom `status_approval` tabel `slip_gaji`

@@ -310,6 +310,10 @@ export interface PenggajianRecord {
   jpMenggantikan?: number; // Jumlah JP Menggantikan
   insentifKajianMuslimah?: number; // Tambahan Insentif Kajian Muslimah
   koreksiPenerimaan?: number; // Koreksi Tambahan Penerimaan
+  tambahanWorkshop?: number; // Tambahan Workshop
+  tambahanKesra?: number; // Tambahan Kesra
+  tambahanLembur?: number; // Tambahan Lembur
+  tambahanKoreksi?: number; // Tambahan Koreksi (+)
   tambahanLainnya?: number; // tambahan_lainnya (Workshop / Lainnya)
   tunjanganVokasiIT?: number;
   tunjanganLainnya?: number;
@@ -324,8 +328,10 @@ export interface PenggajianRecord {
   potonganAlpha?: number; // Backward-compat
   potonganIzin?: number; // Potongan izin pribadi/tanpa SKD
   potonganInfal?: number; // Potongan Diganti JP (JP x Rp 7.500)
+  potonganDigantiJp?: number; // Alias potongan_diganti_jp
   jpDigantikan?: number; // Jumlah JP Digantikan
   koreksiPotongan?: number; // Koreksi Pengurang
+  potonganKoreksi?: number; // Alias potongan_koreksi
   potonganPinjaman?: number; // Pinjaman
   potonganBpjsKesehatan?: number;
   potonganBpjsKetenagakerjaan?: number;

@@ -161,15 +161,15 @@ export const TimeInput24: React.FC<TimeInput24Props> = ({
           onClick={() => !disabled && setIsOpen(true)}
           className={`font-mono text-center font-bold tracking-wider ${
             compact
-              ? 'w-24 px-2 py-1 text-xs border rounded-lg border-slate-300 bg-white text-slate-800 hover:border-indigo-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-hidden shadow-xs cursor-pointer'
-              : 'w-full p-2 text-sm border rounded-lg border-slate-300 bg-white text-slate-800 hover:border-indigo-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-hidden shadow-xs'
+              ? 'w-24 px-2 py-1 text-xs border rounded-lg border-slate-300 bg-white text-slate-800 hover:border-emerald-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-hidden shadow-xs cursor-pointer'
+              : 'w-full p-2 text-sm border rounded-lg border-slate-300 bg-white text-slate-800 hover:border-emerald-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-hidden shadow-xs'
           } ${className}`}
         />
         <button
           type="button"
           disabled={disabled}
           onClick={() => !disabled && setIsOpen(!isOpen)}
-          className="absolute right-1.5 p-1 text-slate-400 hover:text-indigo-600 rounded transition cursor-pointer"
+          className="absolute right-1.5 p-1 text-slate-400 hover:text-emerald-700 rounded transition cursor-pointer"
           title="Buka Pilihan Jam 24:00"
         >
           <Clock className={compact ? 'w-3.5 h-3.5' : 'w-4 h-4'} />
@@ -182,7 +182,7 @@ export const TimeInput24: React.FC<TimeInput24Props> = ({
           {/* Header */}
           <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2.5">
             <div className="flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-indigo-600" />
+              <Clock className="w-4 h-4 text-emerald-700" />
               <span className="text-xs font-bold text-slate-800">Format 24 Jam (00:00 - 24:00)</span>
             </div>
             <button
@@ -200,7 +200,7 @@ export const TimeInput24: React.FC<TimeInput24Props> = ({
             <span className="text-lg font-bold font-mono text-amber-400 tracking-wider">
               {textVal || '00:00'}
             </span>
-            <span className="text-[10px] bg-indigo-500/30 text-indigo-300 px-1.5 py-0.5 rounded font-mono border border-indigo-400/30">
+            <span className="text-[10px] bg-emerald-500/30 text-emerald-300 px-1.5 py-0.5 rounded font-mono border border-emerald-400/30">
               24-JAM
             </span>
           </div>
@@ -223,12 +223,12 @@ export const TimeInput24: React.FC<TimeInput24Props> = ({
                     }}
                     className={`px-1.5 py-1 text-xs font-mono rounded-md font-bold transition flex flex-col items-center justify-center cursor-pointer ${
                       isSelected
-                        ? 'bg-indigo-600 text-white shadow-xs'
-                        : 'bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 border border-slate-200/80'
+                        ? 'bg-emerald-700 text-white shadow-xs'
+                        : 'bg-slate-50 hover:bg-emerald-50 hover:text-emerald-800 text-slate-700 border border-slate-200/80'
                     }`}
                   >
                     <span>{preset.label}</span>
-                    <span className={`text-[9px] font-sans font-normal ${isSelected ? 'text-indigo-100' : 'text-slate-400'}`}>
+                    <span className={`text-[9px] font-sans font-normal ${isSelected ? 'text-emerald-100' : 'text-slate-400'}`}>
                       {preset.desc}
                     </span>
                   </button>
@@ -254,8 +254,8 @@ export const TimeInput24: React.FC<TimeInput24Props> = ({
                       onClick={() => selectHour(hour)}
                       className={`w-full text-left px-2 py-0.5 text-xs font-mono rounded flex items-center justify-between cursor-pointer ${
                         isSelected
-                          ? 'bg-indigo-600 text-white font-bold'
-                          : 'hover:bg-indigo-50 text-slate-700'
+                          ? 'bg-emerald-700 text-white font-bold'
+                          : 'hover:bg-emerald-50 text-slate-700'
                       }`}
                     >
                       <span>{String(hour).padStart(2, '0')}</span>
@@ -281,8 +281,8 @@ export const TimeInput24: React.FC<TimeInput24Props> = ({
                       onClick={() => selectMinute(minute)}
                       className={`w-full text-left px-2 py-0.5 text-xs font-mono rounded flex items-center justify-between cursor-pointer ${
                         isSelected
-                          ? 'bg-indigo-600 text-white font-bold'
-                          : 'hover:bg-indigo-50 text-slate-700'
+                          ? 'bg-emerald-700 text-white font-bold'
+                          : 'hover:bg-emerald-50 text-slate-700'
                       }`}
                     >
                       <span>{String(minute).padStart(2, '0')}</span>
@@ -304,7 +304,7 @@ export const TimeInput24: React.FC<TimeInput24Props> = ({
                 const m = String(now.getMinutes()).padStart(2, '0');
                 emitChange(`${h}:${m}`);
               }}
-              className="text-[11px] text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer"
+              className="text-[11px] text-emerald-700 hover:text-emerald-900 font-semibold cursor-pointer"
             >
               Set Jam Sekarang
             </button>

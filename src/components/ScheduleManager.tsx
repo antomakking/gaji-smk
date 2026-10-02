@@ -98,7 +98,7 @@ export const getBreakVisual = (slot: SlotJadwalPelajaran) => {
       label: 'Pembiasaan & Karakter',
       badgeText: '0 JP (Non-KBM)',
       badgeBg: 'bg-sky-100 text-sky-800 border-sky-300',
-      containerBg: 'bg-gradient-to-br from-sky-50/95 via-indigo-50/60 to-sky-100/50 border-sky-300/90 text-sky-950',
+      containerBg: 'bg-gradient-to-br from-emerald-50/95 via-teal-50/60 to-emerald-100/50 border-emerald-300/90 text-emerald-950',
       accentBorder: 'border-dashed border-sky-300',
       accentColor: 'text-sky-700'
     };
@@ -170,7 +170,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
     kode: '',
     nama: '',
     mataPelajaranUtama: '',
-    warnaBadge: 'bg-indigo-600 text-white'
+    warnaBadge: 'bg-emerald-700 text-white'
   });
 
   const [syncNotification, setSyncNotification] = useState<string | null>(null);
@@ -405,7 +405,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
       {/* Top Banner & Title Bar */}
       <div className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-800 text-white flex items-center justify-center shadow-lg shadow-indigo-600/20 shrink-0">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center shadow-lg shadow-emerald-950/40 shrink-0">
             <CalendarDays className="w-7 h-7" />
           </div>
           <div>
@@ -413,10 +413,10 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               <h2 className="text-xl font-bold text-slate-900 tracking-tight">
                 Pengaturan Jadwal Pelajaran & Waktu Istirahat
               </h2>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
                 Semester Gasal 2026/2027
               </span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
                 {totalAcademicJP} JP Mengajar • {totalBreakSlots} Slot Istirahat
               </span>
             </div>
@@ -456,7 +456,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
 
           <button
             onClick={() => handleOpenAddModal(undefined, undefined, undefined, false)}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-emerald-700 hover:bg-emerald-800 shadow-md shadow-emerald-950/20 transition flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Tambah Slot Jadwal</span>
@@ -503,14 +503,14 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         </div>
       )}
 
-      {/* Navigation View Switcher (Tabs) */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+      {/* Navigation View Switcher (Tabs) with Soft Green Aesthetic */}
+      <div className="bg-white rounded-2xl p-4 border border-emerald-100 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-emerald-50 pb-3">
           <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl flex-wrap">
             <button
               onClick={() => setActiveView('matrix')}
               className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
-                activeView === 'matrix' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                activeView === 'matrix' ? 'bg-white text-emerald-800 font-bold shadow-xs border border-emerald-200/80' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -520,7 +520,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             <button
               onClick={() => setActiveView('by_class')}
               className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
-                activeView === 'by_class' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                activeView === 'by_class' ? 'bg-white text-emerald-800 font-bold shadow-xs border border-emerald-200/80' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <GraduationCap className="w-3.5 h-3.5" />
@@ -530,7 +530,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             <button
               onClick={() => setActiveView('by_teacher')}
               className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
-                activeView === 'by_teacher' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                activeView === 'by_teacher' ? 'bg-white text-emerald-800 font-bold shadow-xs border border-emerald-200/80' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Users className="w-3.5 h-3.5" />
@@ -540,7 +540,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             <button
               onClick={() => setActiveView('initials')}
               className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
-                activeView === 'initials' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                activeView === 'initials' ? 'bg-white text-emerald-800 font-bold shadow-xs border border-emerald-200/80' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <BookOpen className="w-3.5 h-3.5" />
@@ -556,7 +556,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               placeholder="Cari mata pelajaran, guru, kelas..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
             />
             {searchQuery && (
               <button 
@@ -583,7 +583,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     key={h}
                     onClick={() => setSelectedHari(h)}
                     className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer ${
-                      selectedHari === h ? 'bg-indigo-600 text-white font-semibold shadow-xs' : 'text-slate-600 hover:bg-slate-200'
+                      selectedHari === h ? 'bg-emerald-700 text-white font-semibold shadow-xs' : 'text-slate-600 hover:bg-slate-200'
                     }`}
                   >
                     {h}
@@ -598,7 +598,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               <select
                 value={selectedKelas}
                 onChange={(e) => setSelectedKelas(e.target.value)}
-                className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               >
                 <option value="Semua">Semua Kelas ({DAFTAR_KELAS.length})</option>
                 {DAFTAR_KELAS.map(k => (
@@ -613,7 +613,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               <select
                 value={selectedGuru}
                 onChange={(e) => setSelectedGuru(e.target.value)}
-                className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 max-w-[180px]"
+                className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 max-w-[180px]"
               >
                 <option value="Semua">Semua Guru ({guruList.length})</option>
                 {guruList.map(g => (
@@ -628,7 +628,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               <select
                 value={selectedTipeSlot}
                 onChange={(e) => setSelectedTipeSlot(e.target.value as any)}
-                className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               >
                 <option value="Semua">Semua Kategori</option>
                 <option value="pelajaran">📚 Jam Pelajaran Saja (1 JP)</option>
@@ -649,7 +649,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
       </div>
 
       {/* Staggered Break Info Banner */}
-      <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 border border-emerald-200/80 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
+      <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50/70 border border-emerald-200/80 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
         <div className="flex items-start gap-3">
           <div className="p-2 bg-emerald-600 text-white rounded-xl shadow-xs shrink-0 mt-0.5">
             <Clock className="w-4 h-4" />
@@ -692,11 +692,11 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 {/* Header for the day */}
                 <div className="bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="w-3 h-3 rounded-full bg-indigo-400"></span>
+                    <span className="w-3 h-3 rounded-full bg-emerald-400"></span>
                     <h3 className="text-base font-bold tracking-wide">
                       JADWAL HARI {hariName.toUpperCase()}
                     </h3>
-                    <span className="text-xs bg-slate-800 text-indigo-200 px-2.5 py-0.5 rounded-full border border-slate-700">
+                    <span className="text-xs bg-slate-800 text-emerald-200 px-2.5 py-0.5 rounded-full border border-slate-700">
                       {academicCount} JP Mengajar • {breakCount} Istirahat (0 JP)
                     </span>
                   </div>
@@ -711,7 +711,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     </button>
                     <button
                       onClick={() => handleOpenAddModal(hariName, undefined, undefined, false)}
-                      className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-3 py-1.5 rounded-lg flex items-center gap-1 transition cursor-pointer"
+                      className="text-xs bg-emerald-700 hover:bg-emerald-800 text-white font-medium px-3 py-1.5 rounded-lg flex items-center gap-1 transition cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Tambah di {hariName}</span>
@@ -838,7 +838,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                                         <div className="absolute right-1.5 bottom-1.5 opacity-0 group-hover:opacity-100 transition flex items-center gap-1 bg-white/95 p-0.5 rounded-md shadow-xs border border-slate-200">
                                           <button
                                             onClick={() => handleOpenEditModal(slotMatch)}
-                                            className="p-1 text-indigo-600 hover:bg-indigo-50 rounded cursor-pointer"
+                                            className="p-1 text-emerald-700 hover:bg-emerald-50 rounded cursor-pointer"
                                             title="Edit Slot Istirahat"
                                           >
                                             <Edit3 className="w-3 h-3" />
@@ -888,7 +888,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                                             </>
                                           )}
                                         </span>
-                                        <span className="font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded text-[9px] shrink-0 border border-indigo-100">
+                                        <span className="font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded text-[9px] shrink-0 border border-emerald-100">
                                           1 JP
                                         </span>
                                       </div>
@@ -897,7 +897,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                                       <div className="absolute right-1.5 bottom-1.5 opacity-0 group-hover:opacity-100 transition flex items-center gap-1 bg-white/90 p-0.5 rounded-md shadow-xs border border-slate-200">
                                         <button
                                           onClick={() => handleOpenEditModal(slotMatch)}
-                                          className="p-1 text-indigo-600 hover:bg-indigo-50 rounded cursor-pointer"
+                                          className="p-1 text-emerald-700 hover:bg-emerald-50 rounded cursor-pointer"
                                           title="Edit Slot"
                                         >
                                           <Edit3 className="w-3 h-3" />
@@ -921,7 +921,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                                   <div className="flex items-center gap-1">
                                     <button
                                       onClick={() => handleOpenAddModal(hariName, ts.jamKe, kelasName, false)}
-                                      className="w-full h-14 border border-dashed border-slate-200 rounded-xl hover:border-indigo-400 hover:bg-indigo-50/30 text-slate-300 hover:text-indigo-600 flex flex-col items-center justify-center transition cursor-pointer text-[10px] group"
+                                      className="w-full h-14 border border-dashed border-slate-200 rounded-xl hover:border-emerald-400 hover:bg-emerald-50/30 text-slate-300 hover:text-emerald-700 flex flex-col items-center justify-center transition cursor-pointer text-[10px] group"
                                       title="Tambah Jam Pelajaran (1 JP)"
                                     >
                                       <Plus className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 transition" />
@@ -965,7 +965,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 onClick={() => setSelectedKelas(k)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer whitespace-nowrap ${
                   (selectedKelas === 'Semua' ? '10-A' : selectedKelas) === k
-                    ? 'bg-indigo-600 text-white shadow-sm'
+                    ? 'bg-emerald-700 text-white shadow-xs'
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                 }`}
               >
@@ -987,7 +987,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 <div className="p-6 bg-slate-900 text-white border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2">
-                      <GraduationCap className="w-6 h-6 text-indigo-400" />
+                      <GraduationCap className="w-6 h-6 text-emerald-400" />
                       <h3 className="text-lg font-bold">JADWAL PELAJARAN KELAS {targetClass}</h3>
                     </div>
                     <p className="text-xs text-slate-400 mt-1">
@@ -996,7 +996,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="text-xs bg-slate-800 px-3.5 py-2 rounded-xl border border-slate-700 text-slate-300">
-                      Beban: <strong className="text-indigo-300">{classAcademicJP} JP</strong> tatap muka / pekan
+                      Beban: <strong className="text-emerald-300">{classAcademicJP} JP</strong> tatap muka / pekan
                     </div>
                     <div className="text-xs bg-amber-950/80 px-3.5 py-2 rounded-xl border border-amber-700/60 text-amber-200">
                       <strong className="text-amber-300">{classBreakCount}</strong> Slot Istirahat (0 JP)
@@ -1015,7 +1015,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                       <div key={hari} className="p-4 space-y-3">
                         <div className="bg-slate-100 text-slate-800 font-bold text-center py-1.5 px-2 rounded-lg text-xs flex items-center justify-between">
                           <span>{hari.toUpperCase()}</span>
-                          <span className="text-[10px] text-indigo-600 bg-white px-1.5 py-0.5 rounded font-bold">
+                          <span className="text-[10px] text-emerald-800 bg-white px-1.5 py-0.5 rounded font-bold">
                             {dayAcademicJP} JP
                           </span>
                         </div>
@@ -1074,10 +1074,10 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                             // 3. Regular Teaching Slot
                             return (
                               <div 
-                                key={idx}
+                                key={idx} 
                                 className={`p-2.5 rounded-xl border text-xs transition ${
                                   slot 
-                                    ? 'bg-white border-slate-200 shadow-2xs hover:border-indigo-300' 
+                                    ? 'bg-white border-slate-200 shadow-2xs hover:border-emerald-300' 
                                     : 'bg-slate-50/50 border-dashed border-slate-200 text-slate-400'
                                 }`}
                               >
@@ -1099,7 +1099,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                                         <span className={`text-[9px] font-black px-1.5 py-0.5 rounded ${guru?.warnaBadge || 'bg-slate-700 text-white'}`}>
                                           {slot.kodeGuru}
                                         </span>
-                                        <span className="text-[9px] font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100">
+                                        <span className="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">
                                           1 JP
                                         </span>
                                       </div>
@@ -1136,7 +1136,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
 
             <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
               <span className="text-xs text-slate-500 font-semibold">Total Jam Tatap Muka (Pekan)</span>
-              <p className="text-2xl font-black text-indigo-600 mt-1">
+              <p className="text-2xl font-black text-emerald-700 mt-1">
                 {totalAcademicJP} JP / Pekan
               </p>
               <p className="text-[11px] text-emerald-600 mt-0.5 font-medium">
@@ -1163,7 +1163,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
             <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-indigo-600" />
+                <Users className="w-5 h-5 text-emerald-700" />
                 <h3 className="text-sm font-bold text-slate-900">
                   Rekapitulasi Jam Mengajar Guru & Alokasi SIM GAJI (0 JP untuk Istirahat)
                 </h3>
@@ -1199,7 +1199,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                         <p className="font-bold text-slate-900">{t.nama}</p>
                         <p className="text-[11px] text-slate-500">{t.mataPelajaranUtama}</p>
                       </td>
-                      <td className="py-3 px-3 text-center font-bold text-indigo-700 bg-indigo-50/40">
+                      <td className="py-3 px-3 text-center font-bold text-emerald-800 bg-emerald-50/40">
                         {t.totalJP} JP
                       </td>
                       <td className="py-3 px-3 text-center">
@@ -1237,7 +1237,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                             }
                             setSyncNotification(`Berhasil menyinkronkan ${t.monthlyHours} JP (${t.totalJP} JP/pekan) untuk ${t.nama} ke kalkulasi presensi SIM GAJI!`);
                           }}
-                          className="px-2.5 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-[11px] border border-indigo-200 transition cursor-pointer flex items-center gap-1 mx-auto"
+                          className="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold text-[11px] border border-emerald-200 transition cursor-pointer flex items-center gap-1 mx-auto"
                         >
                           <RefreshCw className="w-3 h-3" />
                           <span>Sinkron ke Gaji</span>
@@ -1268,10 +1268,10 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               <button
                 onClick={() => {
                   setEditingGuru(null);
-                  setGuruForm({ kode: '', nama: '', mataPelajaranUtama: '', warnaBadge: 'bg-indigo-600 text-white' });
+                  setGuruForm({ kode: '', nama: '', mataPelajaranUtama: '', warnaBadge: 'bg-emerald-700 text-white' });
                   setIsGuruModalOpen(true);
                 }}
-                className="px-3.5 py-2 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-600/20"
+                className="px-3.5 py-2 rounded-xl text-xs font-semibold text-white bg-emerald-700 hover:bg-emerald-800 transition flex items-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Tambah Kode Guru</span>
@@ -1284,7 +1284,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 return (
                   <div 
                     key={g.kode}
-                    className="p-4 rounded-2xl bg-slate-50/80 hover:bg-white border border-slate-200 hover:border-indigo-300 transition shadow-2xs hover:shadow-xs group flex items-start justify-between gap-3"
+                    className="p-4 rounded-2xl bg-slate-50/80 hover:bg-white border border-slate-200 hover:border-emerald-300 transition shadow-2xs hover:shadow-xs group flex items-start justify-between gap-3"
                   >
                     <div className="flex items-start gap-3 min-w-0">
                       <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-black text-sm shrink-0 shadow-xs ${g.warnaBadge}`}>
@@ -1298,7 +1298,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                           {g.mataPelajaranUtama}
                         </p>
                         <div className="mt-2 flex items-center gap-2">
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200">
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
                             {totalAssigned} JP Aktif (Mengajar)
                           </span>
                         </div>
@@ -1311,7 +1311,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                         setGuruForm({ ...g });
                         setIsGuruModalOpen(true);
                       }}
-                      className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition cursor-pointer opacity-0 group-hover:opacity-100 shrink-0"
+                      className="p-1.5 text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition cursor-pointer opacity-0 group-hover:opacity-100 shrink-0"
                       title="Edit Data Guru"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
@@ -1335,7 +1335,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${
                   modalForm.tipeSlot === 'istirahat' || modalForm.isIstirahat 
                     ? 'bg-amber-100 text-amber-700' 
-                    : 'bg-indigo-50 text-indigo-600'
+                    : 'bg-emerald-50 text-emerald-700'
                 }`}>
                   {modalForm.tipeSlot === 'istirahat' || modalForm.isIstirahat ? (
                     <Coffee className="w-5 h-5" />
@@ -1378,11 +1378,11 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     }}
                     className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer ${
                       !modalForm.isIstirahat && modalForm.tipeSlot !== 'istirahat'
-                        ? 'bg-white text-indigo-700 shadow-sm border border-slate-200'
+                        ? 'bg-white text-emerald-800 shadow-xs border border-slate-200'
                         : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    <BookOpen className="w-4 h-4 text-indigo-600" />
+                    <BookOpen className="w-4 h-4 text-emerald-700" />
                     <span>📚 Jam Pelajaran (1 JP)</span>
                   </button>
 
@@ -1468,7 +1468,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                       const h = e.target.value as HariJadwal;
                       setModalForm({ ...modalForm, hari: h });
                     }}
-                    className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                     required
                   >
                     <option value="Senin">Senin</option>
@@ -1485,7 +1485,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   <select
                     value={modalForm.kelas}
                     onChange={(e) => setModalForm({ ...modalForm, kelas: e.target.value })}
-                    className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                     required
                   >
                     {DAFTAR_KELAS.map(k => (
@@ -1511,7 +1511,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                         rentangWaktu: matchTime ? matchTime.rentangWaktu : modalForm.rentangWaktu
                       });
                     }}
-                    className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                     required
                   >
                     <option value="1">Jam 1 (07:40 - 08:20)</option>
@@ -1538,7 +1538,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     value={modalForm.rentangWaktu || ''}
                     onChange={(e) => setModalForm({ ...modalForm, rentangWaktu: e.target.value })}
                     placeholder="07:40 - 08:20"
-                    className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                     required
                   />
                 </div>
@@ -1554,7 +1554,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   value={modalForm.mataPelajaran || ''}
                   onChange={(e) => setModalForm({ ...modalForm, mataPelajaran: e.target.value })}
                   placeholder={modalForm.tipeSlot === 'istirahat' || modalForm.isIstirahat ? 'Contoh: Istirahat 1 & Sholat Dhuha' : 'Contoh: Koding dan AI / Pemrograman Web'}
-                  className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   required
                 />
               </div>
@@ -1576,7 +1576,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                       pegawaiId: matchG?.pegawaiId
                     });
                   }}
-                  className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                 >
                   {(modalForm.tipeSlot === 'istirahat' || modalForm.isIstirahat) && (
                     <option value="GP">[GP] Guru Piket Sekolah (Tanpa Beban JP)</option>
@@ -1597,7 +1597,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   value={modalForm.ruang || ''}
                   onChange={(e) => setModalForm({ ...modalForm, ruang: e.target.value })}
                   placeholder={modalForm.tipeSlot === 'istirahat' || modalForm.isIstirahat ? 'Contoh: Masjid / Kantin / Area Sekolah' : 'Contoh: Lab RPL 1 / Kelas 10-A'}
-                  className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="w-full p-2 rounded-xl bg-slate-50 border border-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                 />
               </div>
 
@@ -1638,7 +1638,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   className={`px-4 py-2 rounded-xl font-semibold shadow-md transition cursor-pointer text-white ${
                     modalForm.tipeSlot === 'istirahat' || modalForm.isIstirahat
                       ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20'
-                      : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20'
+                      : 'bg-emerald-700 hover:bg-emerald-800 shadow-emerald-700/20'
                   }`}
                 >
                   {editingSlot ? 'Simpan Perubahan' : (modalForm.tipeSlot === 'istirahat' || modalForm.isIstirahat ? 'Simpan Waktu Istirahat (0 JP)' : 'Tambahkan Jam Pelajaran (1 JP)')}
@@ -1731,7 +1731,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold cursor-pointer shadow-md shadow-indigo-600/20"
+                  className="px-4 py-2 rounded-xl bg-emerald-700 text-white font-semibold cursor-pointer shadow-md shadow-emerald-700/20 hover:bg-emerald-800"
                 >
                   Simpan
                 </button>

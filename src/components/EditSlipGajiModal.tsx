@@ -213,21 +213,21 @@ export const EditSlipGajiModal: React.FC<EditSlipGajiModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto animate-in fade-in">
       <div className="bg-white rounded-2xl max-w-4xl w-full shadow-2xl border border-slate-200 overflow-hidden my-auto flex flex-col max-h-[92vh]">
         
-        {/* Modal Header */}
-        <div className="bg-linear-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-5 sm:p-6 flex items-center justify-between border-b border-slate-800 shrink-0">
+        {/* Modal Header - Soft Green Aesthetic */}
+        <div className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white p-5 sm:p-6 flex items-center justify-between border-b border-emerald-800/80 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-white shadow-sm">
-              <Calculator className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-700 flex items-center justify-center font-bold text-white shadow-xs">
+              <Calculator className="w-5 h-5 text-emerald-100" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-white">Form Rincian & Edit Slip Gaji</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
+                <h3 className="text-base font-bold text-white">Form Rincian &amp; Edit Slip Gaji</h3>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-200 border border-emerald-400/30">
                   {record.kodeSlip}
                 </span>
               </div>
-              <p className="text-xs text-slate-300 mt-0.5">
-                {record.pegawaiNama} • <span className="text-indigo-300 font-medium">{record.pegawaiJabatan}</span> ({record.periodeLabel})
+              <p className="text-xs text-emerald-100/80 mt-0.5">
+                {record.pegawaiNama} • <span className="text-emerald-300 font-medium">{record.pegawaiJabatan}</span> ({record.periodeLabel})
               </p>
             </div>
           </div>
@@ -235,7 +235,7 @@ export const EditSlipGajiModal: React.FC<EditSlipGajiModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-white/10 transition cursor-pointer"
+            className="text-emerald-200/80 hover:text-white p-2 rounded-xl hover:bg-white/10 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -248,10 +248,10 @@ export const EditSlipGajiModal: React.FC<EditSlipGajiModalProps> = ({
           <div className="bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200/90 space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-slate-200">
               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                <Briefcase className="w-3.5 h-3.5 text-indigo-600" />
+                <Briefcase className="w-3.5 h-3.5 text-emerald-700" />
                 1. Kelompok Tunjangan Jabatan Struktural
               </h4>
-              <span className="text-[11px] font-bold text-indigo-700 font-mono">
+              <span className="text-[11px] font-bold text-emerald-800 font-mono">
                 Subtotal: {formatRupiah(tunjanganKepsek + tunjanganWakasek + tunjanganWaliKelas + tunjanganAsrama)}
               </span>
             </div>
@@ -269,7 +269,7 @@ export const EditSlipGajiModal: React.FC<EditSlipGajiModalProps> = ({
                     step="10000"
                     value={tunjanganKepsek}
                     onChange={(e) => setTunjanganKepsek(Number(e.target.value) || 0)}
-                    className="w-full pl-8 pr-2.5 py-2 text-xs font-mono rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full pl-8 pr-2.5 py-2 text-xs font-mono rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
                 </div>
               </div>
@@ -286,7 +286,7 @@ export const EditSlipGajiModal: React.FC<EditSlipGajiModalProps> = ({
                     step="10000"
                     value={tunjanganWakasek}
                     onChange={(e) => setTunjanganWakasek(Number(e.target.value) || 0)}
-                    className="w-full pl-8 pr-2.5 py-2 text-xs font-mono rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full pl-8 pr-2.5 py-2 text-xs font-mono rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
                 </div>
               </div>
@@ -303,7 +303,7 @@ export const EditSlipGajiModal: React.FC<EditSlipGajiModalProps> = ({
                     step="10000"
                     value={tunjanganWaliKelas}
                     onChange={(e) => setTunjanganWaliKelas(Number(e.target.value) || 0)}
-                    className="w-full pl-8 pr-2.5 py-2 text-xs font-mono rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full pl-8 pr-2.5 py-2 text-xs font-mono rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
                 </div>
               </div>
@@ -320,7 +320,7 @@ export const EditSlipGajiModal: React.FC<EditSlipGajiModalProps> = ({
                     step="10000"
                     value={tunjanganAsrama}
                     onChange={(e) => setTunjanganAsrama(Number(e.target.value) || 0)}
-                    className="w-full pl-8 pr-2.5 py-2 text-xs font-mono rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full pl-8 pr-2.5 py-2 text-xs font-mono rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
                 </div>
               </div>
@@ -525,16 +525,16 @@ export const EditSlipGajiModal: React.FC<EditSlipGajiModalProps> = ({
           </div>
 
           {/* SECTION 4: REALTIME SUMMARY TAKE HOME PAY CALCULATION */}
-          <div className="bg-linear-to-r from-slate-900 via-indigo-950 to-slate-900 p-5 rounded-2xl text-white shadow-lg border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between text-xs text-indigo-300">
+          <div className="bg-gradient-to-r from-emerald-950 via-[#07241e] to-teal-950 p-5 rounded-2xl text-white shadow-lg border border-emerald-800/60 space-y-3">
+            <div className="flex items-center justify-between text-xs text-emerald-300">
               <span className="font-semibold flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-indigo-400" />
-                Hasil Rekapitulasi Otomatis Frontend & Supabase
+                <Sparkles className="w-4 h-4 text-emerald-400" />
+                Hasil Rekapitulasi Otomatis Frontend &amp; Supabase
               </span>
-              <span className="font-mono text-[11px]">Formula Resmi SMK IT IQM</span>
+              <span className="font-mono text-[11px] text-emerald-200/80">Formula Resmi SMK IT IQM</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-slate-800/80">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-emerald-800/60">
               <div className="bg-white/5 p-3 rounded-xl border border-white/10">
                 <span className="text-[10px] text-slate-300 uppercase tracking-wider block">Total Tambahan / Bruto:</span>
                 <span className="text-base font-black text-white font-mono">{formatRupiah(totalTambahan)}</span>
@@ -567,7 +567,7 @@ export const EditSlipGajiModal: React.FC<EditSlipGajiModalProps> = ({
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold shadow-md shadow-emerald-900/20 transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               <span>{isSaving ? 'Menyimpan ke Supabase...' : 'Simpan Perubahan Slip Gaji'}</span>

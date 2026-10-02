@@ -37,14 +37,14 @@ export const EmailNotificationModal: React.FC<EmailNotificationModalProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Header - Soft Green Aesthetic */}
+      <div className="bg-white p-5 rounded-2xl border border-emerald-100/90 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-base sm:text-lg font-bold text-slate-800">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">
               Notifikasi Email Slip Gaji Otomatis
             </h2>
-            <span className="bg-indigo-50 text-indigo-700 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-indigo-100">
+            <span className="bg-emerald-50 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200">
               SMTP Ready
             </span>
           </div>
@@ -55,7 +55,7 @@ export const EmailNotificationModal: React.FC<EmailNotificationModalProps> = ({
 
         <button
           onClick={onTriggerBatchEmail}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-sm transition flex items-center gap-2"
+          className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs transition flex items-center gap-2 cursor-pointer"
         >
           <Mail className="w-4 h-4" />
           <span>Kirim Notifikasi ke Seluruh Pegawai</span>
@@ -65,7 +65,7 @@ export const EmailNotificationModal: React.FC<EmailNotificationModalProps> = ({
       {/* Grid: Left Logs List, Right Email Live Preview */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Logs List (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col h-[580px]">
+        <div className="lg:col-span-5 bg-white rounded-2xl border border-emerald-100/90 shadow-xs p-4 flex flex-col h-[580px]">
           <div className="pb-3 border-b border-slate-100 mb-3">
             <div className="relative">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -74,7 +74,7 @@ export const EmailNotificationModal: React.FC<EmailNotificationModalProps> = ({
                 placeholder="Cari penerima atau kode slip..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
               />
             </div>
           </div>
@@ -93,7 +93,7 @@ export const EmailNotificationModal: React.FC<EmailNotificationModalProps> = ({
                     onClick={() => setSelectedLog(log)}
                     className={`p-3 rounded-lg border text-xs cursor-pointer transition ${
                       isSelected
-                        ? 'bg-indigo-50/80 border-indigo-300 shadow-xs'
+                        ? 'bg-emerald-50/80 border-emerald-300 shadow-xs'
                         : 'bg-white border-slate-100 hover:bg-slate-50'
                     }`}
                   >
@@ -143,7 +143,7 @@ export const EmailNotificationModal: React.FC<EmailNotificationModalProps> = ({
               <div className="border border-slate-200 rounded-xl p-6 bg-white shadow-xs font-sans text-xs space-y-4">
                 {/* School Header Banner in Email */}
                 <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-                  <div className="w-8 h-8 rounded-lg bg-indigo-900 flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white font-bold text-sm">
                     IQ
                   </div>
                   <div>
@@ -162,8 +162,8 @@ export const EmailNotificationModal: React.FC<EmailNotificationModalProps> = ({
                   </p>
                 </div>
 
-                <div className="bg-indigo-50/70 p-3.5 rounded-lg border border-indigo-100 text-xs text-indigo-950 space-y-1">
-                  <div className="font-bold text-indigo-900">Rincian Dokumen Terlampir:</div>
+                <div className="bg-emerald-50/70 p-3.5 rounded-lg border border-emerald-100 text-xs text-emerald-950 space-y-1">
+                  <div className="font-bold text-emerald-900">Rincian Dokumen Terlampir:</div>
                   <div className="flex justify-between text-[11px]">
                     <span>Nomor Kode Slip:</span>
                     <span className="font-mono font-bold">{selectedLog.kodeSlip}</span>
@@ -179,7 +179,7 @@ export const EmailNotificationModal: React.FC<EmailNotificationModalProps> = ({
                 </p>
 
                 <div className="pt-2">
-                  <div className="inline-block bg-indigo-600 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-sm">
+                  <div className="inline-block bg-emerald-700 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-sm">
                     Unduh Slip Gaji PDF Resmi (Terlampir)
                   </div>
                 </div>

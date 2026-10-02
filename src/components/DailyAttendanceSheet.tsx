@@ -698,7 +698,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <div className="px-3 py-1 text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-indigo-600" />
+                <Calendar className="w-3.5 h-3.5 text-emerald-700" />
                 <span>{dateFormattedIndo}</span>
               </div>
               <button
@@ -715,7 +715,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 font-semibold text-slate-800 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+                className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 font-semibold text-slate-800 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
               />
               <button
                 type="button"
@@ -727,7 +727,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                 }}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-xl transition cursor-pointer flex items-center gap-1 border shadow-2xs ${
                   selectedDate === getTodayDateString()
-                    ? 'bg-indigo-600 hover:bg-indigo-700 text-white border-indigo-600 font-bold ring-2 ring-indigo-500/20'
+                    ? 'bg-emerald-700 hover:bg-emerald-800 text-white border-emerald-700 font-bold ring-2 ring-emerald-500/20'
                     : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
                 }`}
                 title={`Pilih Tanggal Hari Ini (${getTodayDateString()})`}
@@ -745,11 +745,11 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
             </div>
 
             {payrollCycleInfo && (
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-indigo-50/80 border border-indigo-200/80 rounded-xl text-[11px] text-indigo-900">
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-50/80 border border-emerald-200/80 rounded-xl text-[11px] text-emerald-950">
                 <span className="text-slate-500">Siklus:</span>
                 <span className="font-bold">Periode {payrollCycleInfo.periodeLabel}</span>
                 <span className="text-slate-400">•</span>
-                <span className="font-mono text-indigo-700">{payrollCycleInfo.cutoffLabelShort}</span>
+                <span className="font-mono text-emerald-800 font-bold">{payrollCycleInfo.cutoffLabelShort}</span>
                 <span className="text-slate-400">•</span>
                 <span className="text-emerald-700 font-medium">Bayar: 25 {(payrollCycleInfo.periodeLabel || '').split(' ')[0]}</span>
               </div>
@@ -773,7 +773,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                 onClick={() => setSelectedDate(chip.date)}
                 className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
                   selectedDate === chip.date
-                    ? 'bg-indigo-600 text-white shadow-xs font-bold'
+                    ? 'bg-emerald-700 text-white shadow-xs font-bold'
                     : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                 }`}
               >
@@ -795,7 +795,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
             <button
               onClick={handleSaveDayAttendance}
               disabled={isSaving}
-              className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer"
+              className="bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer"
               title="Sinkronisasi manual seluruh baris presensi hari ini ke rekapitulasi penggajian"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSaving ? 'animate-spin' : ''}`} />
@@ -897,7 +897,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
 
         <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
           <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sakit &amp; Izin</div>
-          <div className="text-base font-extrabold text-indigo-700 mt-0.5">
+          <div className="text-base font-extrabold text-teal-800 mt-0.5">
             {metrics.sakit + metrics.izin} Orang
           </div>
           <div className="text-[10px] text-slate-500">{metrics.sakit} Sakit, {metrics.izin} Izin</div>
@@ -932,7 +932,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="bg-white p-4 rounded-2xl border border-emerald-100/90 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="relative w-full sm:w-80">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -940,7 +940,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
             placeholder="Cari nama guru, NIP, atau jabatan..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 bg-slate-50/50"
+            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 bg-slate-50/50"
           />
         </div>
 
@@ -953,7 +953,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
             <button
               onClick={() => setRoleFilter('all')}
               className={`px-3 py-1 rounded-lg font-semibold transition cursor-pointer ${
-                roleFilter === 'all' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600'
+                roleFilter === 'all' ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-600'
               }`}
             >
               Semua ({pegawaiList.length})
@@ -961,7 +961,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
             <button
               onClick={() => setRoleFilter('guru')}
               className={`px-3 py-1 rounded-lg font-semibold transition cursor-pointer ${
-                roleFilter === 'guru' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600'
+                roleFilter === 'guru' ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-600'
               }`}
             >
               Guru (GTY/GTT)
@@ -969,7 +969,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
             <button
               onClick={() => setRoleFilter('tendik')}
               className={`px-3 py-1 rounded-lg font-semibold transition cursor-pointer ${
-                roleFilter === 'tendik' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-600'
+                roleFilter === 'tendik' ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-600'
               }`}
             >
               Tendik / Staf (PTY/PTT)
@@ -1047,7 +1047,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                         </div>
                         <div className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
                           <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
-                            isGuru ? 'bg-indigo-50 text-indigo-700' : 'bg-slate-100 text-slate-700'
+                            isGuru ? 'bg-teal-50 text-teal-800' : 'bg-slate-100 text-slate-700'
                           }`}>
                             {peg.statusPegawai}
                           </span>
@@ -1061,7 +1061,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                         <select
                           value={row.status}
                           onChange={(e) => updateRow(peg.id, { status: e.target.value as StatusKehadiranHarian })}
-                          className={`px-2.5 py-1 text-xs rounded-lg font-bold border cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-indigo-500 ${
+                          className={`px-2.5 py-1 text-xs rounded-lg font-bold border cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-emerald-500 ${
                             row.status === 'hadir_tepat_waktu'
                               ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                               : row.status === 'terlambat'
@@ -1073,13 +1073,13 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                               : row.status === 'libur_sekolah'
                               ? 'bg-rose-50 text-rose-800 border-rose-300 font-bold'
                               : row.status === 'sakit_skd'
-                              ? 'bg-indigo-50 text-indigo-800 border-indigo-300'
+                              ? 'bg-teal-50 text-teal-800 border-teal-300'
                               : row.status === 'izin_resmi'
                               ? 'bg-blue-50 text-blue-800 border-blue-300'
                               : row.status === 'dinas_luar'
                               ? 'bg-teal-50 text-teal-800 border-teal-300 font-semibold'
                               : row.status === 'pelatihan'
-                              ? 'bg-indigo-50 text-indigo-800 border-indigo-300 font-semibold'
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold'
                               : row.status === 'cuti_tahunan' || row.status === 'cuti_khusus'
                               ? 'bg-sky-50 text-sky-800 border-sky-300'
                               : 'bg-rose-50 text-rose-800 border-rose-300'
@@ -1154,7 +1154,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                                 onChange={(e) => updateRow(peg.id, { menitTerlambat: Number(e.target.value) })}
                                 className={`w-14 px-1 py-1 text-xs text-center border rounded-lg font-mono font-bold ${
                                   row.status === 'izin_terlambat'
-                                    ? 'border-indigo-300 bg-indigo-50/70 text-indigo-900'
+                                    ? 'border-emerald-300 bg-emerald-50/70 text-emerald-900'
                                     : row.menitTerlambat > 0
                                     ? 'border-amber-300 bg-amber-50 text-amber-800'
                                     : 'border-slate-300 text-slate-600'
@@ -1210,7 +1210,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                               onChange={(e) => updateRow(peg.id, { jamLembur: Number(e.target.value) })}
                               className={`w-12 px-1 py-1 text-xs text-center border rounded-lg font-bold ${
                                 row.jamLembur > 0
-                                  ? 'border-purple-300 bg-purple-50 text-purple-800'
+                                  ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
                                   : 'border-slate-300 text-slate-600'
                               }`}
                             />
@@ -1228,7 +1228,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                           placeholder={isOffDay ? "Bukan Hari Kerja (Off / Bebas Tugas)" : "Catatan / keterangan..."}
                           value={row.keterangan}
                           onChange={(e) => updateRow(peg.id, { keterangan: e.target.value })}
-                          className="w-full px-2.5 py-1 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-hidden text-slate-800"
+                          className="w-full px-2.5 py-1 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-hidden text-slate-800"
                         />
                       </td>
 
@@ -1263,7 +1263,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
             <button
               onClick={handleSaveDayAttendance}
               disabled={isSaving}
-              className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold px-4 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+              className="bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white font-bold px-4 py-2.5 rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer"
             >
               <Save className="w-4 h-4" />
               <span>Simpan &amp; Terapkan ke Penggajian</span>

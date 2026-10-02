@@ -208,19 +208,19 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Card & Rules Banner */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* 1. Header Card & Rules Banner - Soft Green Aesthetic */}
+      <div className="bg-white p-5 rounded-2xl border border-emerald-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold border border-indigo-100">
-              <ArrowRightLeft className="w-4 h-4" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200/80 shadow-xs">
+              <ArrowRightLeft className="w-5 h-5 text-emerald-700" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-800 flex items-center gap-2">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
                 Manajemen Infal (Guru Pengganti)
               </h2>
               <p className="text-xs text-slate-500">
-                Sistem penggajian simetris untuk jam mengajar yang digantikan saat guru berhalangan hadir.
+                Sistem kompensasi simetris untuk jam mengajar yang digantikan saat guru berhalangan hadir.
               </p>
             </div>
           </div>
@@ -229,7 +229,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowAddModal(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-2 cursor-pointer"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs transition flex items-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Catat Infal Baru</span>
@@ -238,8 +238,8 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
       </div>
 
       {/* 2. Educational Rule Card: Formula Rp 7.500/JP */}
-      <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white p-5 rounded-2xl shadow-sm relative overflow-hidden">
-        <div className="absolute right-0 top-0 translate-x-8 -translate-y-8 w-48 h-48 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+      <div className="bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 text-white p-5 rounded-2xl shadow-sm relative overflow-hidden border border-emerald-700/40">
+        <div className="absolute right-0 top-0 translate-x-8 -translate-y-8 w-48 h-48 bg-emerald-400/10 rounded-full blur-2xl pointer-events-none"></div>
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="space-y-1.5 max-w-2xl">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400 text-slate-950 uppercase tracking-wide">
@@ -248,15 +248,15 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
             <h3 className="text-sm sm:text-base font-bold text-white">
               Ketentuan Kompensasi &amp; Potongan Infal: Rp 7.500 / Jam Pelajaran (JP)
             </h3>
-            <p className="text-xs text-slate-200 leading-relaxed">
+            <p className="text-xs text-emerald-100/80 leading-relaxed">
               Guru yang <b>tidak masuk mengajar</b> pada jadwal tatap muka maka jam pelajaran (JP) yang digantikan 
               akan <b>dipotong Rp 7.500 per JP</b>, dan nominal potongan tersebut <b>diberikan langsung sebagai honor tambahan</b> bagi 
               guru yang masuk menggantikan mengajar di kelas.
             </p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/20 text-xs shrink-0 space-y-1 w-full md:w-auto text-center md:text-right">
-            <span className="text-[11px] text-slate-300">Tarif Standar Infal:</span>
+          <div className="bg-emerald-950/40 backdrop-blur-md p-3.5 rounded-xl border border-emerald-500/30 text-xs shrink-0 space-y-1 w-full md:w-auto text-center md:text-right">
+            <span className="text-[11px] text-emerald-200">Tarif Standar Infal:</span>
             <div className="text-xl font-black text-amber-300 font-mono">Rp 7.500 <span className="text-xs font-normal text-white">/ JP</span></div>
             <div className="text-[10px] text-emerald-300 flex items-center justify-center md:justify-end gap-1">
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -268,18 +268,18 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
 
       {/* 3. Summary Metric Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-1">
+        <div className="bg-white p-4 rounded-xl border border-emerald-100/80 shadow-xs space-y-1">
           <span className="text-[11px] font-medium text-slate-500">Total Jam Infal (JP)</span>
           <div className="text-xl font-bold text-slate-900 font-mono flex items-baseline gap-1">
             <span>{stats.totalJp}</span>
             <span className="text-xs font-normal text-slate-500">Jam (JP)</span>
           </div>
-          <div className="text-[10px] text-indigo-600 font-medium">
+          <div className="text-[10px] text-emerald-700 font-medium">
             {stats.totalTransaksi} Sesi Pergantian Kelas
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-1">
+        <div className="bg-white p-4 rounded-xl border border-emerald-100/80 shadow-xs space-y-1">
           <span className="text-[11px] font-medium text-slate-500">Total Alokasi Honor Infal</span>
           <div className="text-xl font-bold text-emerald-700 font-mono">
             {formatRupiah(stats.totalNominal)}
@@ -289,7 +289,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-1">
+        <div className="bg-white p-4 rounded-xl border border-emerald-100/80 shadow-xs space-y-1">
           <span className="text-[11px] font-medium text-slate-500">Total Potongan Terkumpul</span>
           <div className="text-xl font-bold text-rose-700 font-mono">
             {formatRupiah(stats.totalNominal)}
@@ -299,9 +299,9 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-1">
+        <div className="bg-white p-4 rounded-xl border border-emerald-100/80 shadow-xs space-y-1">
           <span className="text-[11px] font-medium text-slate-500">Guru Pengganti Aktif</span>
-          <div className="text-xl font-bold text-indigo-700 font-mono flex items-baseline gap-1">
+          <div className="text-xl font-bold text-teal-800 font-mono flex items-baseline gap-1">
             <span>{stats.countGuruPengganti}</span>
             <span className="text-xs font-normal text-slate-500">Guru</span>
           </div>
@@ -312,7 +312,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
       </div>
 
       {/* 4. Filter & Search Controls */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="bg-white p-4 rounded-xl border border-emerald-100/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="relative w-full sm:w-80">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -320,18 +320,18 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
             placeholder="Cari guru, kelas, mata pelajaran, alasan..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
           />
         </div>
 
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-slate-400 text-[11px] font-semibold flex items-center gap-1">
-            <Filter className="w-3.5 h-3.5" /> Filter Guru:
+          <span className="text-slate-500 text-[11px] font-semibold flex items-center gap-1">
+            <Filter className="w-3.5 h-3.5 text-emerald-700" /> Filter Guru:
           </span>
           <select
             value={selectedGuruFilter}
             onChange={(e) => setSelectedGuruFilter(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white text-slate-700"
+            className="px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white text-slate-700 cursor-pointer"
           >
             <option value="all">Semua Guru ({guruList.length})</option>
             {guruList.map((g) => (
@@ -345,10 +345,10 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
 
       {/* 5. Teacher Balance Summary Table */}
       {teacherInfalBalances.length > 0 && (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div className="bg-white rounded-xl border border-emerald-100/80 shadow-xs overflow-hidden">
+          <div className="p-4 bg-emerald-50/50 border-b border-emerald-100 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-indigo-600" />
+              <Layers className="w-4 h-4 text-emerald-700" />
               <h3 className="font-bold text-slate-800 text-xs sm:text-sm">
                 Rekapitulasi Saldo Infal Guru (Periode Aktif)
               </h3>
@@ -373,7 +373,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {teacherInfalBalances.map(({ pegawai, jpDigantikan, nominalPotongan, jpMenggantikan, nominalHonor, netSaldo }) => (
-                  <tr key={pegawai.id} className="hover:bg-indigo-50/30 transition">
+                  <tr key={pegawai.id} className="hover:bg-emerald-50/30 transition">
                     <td className="py-2.5 px-3">
                       <div className="font-bold text-slate-900">{pegawai.nama}</div>
                       <div className="text-[10px] text-slate-400 font-mono">NIY: {pegawai.niy || pegawai.nip}</div>
@@ -421,10 +421,10 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
       )}
 
       {/* 6. Detailed Infal Transaction Log Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+      <div className="bg-white rounded-xl border border-emerald-100/80 shadow-xs overflow-hidden">
+        <div className="p-4 bg-emerald-50/50 border-b border-emerald-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-indigo-600" />
+            <Calendar className="w-4 h-4 text-emerald-700" />
             <h3 className="font-bold text-slate-800 text-xs sm:text-sm">
               Log Riwayat Transaksi Pergantian Mengajar (Infal)
             </h3>
@@ -436,7 +436,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
 
         {filteredInfal.length === 0 ? (
           <div className="p-12 text-center text-slate-400 space-y-3">
-            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
+            <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border border-emerald-100">
               <ArrowRightLeft className="w-6 h-6" />
             </div>
             <p className="text-xs font-semibold text-slate-600">Belum ada data pencatatan Infal</p>
@@ -445,7 +445,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
             </p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-xs transition inline-flex items-center gap-1.5"
+              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-xs transition inline-flex items-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Catat Infal Sekarang</span>
@@ -469,7 +469,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {filteredInfal.map((item) => (
-                  <tr key={item.id} className="hover:bg-indigo-50/40 transition">
+                  <tr key={item.id} className="hover:bg-emerald-50/30 transition">
                     <td className="py-3 px-3">
                       <div className="font-bold text-slate-900">{item.tanggal}</div>
                       {item.jamKe && (
@@ -510,7 +510,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
 
                     {/* Durasi JP */}
                     <td className="py-3 px-3 text-center font-mono">
-                      <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">
+                      <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded font-bold">
                         {item.jumlahJp} JP
                       </span>
                     </td>
@@ -560,11 +560,11 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
       {/* 7. Modal Input Pencatatan Infal Baru */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4 my-auto border border-slate-200">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold">
-                  <ArrowRightLeft className="w-4 h-4" />
+          <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4 my-auto border border-emerald-100">
+            <div className="flex items-center justify-between border-b border-emerald-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200">
+                  <ArrowRightLeft className="w-4 h-4 text-emerald-700" />
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 text-sm sm:text-base">
@@ -577,7 +577,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="text-slate-400 hover:text-slate-700 text-lg font-bold p-1"
+                className="text-slate-400 hover:text-slate-700 text-lg font-bold p-1 cursor-pointer"
               >
                 ×
               </button>
@@ -594,7 +594,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                   required
                   value={formData.tanggal}
                   onChange={(e) => setFormData({ ...formData, tanggal: e.target.value })}
-                  className="w-full p-2.5 border rounded-xl border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-slate-800"
+                  className="w-full p-2.5 border rounded-xl border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800"
                 />
               </div>
 
@@ -609,7 +609,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                     required
                     value={formData.guruDigantikanId}
                     onChange={(e) => setFormData({ ...formData, guruDigantikanId: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-rose-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-500/20"
+                    className="w-full p-2 border rounded-lg border-rose-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-500/20 cursor-pointer"
                   >
                     {guruList.map((g) => (
                       <option key={g.id} value={g.id}>
@@ -629,7 +629,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                     required
                     value={formData.guruPenggantiId}
                     onChange={(e) => setFormData({ ...formData, guruPenggantiId: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-emerald-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                    className="w-full p-2 border rounded-lg border-emerald-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 cursor-pointer"
                   >
                     {guruList.map((g) => (
                       <option key={g.id} value={g.id}>
@@ -651,7 +651,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                     placeholder="Contoh: X RPL 1, XI TKJ, XII RPL"
                     value={formData.kelas}
                     onChange={(e) => setFormData({ ...formData, kelas: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
                 </div>
                 <div>
@@ -662,7 +662,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                     placeholder="Contoh: Pemrograman Web, Matematika"
                     value={formData.mataPelajaran}
                     onChange={(e) => setFormData({ ...formData, mataPelajaran: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
                 </div>
               </div>
@@ -676,7 +676,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                     placeholder="Jam 1-2 (07.30-09.00)"
                     value={formData.jamKe}
                     onChange={(e) => setFormData({ ...formData, jamKe: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
                 </div>
                 <div>
@@ -688,7 +688,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                     required
                     value={formData.jumlahJp}
                     onChange={(e) => setFormData({ ...formData, jumlahJp: Number(e.target.value) })}
-                    className="w-full p-2 border rounded-lg border-indigo-300 bg-indigo-50/40 font-bold text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full p-2 border rounded-lg border-emerald-300 bg-emerald-50/50 font-bold text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                   />
                 </div>
                 <div>
@@ -709,7 +709,7 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                   <select
                     value={formData.alasan}
                     onChange={(e) => setFormData({ ...formData, alasan: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full p-2 border rounded-lg border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 cursor-pointer"
                   >
                     <option value="Sakit (Surat Keterangan Dokter)">Sakit (Surat Keterangan Dokter)</option>
                     <option value="Izin Dinas Luar Sekolah">Izin Dinas Luar Sekolah</option>
@@ -725,20 +725,20 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                     placeholder="Materi praktikum / modul..."
                     value={formData.catatan}
                     onChange={(e) => setFormData({ ...formData, catatan: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
                 </div>
               </div>
 
               {/* Kalkulasi Simetris Preview */}
-              <div className="bg-slate-900 text-white p-3.5 rounded-xl space-y-1.5">
+              <div className="bg-[#051c17] text-white p-3.5 rounded-xl border border-emerald-900/60 space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-400">Kalkulasi Otomatis Sistem:</span>
+                  <span className="text-emerald-200/80">Kalkulasi Otomatis Sistem:</span>
                   <span className="font-mono text-amber-300 font-bold">
                     {formData.jumlahJp} JP × Rp 7.500 = {formatRupiah(totalNominalCalculated)}
                   </span>
                 </div>
-                <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-slate-800">
+                <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-emerald-900/80">
                   <div className="text-rose-300">
                     Potongan Guru Berhalangan: <b className="font-mono">-{formatRupiah(totalNominalCalculated)}</b>
                   </div>
@@ -753,13 +753,13 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition"
+                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-sm transition"
+                  className="px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold shadow-xs transition cursor-pointer"
                 >
                   Simpan Infal &amp; Terapkan
                 </button>

@@ -34,7 +34,7 @@ export const FormulaInspectorModal: React.FC<FormulaInspectorModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold border border-indigo-100">
+            <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200">
               <Calculator className="w-5 h-5" />
             </div>
             <div>
@@ -48,21 +48,21 @@ export const FormulaInspectorModal: React.FC<FormulaInspectorModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-100 text-lg"
+            className="text-slate-400 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-100 text-lg cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Periode Cut-Off Notice */}
-        <div className="p-3 bg-indigo-50/70 border border-indigo-200/80 rounded-xl text-xs text-indigo-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="p-3 bg-emerald-50/70 border border-emerald-200/80 rounded-xl text-xs text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-indigo-700 shrink-0" />
+            <Clock className="w-4 h-4 text-emerald-700 shrink-0" />
             <span>
               Cut-off Presensi &amp; JP: <strong>{record.periodeCutoffLabel || '23 Juli 2026 s/d 22 Agustus 2026'}</strong>
             </span>
           </div>
-          <span className="inline-flex items-center gap-1 font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 text-[11px]">
+          <span className="inline-flex items-center gap-1 font-semibold text-emerald-800 bg-white px-2 py-0.5 rounded-lg border border-emerald-200 text-[11px]">
             <span>Dibayarkan:</span>
             <span>Mulai 25 {record.periodeLabel}</span>
           </span>
@@ -84,10 +84,10 @@ export const FormulaInspectorModal: React.FC<FormulaInspectorModalProps> = ({
         <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-indigo-600" />
+              <Clock className="w-4 h-4 text-emerald-700" />
               <span>Honor Jam Mengajar (Realisasi JP Tatap Muka)</span>
             </span>
-            <span className="font-bold text-indigo-700 text-sm">
+            <span className="font-bold text-emerald-800 text-sm">
               {formatRupiah(record.honorJamMengajar)}
             </span>
           </div>
@@ -116,10 +116,10 @@ export const FormulaInspectorModal: React.FC<FormulaInspectorModalProps> = ({
         <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-              <CalendarCheck className="w-4 h-4 text-emerald-600" />
+              <CalendarCheck className="w-4 h-4 text-emerald-700" />
               <span>Tunjangan Kehadiran &amp; Transport Harian</span>
             </span>
-            <span className="font-bold text-emerald-700 text-sm">
+            <span className="font-bold text-emerald-800 text-sm">
               {formatRupiah(record.tunjanganKehadiranTransport)}
             </span>
           </div>
@@ -132,7 +132,7 @@ export const FormulaInspectorModal: React.FC<FormulaInspectorModalProps> = ({
         <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-              <ArrowRightLeft className="w-4 h-4 text-indigo-600" />
+              <ArrowRightLeft className="w-4 h-4 text-emerald-700" />
               <span>Sistem Kompensasi &amp; Potongan Infal (Rp 7.500 / JP)</span>
             </span>
             <div className="flex items-center gap-2 text-xs font-mono">
@@ -158,10 +158,10 @@ export const FormulaInspectorModal: React.FC<FormulaInspectorModalProps> = ({
         <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-              <FileCheck className="w-4 h-4 text-blue-600" />
+              <FileCheck className="w-4 h-4 text-teal-600" />
               <span>Status Cuti &amp; Sakit Ber-SKD</span>
             </span>
-            <span className="font-bold text-blue-700 text-xs bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+            <span className="font-bold text-teal-800 text-xs bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
               Hak Normatif Terlindungi
             </span>
           </div>
@@ -191,12 +191,12 @@ export const FormulaInspectorModal: React.FC<FormulaInspectorModalProps> = ({
         </div>
 
         {/* 7. Total Gaji Bersih Step Breakdown */}
-        <div className="bg-slate-900 text-white p-5 rounded-xl space-y-3">
-          <div className="text-xs uppercase font-bold tracking-wider text-slate-400">
+        <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 text-white p-5 rounded-xl space-y-3 border border-emerald-900/60 shadow-md">
+          <div className="text-xs uppercase font-bold tracking-wider text-slate-300">
             Kalkulasi Akhir Take Home Pay (THP)
           </div>
           <div className="space-y-1.5 text-xs font-mono">
-            <div className="flex justify-between text-indigo-300">
+            <div className="flex justify-between text-emerald-300">
               <span>(+) Total Penerimaan Kotor (Pokok + Jabatan + JP + Lembur + Infal + Transport)</span>
               <span className="font-bold">{formatRupiah(record.totalPenerimaan)}</span>
             </div>

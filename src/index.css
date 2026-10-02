@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Eye-Catching Modern Scrollbar System
-   Seamlessly integrates with dark navy sidebar (#0f172a / #020617) & light views
+   Soft Green Aesthetic - Typography, Ambient Surfaces & Scrollbar System
+   Designed with gentle sage, emerald, and mint tones for Indonesian school SIM
    ========================================================================== */
 
 /* Universal Scrollbar Baseline */
@@ -16,7 +16,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.35); /* subtle slate */
+  background: rgba(5, 150, 105, 0.25); /* gentle soft emerald / sage */
   border-radius: 9999px;
   border: 1px solid transparent;
   background-clip: padding-box;
@@ -24,7 +24,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.65); /* modern indigo on hover */
+  background: rgba(16, 185, 129, 0.75); /* vibrant soft emerald on hover */
 }
 
 /* Hide default browser scrollbar arrows/buttons completely */
@@ -41,18 +41,18 @@
 /* Firefox standard support */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+  scrollbar-color: rgba(5, 150, 105, 0.3) transparent;
 }
 
 /* ==========================================================================
-   Dark Sidebar & Dark Elements Scrollbar (Seamless Dark Theme Blend)
+   Botanical Dark Emerald Sidebar & Dark Elements Scrollbar
    ========================================================================== */
 #main-sidebar,
 #main-sidebar nav,
 .custom-scrollbar-dark,
 aside .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(99, 102, 241, 0.35) transparent;
+  scrollbar-color: rgba(16, 185, 129, 0.4) transparent;
 }
 
 #main-sidebar::-webkit-scrollbar,
@@ -74,18 +74,18 @@ aside .custom-scrollbar::-webkit-scrollbar-track {
 #main-sidebar nav::-webkit-scrollbar-thumb,
 .custom-scrollbar-dark::-webkit-scrollbar-thumb,
 aside .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.3);
+  background: rgba(16, 185, 129, 0.35);
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: inset 0 0 6px rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 6px rgba(16, 185, 129, 0.25);
 }
 
 #main-sidebar::-webkit-scrollbar-thumb:hover,
 #main-sidebar nav::-webkit-scrollbar-thumb:hover,
 .custom-scrollbar-dark::-webkit-scrollbar-thumb:hover,
 aside .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.75);
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+  background: rgba(16, 185, 129, 0.85);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
 }
 
 #main-sidebar::-webkit-scrollbar-button,
@@ -104,17 +104,17 @@ aside .custom-scrollbar::-webkit-scrollbar-button {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(241, 245, 249, 0.4);
+  background: rgba(236, 253, 245, 0.6);
   border-radius: 9999px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.45);
+  background: rgba(5, 150, 105, 0.35);
   border-radius: 9999px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.65);
+  background: rgba(5, 150, 105, 0.75);
 }
 
 .custom-scrollbar::-webkit-scrollbar-button {

@@ -183,7 +183,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
           isAbsent = true;
           statusKey = 'pelatihan';
           statusLabel = 'Pelatihan / Diklat / Bimtek';
-          statusBadgeColor = 'bg-indigo-50 text-indigo-700 border-indigo-200 font-semibold';
+          statusBadgeColor = 'bg-teal-50 text-teal-800 border-teal-200 font-semibold';
           keterangan = log.keterangan || 'Mengikuti pelatihan / workshop / diklat';
         } else if (log.status === 'alpha') {
           isAbsent = true;
@@ -205,7 +205,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
         } else if (leave.jenis === 'pelatihan') {
           statusKey = 'pelatihan';
           statusLabel = 'Pelatihan / Diklat Disetujui';
-          statusBadgeColor = 'bg-indigo-50 text-indigo-700 border-indigo-200 font-semibold';
+          statusBadgeColor = 'bg-teal-50 text-teal-800 border-teal-200 font-semibold';
         } else if (leave.jenis.includes('dinas')) {
           statusKey = 'dinas_luar';
           statusLabel = 'Dinas Luar (Surat Tugas)';
@@ -484,11 +484,11 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
       {/* Header with Date Switcher and Direct CTA to Infal Manager */}
-      <div className="p-4 sm:p-5 border-b border-slate-200 bg-linear-to-r from-slate-50/80 via-white to-indigo-50/30">
+      <div className="p-4 sm:p-5 border-b border-emerald-100/80 bg-gradient-to-r from-emerald-50/50 via-white to-teal-50/30">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <div className="p-2 bg-indigo-600 text-white rounded-lg shadow-xs">
+              <div className="p-2 bg-emerald-700 text-white rounded-lg shadow-xs">
                 <CalendarCheck className="w-5 h-5" />
               </div>
               <div>
@@ -538,7 +538,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
                   onClick={() => setSelectedDate(chip.val)}
                   className={`px-2 py-1 text-[11px] font-semibold rounded-md transition cursor-pointer ${
                     selectedDate === chip.val
-                      ? 'bg-indigo-600 text-white shadow-2xs'
+                      ? 'bg-emerald-700 text-white shadow-2xs'
                       : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
                   }`}
                 >
@@ -550,7 +550,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
             {/* Primary Action Button: Navigate directly to Pergantian Mengajar (Infal) */}
             <button
               onClick={() => onNavigateTab('attendance', 'infal')}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer ml-auto sm:ml-0"
+              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-xs transition flex items-center gap-1.5 cursor-pointer ml-auto sm:ml-0"
               title="Buka Halaman Pergantian Mengajar Guru (Jadwal Infal)"
             >
               <ArrowRightLeft className="w-4 h-4" />
@@ -564,7 +564,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
         <div className="mt-3 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
           <div className="text-xs font-medium text-slate-700 flex items-center gap-2">
             <span className="text-slate-500">Hari & Tanggal:</span>
-            <strong className="text-indigo-900 bg-indigo-50/80 px-2.5 py-0.5 rounded border border-indigo-100">
+            <strong className="text-emerald-950 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200/80">
               {dayInfo.dateFormatted}
             </strong>
             {!dayInfo.isSchoolDay && (
@@ -601,7 +601,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
               </span>
             )}
             {metrics.totalPelatihan > 0 && (
-              <span className="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-1 rounded-md font-semibold text-[11px]">
+              <span className="bg-teal-50 text-teal-800 border border-teal-200 px-2 py-1 rounded-md font-semibold text-[11px]">
                 {metrics.totalPelatihan} Pelatihan/Diklat
               </span>
             )}
@@ -611,8 +611,8 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
               </span>
             )}
 
-            <div className="flex items-center gap-1.5 bg-purple-50 border border-purple-200 px-2.5 py-1 rounded-md text-purple-900 font-semibold">
-              <Clock className="w-3.5 h-3.5 text-purple-600" />
+            <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md text-emerald-950 font-semibold">
+              <Clock className="w-3.5 h-3.5 text-emerald-700" />
               <span>Jam Perlu Digantikan: <strong>{metrics.totalSlotsNeedReplace} JP</strong></span>
             </div>
           </div>
@@ -687,7 +687,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
                 <div className="mt-3.5">
                   <div className="flex items-center justify-between mb-2">
                     <div className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                      <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
+                      <BookOpen className="w-3.5 h-3.5 text-emerald-700" />
                       <span>Jadwal Jam Mengajar Terdampak Hari {dayInfo.hari}:</span>
                     </div>
 
@@ -755,7 +755,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
                                 </div>
                                 <button
                                   onClick={() => openAssignModal(item.pegawai, slot, item.keterangan)}
-                                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-[11px] px-2.5 py-1 rounded-md shadow-2xs transition flex items-center gap-1 cursor-pointer"
+                                  className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-[11px] px-2.5 py-1 rounded-md shadow-2xs transition flex items-center gap-1 cursor-pointer"
                                 >
                                   <Plus className="w-3 h-3" />
                                   <span>Tugaskan Pengganti</span>
@@ -777,7 +777,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
       {/* Footer Navigation Bar */}
       <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
         <div className="text-slate-600 flex items-center gap-1.5">
-          <ShieldAlert className="w-4 h-4 text-indigo-600" />
+          <ShieldAlert className="w-4 h-4 text-emerald-700" />
           <span>
             Setiap jam infal yang tercatat resmi akan otomatis menambahkan <strong>Rp 7.500/JP</strong> ke honor guru pengganti dan memotong <strong>Rp 7.500/JP</strong> dari guru berhalangan pada draft penggajian.
           </span>
@@ -786,13 +786,13 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => onNavigateTab('schedule')}
-            className="text-slate-700 hover:text-indigo-600 font-semibold px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer"
+            className="text-slate-700 hover:text-emerald-700 font-semibold px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer"
           >
             Lihat Matriks Jadwal
           </button>
           <button
             onClick={() => onNavigateTab('attendance', 'infal')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3.5 py-1.5 rounded-lg shadow-2xs transition flex items-center gap-1.5 cursor-pointer"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-3.5 py-1.5 rounded-lg shadow-xs transition flex items-center gap-1.5 cursor-pointer"
           >
             <span>Halaman Pergantian Mengajar (Infal)</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -805,26 +805,26 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-150 my-auto">
             {/* Modal Header */}
-            <div className="p-4 sm:p-5 bg-linear-to-r from-indigo-700 via-indigo-800 to-indigo-900 text-white flex items-center justify-between">
+            <div className="p-4 sm:p-5 bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-white/10 rounded-xl shadow-2xs">
-                  <ArrowRightLeft className="w-5 h-5 text-indigo-200" />
+                  <ArrowRightLeft className="w-5 h-5 text-emerald-200" />
                 </div>
                 <div>
                   <h4 className="font-bold text-base flex items-center gap-2">
                     <span>Tugaskan Guru Pengganti (Infal)</span>
-                    <span className="text-[10px] bg-indigo-500/40 text-indigo-100 font-mono px-2 py-0.5 rounded-full border border-indigo-400/30">
+                    <span className="text-[10px] bg-emerald-500/30 text-emerald-200 font-mono px-2 py-0.5 rounded-full border border-emerald-400/30">
                       Guru Induk Terverifikasi
                     </span>
                   </h4>
-                  <p className="text-xs text-indigo-200">
+                  <p className="text-xs text-emerald-200/90">
                     Jadwal Belajar: <strong>{dayInfo.dateFormatted}</strong> • Jam {quickAssignModal.slot.jamKe} ({quickAssignModal.slot.rentangWaktu})
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setQuickAssignModal({ isOpen: false, guruDigantikan: null, slot: null, alasan: '' })}
-                className="text-indigo-200 hover:text-white p-1 rounded-lg hover:bg-white/10 transition cursor-pointer"
+                className="text-emerald-200 hover:text-white p-1 rounded-lg hover:bg-white/10 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -847,7 +847,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500">Waktu / Jam Pelajaran:</span>
-                  <strong className="text-indigo-900 font-mono bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                  <strong className="text-emerald-950 font-mono bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/80">
                     Hari {dayInfo.hari} • Jam {quickAssignModal.slot.jamKe} ({quickAssignModal.slot.rentangWaktu})
                   </strong>
                 </div>
@@ -857,7 +857,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
               <div>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                   <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <School className="w-4 h-4 text-indigo-600" />
+                    <School className="w-4 h-4 text-emerald-700" />
                     <span>Pilih Guru Pengganti (Khusus Guru Induk IQM)</span>
                     <span className="text-rose-500">*</span>
                   </label>
@@ -884,7 +884,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
                   value={selectedPenggantiId}
                   onChange={(e) => setSelectedPenggantiId(e.target.value)}
                   required
-                  className="w-full p-2.5 text-xs border rounded-lg border-slate-300 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-2xs"
+                  className="w-full p-2.5 text-xs border rounded-lg border-slate-300 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 shadow-2xs"
                 >
                   <option value="">-- Pilih Guru Pengganti --</option>
                   {activeCandidates.map((c) => (
@@ -902,10 +902,10 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
 
               {/* Selected Teacher Detailed Candidate Card with Cut-Off Stats */}
               {selectedTeacherCandidate && (
-                <div className="bg-linear-to-br from-indigo-50/70 via-white to-slate-50 p-3.5 rounded-xl border border-indigo-200 shadow-2xs space-y-3 animate-in fade-in">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-indigo-100">
+                <div className="bg-gradient-to-br from-emerald-50/70 via-white to-slate-50 p-3.5 rounded-xl border border-emerald-200/90 shadow-2xs space-y-3 animate-in fade-in">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-emerald-100">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs shadow-2xs">
+                      <div className="w-8 h-8 rounded-full bg-emerald-700 text-white font-bold flex items-center justify-center text-xs shadow-2xs">
                         {selectedTeacherCandidate.pegawai.nama.charAt(0)}
                       </div>
                       <div>
@@ -940,7 +940,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
                   <div>
                     <div className="text-[11px] font-bold text-slate-600 mb-1.5 flex items-center justify-between">
                       <span className="flex items-center gap-1">
-                        <Award className="w-3.5 h-3.5 text-indigo-600" />
+                        <Award className="w-3.5 h-3.5 text-emerald-700" />
                         <span>Rekap Infal Periode Cut-Off (Bulan {selectedBulan}/{selectedTahun}):</span>
                       </span>
                       <span className="font-mono text-[10px] text-slate-500">
@@ -1052,7 +1052,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
                 <button
                   type="submit"
                   disabled={!selectedPenggantiId}
-                  className="px-4 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition shadow-sm disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg transition shadow-xs disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
                 >
                   <CheckCircle2 className="w-4 h-4" />
                   <span>Simpan & Terapkan Jadwal Pengganti</span>

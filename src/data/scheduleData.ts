@@ -8,7 +8,7 @@ export const DAFTAR_KELAS = [
 export const GURU_INITIALS: GuruInitialMap[] = [
   { kode: 'A', nama: 'Anto, S.E.I., M.E., Gr., MCF.', pegawaiId: 'peg-001', mataPelajaranUtama: 'Kepemimpinan & Vokasi', warnaBadge: 'bg-emerald-600 text-white' },
   { kode: 'KH', nama: 'Khalid Fikri Mustanir, A.Md.T., MCF.', pegawaiId: 'peg-004', mataPelajaranUtama: 'Koding dan AI / Basis Data / Dasar RPL', warnaBadge: 'bg-blue-600 text-white' },
-  { kode: 'RQ', nama: 'Rajie Al-Qadri Anwar, S.Kom., MCF.', pegawaiId: 'peg-005', mataPelajaranUtama: 'Informatika / Pemrograman Web', warnaBadge: 'bg-indigo-600 text-white' },
+  { kode: 'RQ', nama: 'Rajie Al-Qadri Anwar, S.Kom., MCF.', pegawaiId: 'peg-005', mataPelajaranUtama: 'Informatika / Pemrograman Web', warnaBadge: 'bg-teal-700 text-white' },
   { kode: 'AY', nama: 'Ayu Aksari, S.Kom., Gr., MTA., MCF.', pegawaiId: 'peg-006', mataPelajaranUtama: 'Pemrograman Web / RPL', warnaBadge: 'bg-purple-600 text-white' },
   { kode: 'BA', nama: 'Basyirah Anan, S.Pd., M.Pd., Gr.', pegawaiId: 'peg-014', mataPelajaranUtama: 'Bahasa Inggris', warnaBadge: 'bg-teal-600 text-white' },
   { kode: 'MM', nama: 'Gr. Mustakim, S.Pd.I., M.Pd.', pegawaiId: 'peg-018', mataPelajaranUtama: 'Bahasa Arab / PAI', warnaBadge: 'bg-amber-600 text-white' },

@@ -25,13 +25,16 @@ import {
   Briefcase,
   Users,
   Edit3,
-  Pencil
+  Pencil,
+  Table,
+  Sparkles
 } from 'lucide-react';
 import { PenggajianRecord, User, StatusPenggajian, AuditCategory, AuditActionType } from '../types';
 import { formatRupiah, formatNumber, getPayrollCutoffDates } from '../utils/security';
 import { PeriodSelector, MONTH_NAMES_ID } from './PeriodSelector';
 import { exportBatchSlipsToZip } from '../utils/batchSlipZip';
 import { EditSlipGajiModal } from './EditSlipGajiModal';
+import { PayrollAdjustmentMatrix } from './PayrollAdjustmentMatrix';
 
 interface PayrollManagementProps {
   records: PenggajianRecord[];
@@ -79,6 +82,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectTargetId, setRejectTargetId] = useState<string | null>(null);
   const [rejectNotes, setRejectNotes] = useState('');
+  const [viewMode, setViewMode] = useState<'table' | 'matrix'>('table');
 
   // Edit Slip Gaji Modal State
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -419,9 +423,9 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
             )}
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 mt-2">
-            <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
-              <span className="text-slate-500 font-medium">Cut-Off Data:</span>
-              <strong className="text-indigo-900 font-mono">{cutoffInfo.cutoffLabelLong}</strong>
+            <div className="flex items-center gap-1.5 bg-emerald-50/60 px-2.5 py-1 rounded-lg border border-emerald-200/70">
+              <span className="text-emerald-800 font-medium">Cut-Off Data:</span>
+              <strong className="text-emerald-950 font-mono">{cutoffInfo.cutoffLabelLong}</strong>
             </div>
             <div className="flex items-center gap-1.5 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 text-emerald-900">
               <span className="text-emerald-700 font-medium">Jadwal Pembayaran:</span>
@@ -459,7 +463,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
           {(currentUser.role === 'super_admin' || currentUser.role === 'bendahara_yayasan') && (
             <button
               onClick={() => onGeneratePayroll(selectedBulan, selectedTahun)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer"
             >
               <Zap className="w-4 h-4" />
               <span>Otomasi Hitung Periode Ini</span>
@@ -481,7 +485,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
               {canApprove && (
                 <button
                   onClick={() => onBatchApprove(selectedIds)}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-3 py-2 rounded-lg transition flex items-center gap-1 shadow-sm"
+                  className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-3 py-2 rounded-lg transition flex items-center gap-1 shadow-sm cursor-pointer"
                 >
                   <CheckCheck className="w-3.5 h-3.5" />
                   <span>Setujui Terpilih ({selectedIds.length})</span>
@@ -499,8 +503,59 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
         </div>
       </div>
 
-      {/* Filter and Search Toolbar */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+      {/* View Switcher: Tabel Reguler vs Matriks Penyesuaian Interaktif */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-lg border border-slate-200">
+          <button
+            type="button"
+            onClick={() => setViewMode('table')}
+            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 cursor-pointer ${
+              viewMode === 'table'
+                ? 'bg-white text-slate-800 shadow-xs border border-slate-200/80 font-bold'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Table className="w-3.5 h-3.5 text-slate-500" />
+            <span>Tabel Standar & Status Approval</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('matrix')}
+            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 cursor-pointer ${
+              viewMode === 'matrix'
+                ? 'bg-emerald-700 text-white shadow-xs font-bold'
+                : 'text-emerald-800 hover:text-emerald-950 hover:bg-emerald-50'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-emerald-300" />
+            <span>Matriks Penyesuaian Interaktif (Live RPC)</span>
+          </button>
+        </div>
+
+        <div className="text-xs text-slate-500 flex items-center gap-2">
+          <span className="hidden sm:inline">Mode Aktif:</span>
+          <span className="font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+            {viewMode === 'matrix' ? 'Matriks Kalkulasi Realtime (Soft Green)' : 'Tabel Alur Persetujuan'}
+          </span>
+        </div>
+      </div>
+
+      {viewMode === 'matrix' ? (
+        <PayrollAdjustmentMatrix
+          records={indukRecords}
+          currentUser={currentUser}
+          onUpdateRecord={onUpdateRecord}
+          selectedBulan={selectedBulan}
+          selectedTahun={selectedTahun}
+          showToast={showToast}
+          onAuditLog={onAuditLog}
+          onInspectFormula={onInspectFormula}
+          onViewSlip={onViewSlip}
+        />
+      ) : (
+        <>
+          {/* Filter and Search Toolbar */}
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
         <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
           
           {/* Search Box */}
@@ -511,7 +566,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
               placeholder="Cari nama guru/staf, NIP, atau jabatan..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+              className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
             />
           </div>
 
@@ -540,8 +595,8 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
               onClick={() => setJenisPegawaiFilter('guru')}
               className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
                 jenisPegawaiFilter === 'guru'
-                  ? 'bg-emerald-600 text-white shadow-xs font-bold'
-                  : 'text-slate-600 hover:text-emerald-700'
+                  ? 'bg-emerald-700 text-white shadow-xs font-bold'
+                  : 'text-slate-600 hover:text-emerald-800'
               }`}
             >
               <GraduationCap className="w-3.5 h-3.5" />
@@ -553,8 +608,8 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
               onClick={() => setJenisPegawaiFilter('tendik')}
               className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
                 jenisPegawaiFilter === 'tendik'
-                  ? 'bg-indigo-600 text-white shadow-xs font-bold'
-                  : 'text-slate-600 hover:text-indigo-700'
+                  ? 'bg-teal-700 text-white shadow-xs font-bold'
+                  : 'text-slate-600 hover:text-teal-800'
               }`}
             >
               <Briefcase className="w-3.5 h-3.5" />
@@ -570,8 +625,8 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
               { id: 'all', label: 'Semua Status', count: counts.total, color: 'slate' },
               { id: 'draft', label: 'Draft', count: counts.draft, color: 'slate' },
               { id: 'pending_kepsek', label: 'Review Kepsek', count: counts.pending_kepsek, color: 'amber' },
-              { id: 'pending_yayasan', label: 'Review Yayasan', count: counts.pending_yayasan, color: 'indigo' },
-              { id: 'approved', label: 'Siap Transfer', count: counts.approved, color: 'blue' },
+              { id: 'pending_yayasan', label: 'Review Yayasan', count: counts.pending_yayasan, color: 'teal' },
+              { id: 'approved', label: 'Siap Transfer', count: counts.approved, color: 'emerald' },
               { id: 'transferred', label: 'Terbayar & Terbit', count: counts.transferred, color: 'emerald' },
               { id: 'rejected', label: 'Ditolak / Revisi', count: counts.rejected, color: 'rose' },
             ].map((tab) => {
@@ -617,7 +672,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                 <th colSpan={3} className="py-2 px-3 bg-slate-100 text-slate-700 text-center border-r border-slate-200">
                   Identitas Pegawai
                 </th>
-                <th colSpan={4} className="py-2 px-3 bg-indigo-50 text-indigo-900 text-center border-r border-slate-200">
+                <th colSpan={4} className="py-2 px-3 bg-teal-50 text-teal-900 text-center border-r border-slate-200">
                   Kelompok Tunjangan Jabatan
                 </th>
                 <th colSpan={4} className="py-2 px-3 bg-emerald-50 text-emerald-900 text-center border-r border-slate-200">
@@ -643,7 +698,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                       type="checkbox"
                       onChange={handleSelectAll}
                       checked={selectedIds.length > 0 && selectedIds.length === filteredRecords.length}
-                      className="rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                      className="rounded text-emerald-700 focus:ring-emerald-600 cursor-pointer"
                     />
                     <span>No</span>
                   </div>
@@ -656,10 +711,10 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                 <th className="px-3 py-2.5 min-w-[120px]">Jabatan</th>
 
                 {/* 4-7. Kelompok Tunjangan Jabatan */}
-                <th className="px-3 py-2.5 text-right bg-indigo-50/40 min-w-[100px]" title="tunjangan_kepsek">Kepala Sekolah</th>
-                <th className="px-3 py-2.5 text-right bg-indigo-50/40 min-w-[95px]" title="tunjangan_wakasek">Wakasek</th>
-                <th className="px-3 py-2.5 text-right bg-indigo-50/40 min-w-[95px]" title="tunjangan_wali_kelas">Wali Kelas</th>
-                <th className="px-3 py-2.5 text-right bg-indigo-50/40 min-w-[100px]" title="tunjangan_asrama">Asrama/Musyrif</th>
+                <th className="px-3 py-2.5 text-right bg-teal-50/40 min-w-[100px]" title="tunjangan_kepsek">Kepala Sekolah</th>
+                <th className="px-3 py-2.5 text-right bg-teal-50/40 min-w-[95px]" title="tunjangan_wakasek">Wakasek</th>
+                <th className="px-3 py-2.5 text-right bg-teal-50/40 min-w-[95px]" title="tunjangan_wali_kelas">Wali Kelas</th>
+                <th className="px-3 py-2.5 text-right bg-teal-50/40 min-w-[100px]" title="tunjangan_asrama">Asrama/Musyrif</th>
 
                 {/* 8-11. Kelompok Penerimaan & Kinerja */}
                 <th className="px-3 py-2.5 text-right bg-emerald-50/40 min-w-[110px]" title="gaji_pokok_nominal">Gaji Pokok</th>
@@ -728,8 +783,8 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                   return (
                     <tr 
                       key={record.id} 
-                      className={`hover:bg-slate-50/80 transition divide-x divide-slate-100 ${
-                        isSelected ? 'bg-indigo-50/30' : ''
+                      className={`hover:bg-emerald-50/20 transition divide-x divide-slate-100 ${
+                        isSelected ? 'bg-emerald-50/40' : ''
                       }`}
                     >
                       {/* 1. Checkbox & No */}
@@ -739,7 +794,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => handleToggleSelect(record.id)}
-                            className="rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                            className="rounded text-emerald-700 focus:ring-emerald-600 cursor-pointer"
                           />
                           <span className="text-[10px] font-mono text-slate-400 font-bold">{idx + 1}</span>
                         </div>
@@ -749,7 +804,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                       <td className="py-2.5 px-3">
                         <div className="font-bold text-slate-900 text-xs">{record.pegawaiNama}</div>
                         <div className="text-[10px] text-slate-400 font-mono mt-0.5">
-                          <span className="text-indigo-600 font-medium">{record.kodeSlip}</span>
+                          <span className="text-emerald-800 font-medium">{record.kodeSlip}</span>
                         </div>
                       </td>
 
@@ -762,22 +817,22 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                       </td>
 
                       {/* 4. Kepala Sekolah */}
-                      <td className="py-2.5 px-3 text-right font-mono bg-indigo-50/20 text-slate-700">
+                      <td className="py-2.5 px-3 text-right font-mono bg-teal-50/20 text-slate-700">
                         {tunjKepsek > 0 ? formatRupiah(tunjKepsek) : <span className="text-slate-300">-</span>}
                       </td>
 
                       {/* 5. Wakasek */}
-                      <td className="py-2.5 px-3 text-right font-mono bg-indigo-50/20 text-slate-700">
+                      <td className="py-2.5 px-3 text-right font-mono bg-teal-50/20 text-slate-700">
                         {tunjWakasek > 0 ? formatRupiah(tunjWakasek) : <span className="text-slate-300">-</span>}
                       </td>
 
                       {/* 6. Wali Kelas */}
-                      <td className="py-2.5 px-3 text-right font-mono bg-indigo-50/20 text-slate-700">
+                      <td className="py-2.5 px-3 text-right font-mono bg-teal-50/20 text-slate-700">
                         {tunjWaliKelas > 0 ? formatRupiah(tunjWaliKelas) : <span className="text-slate-300">-</span>}
                       </td>
 
                       {/* 7. Asrama/Musyrif */}
-                      <td className="py-2.5 px-3 text-right font-mono bg-indigo-50/20 text-slate-700">
+                      <td className="py-2.5 px-3 text-right font-mono bg-teal-50/20 text-slate-700">
                         {tunjAsrama > 0 ? formatRupiah(tunjAsrama) : <span className="text-slate-300">-</span>}
                       </td>
 
@@ -866,7 +921,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                             title="Edit & Sesuaikan Rincian Slip Gaji"
                             className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer"
                           >
-                            <Edit3 className="w-3.5 h-3.5 text-indigo-600" />
+                            <Edit3 className="w-3.5 h-3.5 text-emerald-700" />
                           </button>
 
                           {/* View / Print Slip */}
@@ -874,7 +929,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                             type="button"
                             onClick={() => onViewSlip(record)}
                             title="Buka & Cetak Slip Gaji PDF Resmi"
-                            className="p-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition cursor-pointer"
+                            className="p-1.5 rounded-lg bg-emerald-50 text-emerald-800 hover:bg-emerald-100 transition cursor-pointer"
                           >
                             <FileText className="w-3.5 h-3.5" />
                           </button>
@@ -885,7 +940,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                               type="button"
                               onClick={() => onApproveRecord(record.id, 'approve')}
                               title="Setujui sebagai Kepala Sekolah"
-                              className="p-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition cursor-pointer"
+                              className="p-1.5 rounded-lg bg-teal-700 text-white hover:bg-teal-800 transition cursor-pointer"
                             >
                               <CheckCircle className="w-3.5 h-3.5" />
                             </button>
@@ -896,7 +951,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                               type="button"
                               onClick={() => onApproveRecord(record.id, 'approve')}
                               title="Setujui & Otorisasi Anggaran Yayasan"
-                              className="p-1.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition cursor-pointer"
+                              className="p-1.5 rounded-lg bg-emerald-800 text-white hover:bg-emerald-900 transition cursor-pointer"
                             >
                               <CheckCheck className="w-3.5 h-3.5" />
                             </button>
@@ -953,16 +1008,16 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
                   </td>
                   
                   {/* Tunjangan Jabatan */}
-                  <td className="py-3 px-3 text-right font-mono text-indigo-300">
+                  <td className="py-3 px-3 text-right font-mono text-teal-300">
                     {formatRupiah(grandTotals.tunjKepsek)}
                   </td>
-                  <td className="py-3 px-3 text-right font-mono text-indigo-300">
+                  <td className="py-3 px-3 text-right font-mono text-teal-300">
                     {formatRupiah(grandTotals.tunjWakasek)}
                   </td>
-                  <td className="py-3 px-3 text-right font-mono text-indigo-300">
+                  <td className="py-3 px-3 text-right font-mono text-teal-300">
                     {formatRupiah(grandTotals.tunjWaliKelas)}
                   </td>
-                  <td className="py-3 px-3 text-right font-mono text-indigo-300">
+                  <td className="py-3 px-3 text-right font-mono text-teal-300">
                     {formatRupiah(grandTotals.tunjAsrama)}
                   </td>
 
@@ -1018,6 +1073,8 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
           </table>
         </div>
       </div>
+    </>
+  )}
 
       {/* Edit Slip Gaji Modal */}
       <EditSlipGajiModal

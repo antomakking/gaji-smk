@@ -31,6 +31,7 @@ import {
 import { Pegawai, StatusPegawai } from '../types';
 import { formatRupiah, maskData } from '../utils/security';
 import { BulkSalaryAdjustmentModal } from './BulkSalaryAdjustmentModal';
+import { Editdata } from './Editdata';
 
 interface EmployeeManagerProps {
   pegawaiList: Pegawai[];
@@ -106,7 +107,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState<'all' | 'incomplete' | 'GTY' | 'GTT' | 'PTY' | 'induk' | 'non_induk'>('all');
-  const [viewMode, setViewMode] = useState<'grid' | 'table'>('table');
+  const [viewMode, setViewMode] = useState<'grid' | 'table' | 'editdata'>('editdata');
   const [showEncryptedAccounts, setShowEncryptedAccounts] = useState<Record<string, boolean>>({});
   
   // Modals state
@@ -335,7 +336,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
             <h2 className="text-base sm:text-lg font-bold text-slate-800">
               Master Data Guru & Tenaga Kependidikan (Tendik)
             </h2>
-            <span className="bg-indigo-50 text-indigo-700 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-indigo-100">
+            <span className="bg-emerald-50 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200">
               {pegawaiList.length} Guru & Tendik Terdaftar
             </span>
           </div>
@@ -348,18 +349,27 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
           {/* View Toggle */}
           <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs">
             <button
+              onClick={() => setViewMode('editdata')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-semibold transition cursor-pointer ${
+                viewMode === 'editdata' ? 'bg-emerald-700 text-white shadow-sm font-bold' : 'text-emerald-800 hover:text-emerald-950 hover:bg-emerald-50'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-300" />
+              <span>Matriks Edit Data Lengkap (Live RPC)</span>
+            </button>
+            <button
               onClick={() => setViewMode('table')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-medium transition ${
-                viewMode === 'table' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
+                viewMode === 'table' ? 'bg-white text-emerald-800 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <TableIcon className="w-3.5 h-3.5" />
-              <span>Tabel Lengkap</span>
+              <span>Tabel Ringkas</span>
             </button>
             <button
               onClick={() => setViewMode('grid')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-medium transition ${
-                viewMode === 'grid' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
+                viewMode === 'grid' ? 'bg-white text-emerald-800 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
@@ -369,7 +379,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
 
           <button
             onClick={() => setBulkSalaryModalOpen(true)}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer"
             title="Penyesuaian Gaji Pokok Massal & Personal ke Supabase"
           >
             <Banknote className="w-4 h-4" />
@@ -378,7 +388,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
 
           <button
             onClick={() => setAddModalOpen(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-sm transition flex items-center gap-2"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-sm transition flex items-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Tambah Pegawai</span>
@@ -396,13 +406,13 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
             <div>
               <span className="font-bold">Perhatian: {incompleteCount} data pegawai belum memiliki TTL atau Jurusan S1 lengkap.</span>
               <p className="text-amber-700 text-[11px] mt-0.5">
-                Klik tombol <span className="font-semibold text-indigo-700">"Edit / Lengkapi"</span> pada baris tabel untuk melengkapi Tempat Tanggal Lahir dan Jurusan Ijazah.
+                Klik tombol <span className="font-semibold text-emerald-800">"Edit / Lengkapi"</span> pada baris tabel untuk melengkapi Tempat Tanggal Lahir dan Jurusan Ijazah.
               </p>
             </div>
           </div>
           <button
             onClick={() => setFilterCategory(filterCategory === 'incomplete' ? 'all' : 'incomplete')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition border ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition border cursor-pointer ${
               filterCategory === 'incomplete'
                 ? 'bg-amber-700 text-white border-amber-800'
                 : 'bg-white text-amber-800 border-amber-300 hover:bg-amber-100'
@@ -414,7 +424,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
       )}
 
       {/* Filter & Search Bar */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -422,7 +432,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
             placeholder="Cari nama, NIY, NIK, TTL, jurusan, jabatan..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
           />
         </div>
 
@@ -454,15 +464,15 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
 
           <button
             onClick={() => setFilterCategory('GTY')}
-            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition ${
-              filterCategory === 'GTY' ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
+            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+              filterCategory === 'GTY' ? 'bg-emerald-700 text-white' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
             }`}
           >
             GTY ({pegawaiList.filter(p => p.statusPegawai === 'GTY').length})
           </button>
           <button
             onClick={() => setFilterCategory('GTT')}
-            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition ${
+            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
               filterCategory === 'GTT' ? 'bg-amber-600 text-white' : 'bg-amber-50 text-amber-700 hover:bg-amber-100'
             }`}
           >
@@ -470,7 +480,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
           </button>
           <button
             onClick={() => setFilterCategory('PTY')}
-            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition ${
+            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
               filterCategory === 'PTY' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
             }`}
           >
@@ -478,22 +488,32 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
           </button>
           <button
             onClick={() => setFilterCategory('induk')}
-            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition ${
-              filterCategory === 'induk' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+              filterCategory === 'induk' ? 'bg-teal-700 text-white' : 'bg-teal-50 text-teal-800 hover:bg-teal-100'
             }`}
           >
             Induk ({pegawaiList.filter(p => p.statusInduk === 'Induk').length})
           </button>
           <button
             onClick={() => setFilterCategory('non_induk')}
-            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition ${
-              filterCategory === 'non_induk' ? 'bg-purple-600 text-white' : 'bg-purple-50 text-purple-700 hover:bg-purple-100'
+            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+              filterCategory === 'non_induk' ? 'bg-emerald-800 text-white' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
             }`}
           >
             Non-Induk ({pegawaiList.filter(p => p.statusInduk === 'Non Induk').length})
           </button>
         </div>
       </div>
+
+      {/* EDITDATA MATRIX VIEW (Master Guru & Pegawai with Sticky Name & Supabase RPC) */}
+      {viewMode === 'editdata' && (
+        <Editdata
+          pegawaiList={pegawaiList}
+          onUpdatePegawai={onUpdatePegawai}
+          onBatchUpdatePegawai={onBulkUpdateSalary}
+          showToast={onShowToast}
+        />
+      )}
 
       {/* TABLE VIEW (Complete Master Table) */}
       {viewMode === 'table' && (
@@ -522,7 +542,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                   const hasMissingJurusan = (!peg.jurusan || peg.jurusan === '-') && (peg.pendidikanTerakhir === 'S1' || peg.pendidikanTerakhir === 'S2' || peg.pendidikanTerakhir === 'D3');
                   
                   return (
-                    <tr key={peg.id} className="hover:bg-indigo-50/40 transition">
+                    <tr key={peg.id} className="hover:bg-emerald-50/40 transition">
                       <td className="py-3 px-3 text-center font-medium text-slate-500">
                         {index + 1}
                       </td>
@@ -532,7 +552,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       </td>
                       <td className="py-3 px-2 text-center font-semibold">
                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                          peg.jenisKelamin === 'P' ? 'bg-pink-100 text-pink-700' : 'bg-blue-100 text-blue-700'
+                          peg.jenisKelamin === 'P' ? 'bg-pink-100 text-pink-700' : 'bg-emerald-100 text-emerald-800'
                         }`}>
                           {peg.jenisKelamin || 'L'}
                         </span>
@@ -543,7 +563,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                             <span className="text-slate-400 italic text-[11px]">-</span>
                             <button
                               onClick={() => handleOpenEdit(peg)}
-                              className="text-[10px] text-amber-700 bg-amber-50 hover:bg-amber-100 px-1.5 py-0.5 rounded font-semibold border border-amber-200 flex items-center gap-1 transition"
+                              className="text-[10px] text-amber-700 bg-amber-50 hover:bg-amber-100 px-1.5 py-0.5 rounded font-semibold border border-amber-200 flex items-center gap-1 transition cursor-pointer"
                               title="Klik untuk melengkapi TTL"
                             >
                               <Plus className="w-2.5 h-2.5" /> Lengkapi TTL
@@ -563,13 +583,13 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       <td className="py-3 px-3 font-mono text-[11px]">
                         <div>{peg.nik || '-'}</div>
                         {peg.nuptk && (
-                          <div className="text-[10px] text-indigo-600 font-semibold">NUPTK: {peg.nuptk}</div>
+                          <div className="text-[10px] text-emerald-700 font-semibold">NUPTK: {peg.nuptk}</div>
                         )}
                       </td>
                       <td className="py-3 px-3">
                         <span className={`px-2 py-0.5 text-[10px] font-bold rounded ${
-                          peg.statusPegawai === 'GTY' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
-                          peg.statusPegawai === 'PTY' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                          peg.statusPegawai === 'GTY' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
+                          peg.statusPegawai === 'PTY' ? 'bg-teal-50 text-teal-800 border border-teal-200' :
                           'bg-amber-50 text-amber-700 border border-amber-200'
                         }`}>
                           {peg.statusPegawai}
@@ -596,19 +616,19 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                             <span className="text-slate-400 italic text-[11px]">-</span>
                             <button
                               onClick={() => handleOpenEdit(peg)}
-                              className="text-[10px] text-amber-700 bg-amber-50 hover:bg-amber-100 px-1.5 py-0.5 rounded font-semibold border border-amber-200 flex items-center gap-1 transition"
+                              className="text-[10px] text-amber-700 bg-amber-50 hover:bg-amber-100 px-1.5 py-0.5 rounded font-semibold border border-amber-200 flex items-center gap-1 transition cursor-pointer"
                               title="Klik untuk melengkapi Jurusan"
                             >
                               <Plus className="w-2.5 h-2.5" /> Isi Jurusan
                             </button>
                           </div>
                         ) : (
-                          <div className="text-[10px] text-indigo-900 font-medium">{peg.jurusan || '-'}</div>
+                          <div className="text-[10px] text-emerald-950 font-medium">{peg.jurusan || '-'}</div>
                         )}
                       </td>
                       <td className="py-3 px-3">
                         <span className={`px-2 py-0.5 text-[10px] font-bold rounded ${
-                          peg.statusInduk === 'Induk' ? 'bg-teal-50 text-teal-700' : 'bg-purple-50 text-purple-700'
+                          peg.statusInduk === 'Induk' ? 'bg-teal-50 text-teal-800' : 'bg-slate-100 text-slate-700'
                         }`}>
                           {peg.statusInduk || 'Induk'}
                         </span>
@@ -623,14 +643,14 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                         <div className="flex items-center justify-center gap-1.5">
                           <button
                             onClick={() => setSelectedDetailPegawai(peg)}
-                            className="bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 px-2 py-1 rounded text-[11px] font-semibold transition"
+                            className="bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-800 px-2 py-1 rounded text-[11px] font-semibold transition cursor-pointer"
                             title="Lihat Profil Lengkap"
                           >
                             Lihat
                           </button>
                           <button
                             onClick={() => handleOpenEdit(peg)}
-                            className="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-[11px] font-semibold transition flex items-center gap-1 border border-indigo-200"
+                            className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-[11px] font-semibold transition flex items-center gap-1 border border-emerald-200 cursor-pointer"
                             title="Edit / Lengkapi Data TTL & Jurusan"
                           >
                             <Edit3 className="w-3 h-3" />
@@ -646,8 +666,8 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
           </div>
           <div className="p-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-2">
             <span>Menampilkan <b>{filtered.length}</b> dari {pegawaiList.length} data guru & tenaga kependidikan</span>
-            <span className="text-[11px] text-emerald-600 font-medium flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" /> Database terverifikasi SMK IT Ibnul Qayyim Makassar
+            <span className="text-[11px] text-emerald-700 font-medium flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Database terverifikasi SMK IT Ibnul Qayyim Makassar
             </span>
           </div>
         </div>
@@ -661,7 +681,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
             const incomplete = isDataIncomplete(peg);
 
             return (
-              <div key={peg.id} className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between hover:border-indigo-300 transition relative">
+              <div key={peg.id} className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition relative">
                 {incomplete && (
                   <div className="absolute -top-2.5 -right-2.5 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" /> Lengkapi Data
@@ -672,7 +692,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                   {/* Status & ID */}
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-xs border border-indigo-100">
+                      <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold text-xs border border-emerald-200">
                         {peg.nama.slice(0, 2).toUpperCase()}
                       </div>
                       <div>
@@ -688,7 +708,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                   {/* TTL & Jurusan Overview Card */}
                   <div className="mt-3.5 bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-1.5 text-xs">
                     <div className="text-slate-800 font-semibold flex items-center gap-1.5">
-                      <Briefcase className="w-3.5 h-3.5 text-indigo-500" />
+                      <Briefcase className="w-3.5 h-3.5 text-emerald-700" />
                       <span>{peg.jabatanUtama}</span>
                     </div>
                     <div className="text-[11px] text-slate-600 flex items-center justify-between">
@@ -712,7 +732,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     {peg.tarifPerJamMengajar > 0 && (
                       <div className="flex justify-between text-slate-600">
                         <span>Tarif per JP:</span>
-                        <span className="font-bold text-indigo-600">{formatRupiah(peg.tarifPerJamMengajar)}/JP</span>
+                        <span className="font-bold text-emerald-700">{formatRupiah(peg.tarifPerJamMengajar)}/JP</span>
                       </div>
                     )}
                     {peg.tunjanganJabatanDefault > 0 && (
@@ -738,21 +758,21 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => toggleRevealAccount(peg.id)}
-                      className="p-1.5 text-slate-400 hover:text-slate-700 transition rounded-md hover:bg-slate-100"
+                      className="p-1.5 text-slate-400 hover:text-slate-700 transition rounded-md hover:bg-slate-100 cursor-pointer"
                       title={isRevealed ? "Tutup Masking" : "Buka Enkripsi"}
                     >
                       {isRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                     </button>
                     <button
                       onClick={() => handleOpenEdit(peg)}
-                      className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-md text-[11px] font-semibold flex items-center gap-1"
+                      className="p-1.5 text-emerald-800 hover:bg-emerald-50 rounded-md text-[11px] font-semibold flex items-center gap-1 cursor-pointer"
                       title="Edit Biodata"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => setSelectedDetailPegawai(peg)}
-                      className="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md text-[11px] font-semibold"
+                      className="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md text-[11px] font-semibold cursor-pointer"
                     >
                       Detail
                     </button>
@@ -773,7 +793,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
                   <Edit3 className="w-5 h-5" />
                 </div>
                 <div>
@@ -787,7 +807,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
               </div>
               <button 
                 onClick={() => setEditingPegawai(null)} 
-                className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition"
+                className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -798,10 +818,10 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
               <div className="bg-slate-50/80 p-4 rounded-xl border border-slate-200 space-y-3.5">
                 <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
                   <h4 className="font-bold text-slate-800 flex items-center gap-2 text-xs">
-                    <FileBadge className="w-4 h-4 text-indigo-600" />
+                    <FileBadge className="w-4 h-4 text-emerald-700" />
                     <span>1. Identitas & Tempat Tanggal Lahir (TTL)</span>
                   </h4>
-                  <span className="text-[11px] text-indigo-600 font-medium">Wajib diisi lengkap</span>
+                  <span className="text-[11px] text-emerald-700 font-medium">Wajib diisi lengkap</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -813,7 +833,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       value={editFormData.nama || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, nama: e.target.value })}
                       placeholder="Contoh: Gr. Ashary Alam, S.Pd., M.Pd."
-                      className="w-full p-2.5 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-medium"
+                      className="w-full p-2.5 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-medium"
                     />
                   </div>
 
@@ -829,7 +849,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                         placeholder="Contoh: Makassar / Ujung Pandang / Bulukumba / Bone"
                         value={editFormData.tempatLahir || ''}
                         onChange={(e) => setEditFormData({ ...editFormData, tempatLahir: e.target.value })}
-                        className="w-full pl-9 pr-3 py-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-medium"
+                        className="w-full pl-9 pr-3 py-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-medium"
                       />
                     </div>
                   </div>
@@ -853,7 +873,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                             usia: newAge
                           });
                         }}
-                        className="w-full pl-9 pr-3 py-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-medium"
+                        className="w-full pl-9 pr-3 py-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-medium"
                       />
                     </div>
                   </div>
@@ -868,7 +888,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                             setEditFormData({ ...editFormData, usia: calculateAge(editFormData.tanggalLahir) });
                           }
                         }}
-                        className="text-[10px] text-indigo-600 hover:underline flex items-center gap-1"
+                        className="text-[10px] text-emerald-800 hover:underline flex items-center gap-1 cursor-pointer font-medium"
                       >
                         <RefreshCw className="w-2.5 h-2.5" /> Hitung Ulang
                       </button>
@@ -878,7 +898,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       placeholder="Contoh: 31 Tahun 7 Bulan"
                       value={editFormData.usia || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, usia: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-slate-100/70 font-medium text-slate-700"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-slate-100/70 font-medium text-slate-700"
                     />
                   </div>
 
@@ -887,7 +907,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     <select
                       value={editFormData.jenisKelamin || 'L'}
                       onChange={(e) => setEditFormData({ ...editFormData, jenisKelamin: e.target.value as 'L' | 'P' })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white"
                     >
                       <option value="L">Laki-laki (L)</option>
                       <option value="P">Perempuan (P)</option>
@@ -902,7 +922,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       placeholder="Contoh: 7371121901950004"
                       value={editFormData.nik || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, nik: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-mono"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-mono"
                     />
                   </div>
 
@@ -914,7 +934,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       placeholder="Contoh: 19950119-202007-01-03"
                       value={editFormData.niy || editFormData.nip || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, niy: e.target.value, nip: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-mono"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-mono"
                     />
                   </div>
 
@@ -925,7 +945,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       placeholder="NUPTK 16 digit"
                       value={editFormData.nuptk || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, nuptk: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-mono"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-mono"
                     />
                   </div>
 
@@ -936,20 +956,20 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       placeholder="0812xxxxxxxx"
                       value={editFormData.noHp || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, noHp: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white"
                     />
                   </div>
                 </div>
               </div>
 
               {/* SECTION 2: KUALIFIKASI PENDIDIKAN & JURUSAN S1 */}
-              <div className="bg-indigo-50/40 p-4 rounded-xl border border-indigo-100 space-y-3.5">
-                <div className="flex items-center justify-between border-b border-indigo-200/80 pb-2">
-                  <h4 className="font-bold text-indigo-900 flex items-center gap-2 text-xs">
-                    <GraduationCap className="w-4 h-4 text-indigo-600" />
+              <div className="bg-emerald-50/40 p-4 rounded-xl border border-emerald-100 space-y-3.5">
+                <div className="flex items-center justify-between border-b border-emerald-200/80 pb-2">
+                  <h4 className="font-bold text-emerald-950 flex items-center gap-2 text-xs">
+                    <GraduationCap className="w-4 h-4 text-emerald-700" />
                     <span>2. Kualifikasi Pendidikan Terakhir & Jurusan S1</span>
                   </h4>
-                  <span className="text-[11px] text-indigo-700 font-medium">Linearitas Mapel</span>
+                  <span className="text-[11px] text-emerald-800 font-medium">Linearitas Mapel</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
@@ -958,7 +978,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     <select
                       value={editFormData.pendidikanTerakhir || 'S1'}
                       onChange={(e) => setEditFormData({ ...editFormData, pendidikanTerakhir: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-semibold text-slate-800"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-semibold text-slate-800"
                     >
                       <option value="S3">S3 (Doktor)</option>
                       <option value="S2">S2 (Magister)</option>
@@ -980,7 +1000,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       placeholder="Contoh: Pendidikan Sejarah / Teknik Informatika / Pendidikan Matematika"
                       value={editFormData.jurusan || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, jurusan: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-medium text-slate-900"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-medium text-slate-900"
                     />
                   </div>
                 </div>
@@ -994,10 +1014,10 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                         key={j}
                         type="button"
                         onClick={() => setEditFormData({ ...editFormData, jurusan: j })}
-                        className={`text-[10px] px-2 py-0.5 rounded-md transition border ${
+                        className={`text-[10px] px-2 py-0.5 rounded-md transition border cursor-pointer ${
                           editFormData.jurusan === j
-                            ? 'bg-indigo-600 text-white border-indigo-700 font-bold'
-                            : 'bg-white text-slate-700 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50'
+                            ? 'bg-emerald-700 text-white border-emerald-800 font-bold'
+                            : 'bg-white text-slate-700 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50'
                         }`}
                       >
                         {j}
@@ -1011,7 +1031,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
               <div className="bg-slate-50/80 p-4 rounded-xl border border-slate-200 space-y-3.5">
                 <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
                   <h4 className="font-bold text-slate-800 flex items-center gap-2 text-xs">
-                    <Briefcase className="w-4 h-4 text-indigo-600" />
+                    <Briefcase className="w-4 h-4 text-emerald-700" />
                     <span>3. Penugasan, Status Induk & Masa Kerja</span>
                   </h4>
                 </div>
@@ -1022,7 +1042,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     <select
                       value={editFormData.statusPegawai || 'GTY'}
                       onChange={(e) => setEditFormData({ ...editFormData, statusPegawai: e.target.value as StatusPegawai })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white"
                     >
                       <option value="GTY">Guru Tetap Yayasan (GTY)</option>
                       <option value="GTT">Guru Tidak Tetap / Percobaan (GTT)</option>
@@ -1036,7 +1056,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     <select
                       value={editFormData.statusInduk || 'Induk'}
                       onChange={(e) => setEditFormData({ ...editFormData, statusInduk: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-medium"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-medium"
                     >
                       <option value="Induk">Guru / Staf Induk (SMK IT Ibnul Qayyim)</option>
                       <option value="Non Induk">Guru Non-Induk (SMPIT / Mitra Luar - Murni JP)</option>
@@ -1051,7 +1071,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       placeholder="Contoh: Guru Mapel Sejarah / Kaprog RPL"
                       value={editFormData.jabatanUtama || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, jabatanUtama: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-medium"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-medium"
                     />
                   </div>
 
@@ -1062,7 +1082,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       placeholder="Contoh: SMPIT Ibnul Qayyim Makassar"
                       value={editFormData.keteranganInduk || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, keteranganInduk: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white"
                     />
                   </div>
 
@@ -1080,7 +1100,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                           masaKerja: newMasa
                         });
                       }}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-medium"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-medium"
                     />
                   </div>
 
@@ -1091,17 +1111,17 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       placeholder="Contoh: 6 Tahun 9 Bulan"
                       value={editFormData.masaKerja || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, masaKerja: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-slate-100 font-medium"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-slate-100 font-medium"
                     />
                   </div>
                 </div>
               </div>
 
               {/* SECTION 4: SKEMA PENGGAJIAN & REKENING */}
-              <div className="bg-slate-50/80 p-4 rounded-xl border border-slate-200 space-y-3.5">
-                <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
-                  <h4 className="font-bold text-slate-800 flex items-center gap-2 text-xs">
-                    <CreditCard className="w-4 h-4 text-indigo-600" />
+              <div className="bg-emerald-50/40 p-4 rounded-xl border border-emerald-100 space-y-3.5">
+                <div className="flex items-center justify-between border-b border-emerald-200/60 pb-2">
+                  <h4 className="font-bold text-emerald-950 flex items-center gap-2 text-xs">
+                    <CreditCard className="w-4 h-4 text-emerald-700" />
                     <span>4. Skema Komponen Gaji & Rekening Bank</span>
                   </h4>
                 </div>
@@ -1114,7 +1134,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       required
                       value={editFormData.gajiPokokDefault ?? 0}
                       onChange={(e) => setEditFormData({ ...editFormData, gajiPokokDefault: Number(e.target.value) })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-mono"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-mono"
                     />
                   </div>
 
@@ -1124,7 +1144,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       type="number"
                       value={editFormData.tarifPerJamMengajar ?? 18000}
                       onChange={(e) => setEditFormData({ ...editFormData, tarifPerJamMengajar: Number(e.target.value) })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-mono"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-mono"
                     />
                   </div>
 
@@ -1134,7 +1154,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       type="number"
                       value={editFormData.tarifLemburPerJam ?? 20000}
                       onChange={(e) => setEditFormData({ ...editFormData, tarifLemburPerJam: Number(e.target.value) })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-mono"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-mono"
                     />
                   </div>
 
@@ -1144,7 +1164,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       type="text"
                       value={editFormData.namaBank || 'Bank Syariah Indonesia (BSI)'}
                       onChange={(e) => setEditFormData({ ...editFormData, namaBank: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white"
                     />
                   </div>
 
@@ -1154,7 +1174,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       type="text"
                       value={editFormData.nomorRekening || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, nomorRekening: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-mono"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white font-mono"
                     />
                   </div>
 
@@ -1164,7 +1184,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       type="text"
                       value={editFormData.atasNamaRekening || editFormData.nama || ''}
                       onChange={(e) => setEditFormData({ ...editFormData, atasNamaRekening: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white"
                     />
                   </div>
                 </div>
@@ -1175,13 +1195,13 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                 <button
                   type="button"
                   onClick={() => setEditingPegawai(null)}
-                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition"
+                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-md hover:shadow-lg transition flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold shadow-xs hover:shadow-sm transition flex items-center gap-2 cursor-pointer"
                 >
                   <Check className="w-4 h-4" />
                   <span>Simpan Perubahan Data</span>
@@ -1208,19 +1228,19 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     setSelectedDetailPegawai(null);
                     handleOpenEdit(target);
                   }}
-                  className="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-indigo-200 transition"
+                  className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-emerald-200 transition cursor-pointer"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
                   <span>Edit / Lengkapi</span>
                 </button>
-                <button onClick={() => setSelectedDetailPegawai(null)} className="text-slate-400 hover:text-slate-700 text-lg font-bold p-1">×</button>
+                <button onClick={() => setSelectedDetailPegawai(null)} className="text-slate-400 hover:text-slate-700 text-lg font-bold p-1 cursor-pointer">×</button>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
                 <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1.5 flex items-center gap-1.5">
-                  <FileBadge className="w-3.5 h-3.5 text-indigo-600" /> Profil Biodata & TTL
+                  <FileBadge className="w-3.5 h-3.5 text-emerald-700" /> Profil Biodata & TTL
                 </h4>
                 <div className="flex justify-between"><span className="text-slate-500">Jenis Kelamin:</span><span className="font-semibold">{selectedDetailPegawai.jenisKelamin === 'P' ? 'Perempuan' : 'Laki-laki'}</span></div>
                 <div className="flex justify-between">
@@ -1240,9 +1260,9 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
 
               <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
                 <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1.5 flex items-center gap-1.5">
-                  <Briefcase className="w-3.5 h-3.5 text-indigo-600" /> Data Kepegawaian & Ijazah
+                  <Briefcase className="w-3.5 h-3.5 text-emerald-700" /> Data Kepegawaian & Ijazah
                 </h4>
-                <div className="flex justify-between"><span className="text-slate-500">Status Pegawai:</span><span className="font-bold text-indigo-600">{selectedDetailPegawai.statusPegawai}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">Status Pegawai:</span><span className="font-bold text-emerald-700">{selectedDetailPegawai.statusPegawai}</span></div>
                 <div className="flex justify-between"><span className="text-slate-500">Status Induk:</span><span className="font-bold">{selectedDetailPegawai.statusInduk || 'Induk'}</span></div>
                 {selectedDetailPegawai.keteranganInduk && (
                   <div className="flex justify-between"><span className="text-slate-500">Asal Sekolah:</span><span className="font-medium text-slate-700">{selectedDetailPegawai.keteranganInduk}</span></div>
@@ -1250,7 +1270,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                 <div className="flex justify-between"><span className="text-slate-500">Ijazah Terakhir:</span><span className="font-semibold">{selectedDetailPegawai.pendidikanTerakhir}</span></div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Jurusan S1 / Studi:</span>
-                  <span className="font-bold text-indigo-900">
+                  <span className="font-bold text-emerald-950">
                     {selectedDetailPegawai.jurusan || <span className="text-amber-600 italic">Belum diisi</span>}
                   </span>
                 </div>
@@ -1260,8 +1280,8 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
             </div>
 
             {/* Skema Komponen Penggajian */}
-            <div className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 space-y-2 text-xs">
-              <h4 className="font-bold text-indigo-900 border-b border-indigo-200 pb-1">Skema Komponen Penggajian & Rekening</h4>
+            <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 space-y-2 text-xs">
+              <h4 className="font-bold text-emerald-950 border-b border-emerald-200/80 pb-1">Skema Komponen Penggajian & Rekening</h4>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
                 <div>
                   <span className="text-slate-500 text-[11px]">Gaji Pokok:</span>
@@ -1269,7 +1289,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                 </div>
                 <div>
                   <span className="text-slate-500 text-[11px]">Tarif Jam Mengajar:</span>
-                  <div className="font-bold text-indigo-600 font-mono">{formatRupiah(selectedDetailPegawai.tarifPerJamMengajar)}/JP</div>
+                  <div className="font-bold text-emerald-700 font-mono">{formatRupiah(selectedDetailPegawai.tarifPerJamMengajar)}/JP</div>
                 </div>
                 <div>
                   <span className="text-slate-500 text-[11px]">Tarif Jam Lembur:</span>
@@ -1280,7 +1300,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                   <div className="font-bold text-slate-900 font-mono">{formatRupiah(selectedDetailPegawai.tunjanganJabatanDefault)}</div>
                 </div>
               </div>
-              <div className="pt-2 border-t border-indigo-100 flex items-center justify-between text-[11px]">
+              <div className="pt-2 border-t border-emerald-100 flex items-center justify-between text-[11px]">
                 <span>Rekening Bank: <b>{selectedDetailPegawai.namaBank}</b> - <span className="font-mono">{selectedDetailPegawai.nomorRekening}</span> a.n. <b>{selectedDetailPegawai.atasNamaRekening}</b></span>
                 <span className="text-emerald-700 font-semibold">Status: Aktif</span>
               </div>
@@ -1317,7 +1337,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     placeholder="Contoh: Gr. Ashary Alam, S.Pd., M.Pd."
                     value={formData.nama}
                     onChange={(e) => setFormData({ ...formData, nama: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   />
                 </div>
                 <div>
@@ -1328,7 +1348,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     placeholder="Contoh: 19950119-202007-01-03"
                     value={formData.nip}
                     onChange={(e) => setFormData({ ...formData, nip: e.target.value, niy: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   />
                 </div>
                 <div>
@@ -1339,7 +1359,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     placeholder="Contoh: Makassar"
                     value={formData.tempatLahir}
                     onChange={(e) => setFormData({ ...formData, tempatLahir: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   />
                 </div>
                 <div>
@@ -1356,7 +1376,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                         usia: calculateAge(newDate)
                       });
                     }}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   />
                 </div>
                 <div>
@@ -1364,7 +1384,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                   <select
                     value={formData.jenisKelamin}
                     onChange={(e) => setFormData({ ...formData, jenisKelamin: e.target.value as 'L' | 'P' })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   >
                     <option value="L">Laki-laki (L)</option>
                     <option value="P">Perempuan (P)</option>
@@ -1377,7 +1397,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     placeholder="7371xxxxxxxxxxxx"
                     value={formData.nik}
                     onChange={(e) => setFormData({ ...formData, nik: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                   />
                 </div>
                 <div>
@@ -1387,7 +1407,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     placeholder="NUPTK 16 digit"
                     value={formData.nuptk}
                     onChange={(e) => setFormData({ ...formData, nuptk: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                   />
                 </div>
                 <div>
@@ -1398,7 +1418,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     placeholder="guru@smkit-ibnulqayyim.sch.id"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   />
                 </div>
                 <div>
@@ -1406,7 +1426,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                   <select
                     value={formData.statusPegawai}
                     onChange={(e) => setFormData({ ...formData, statusPegawai: e.target.value as StatusPegawai })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   >
                     <option value="GTY">Guru Tetap Yayasan (GTY)</option>
                     <option value="GTT">Guru Tidak Tetap / Percobaan (GTT)</option>
@@ -1419,7 +1439,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                   <select
                     value={formData.statusInduk || 'Induk'}
                     onChange={(e) => setFormData({ ...formData, statusInduk: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-medium"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-medium"
                   >
                     <option value="Induk">Guru / Staf Induk (SMK IT IQM)</option>
                     <option value="Non Induk">Guru Non-Induk (SMPIT / Luar - Murni Honor JP)</option>
@@ -1433,7 +1453,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     placeholder="Contoh: Guru Mapel Sejarah"
                     value={formData.jabatanUtama}
                     onChange={(e) => setFormData({ ...formData, jabatanUtama: e.target.value })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   />
                 </div>
                 <div>
@@ -1442,7 +1462,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     <select
                       value={formData.pendidikanTerakhir || 'S1'}
                       onChange={(e) => setFormData({ ...formData, pendidikanTerakhir: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                     >
                       <option value="S1">S1</option>
                       <option value="S2">S2</option>
@@ -1455,7 +1475,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                       placeholder="Jurusan S1"
                       value={formData.jurusan}
                       onChange={(e) => setFormData({ ...formData, jurusan: e.target.value })}
-                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                      className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                     />
                   </div>
                 </div>
@@ -1466,7 +1486,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     required
                     value={formData.gajiPokokDefault}
                     onChange={(e) => setFormData({ ...formData, gajiPokokDefault: Number(e.target.value) })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   />
                 </div>
                 <div>
@@ -1475,7 +1495,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                     type="number"
                     value={formData.tarifPerJamMengajar}
                     onChange={(e) => setFormData({ ...formData, tarifPerJamMengajar: Number(e.target.value) })}
-                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    className="w-full p-2 border rounded-lg border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                   />
                 </div>
               </div>
@@ -1484,13 +1504,13 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                 <button
                   type="button"
                   onClick={() => setAddModalOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition"
+                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-sm transition"
+                  className="px-5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-semibold shadow-xs transition cursor-pointer"
                 >
                   Simpan Pegawai
                 </button>

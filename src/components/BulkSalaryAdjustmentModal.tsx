@@ -333,13 +333,13 @@ export const BulkSalaryAdjustmentModal: React.FC<BulkSalaryAdjustmentModalProps>
               </button>
               <button
                 onClick={() => setCategoryFilter('tendik')}
-                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 cursor-pointer ${
                   categoryFilter === 'tendik'
-                    ? 'bg-indigo-950 text-indigo-300 border border-indigo-500/30 font-semibold'
+                    ? 'bg-teal-950 text-teal-300 border border-teal-500/30 font-semibold'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <Briefcase className="w-3 h-3 text-indigo-400" />
+                <Briefcase className="w-3 h-3 text-teal-400" />
                 Tendik ({pegawaiList.filter(p => p.statusPegawai === 'PTY' || p.statusPegawai === 'PTT' || (!p.jabatanUtama?.toLowerCase().includes('guru') && p.statusPegawai !== 'GTY' && p.statusPegawai !== 'GTT')).length})
               </button>
             </div>
@@ -416,7 +416,7 @@ export const BulkSalaryAdjustmentModal: React.FC<BulkSalaryAdjustmentModalProps>
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1">
+                      <span className="text-xs font-bold uppercase tracking-wider text-teal-400 flex items-center gap-1">
                         <DollarSign className="w-3.5 h-3.5" />
                         Nominal Tetap
                       </span>
@@ -677,7 +677,7 @@ export const BulkSalaryAdjustmentModal: React.FC<BulkSalaryAdjustmentModalProps>
                               <td className="py-3 px-4">
                                 <div className="text-slate-200">{pegawai.jabatanUtama}</div>
                                 <span className={`inline-block px-1.5 py-0.5 text-[10px] font-semibold rounded mt-0.5 ${
-                                  isGuru ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
+                                  isGuru ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-teal-500/10 text-teal-300 border border-teal-500/20'
                                 }`}>
                                   {isGuru ? 'Guru' : 'Tendik'} • {pegawai.statusPegawai}
                                 </span>

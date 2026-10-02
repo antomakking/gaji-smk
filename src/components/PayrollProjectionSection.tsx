@@ -292,7 +292,7 @@ Jadwal Transfer: ${nextMonthInfo.cutoff.paymentLabel}`;
             </span>
           </div>
           <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            Estimasi Biaya Penggajian: <span className="text-indigo-600 font-extrabold">{nextMonthInfo.label}</span>
+            Estimasi Biaya Penggajian: <span className="text-emerald-700 font-extrabold">{nextMonthInfo.label}</span>
           </h3>
           <p className="text-xs text-slate-500 max-w-2xl">
             Prakiraan kebutuhan likuiditas kas yayasan untuk periode mendatang berdasarkan {projection.totalStaffCount} staf aktif, jadwal mengajar reguler, dan parameter fluktuasi kegiatan.
@@ -307,7 +307,7 @@ Jadwal Transfer: ${nextMonthInfo.cutoff.paymentLabel}`;
               onClick={() => setScenario('baseline')}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
                 scenario === 'baseline'
-                  ? 'bg-white text-indigo-700 shadow-xs'
+                  ? 'bg-white text-emerald-800 shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -353,10 +353,10 @@ Jadwal Transfer: ${nextMonthInfo.cutoff.paymentLabel}`;
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         {/* Card 1: Total Projected Net Payroll */}
-        <div className="bg-linear-to-br from-indigo-900 via-indigo-950 to-slate-900 p-4 rounded-2xl text-white shadow-sm border border-indigo-800 relative overflow-hidden">
-          <div className="flex items-center justify-between text-indigo-300 text-xs mb-1 font-medium">
+        <div className="bg-gradient-to-br from-emerald-900 via-[#07241e] to-slate-900 p-4 rounded-2xl text-white shadow-sm border border-emerald-800 relative overflow-hidden">
+          <div className="flex items-center justify-between text-emerald-300 text-xs mb-1 font-medium">
             <span>Estimasi Kas THP Bulan Depan</span>
-            <Banknote className="w-4 h-4 text-indigo-400" />
+            <Banknote className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="text-2xl font-black tracking-tight text-white mt-1">
             {formatRupiah(projection.projectedTHP)}
@@ -410,14 +410,14 @@ Jadwal Transfer: ${nextMonthInfo.cutoff.paymentLabel}`;
         <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 shadow-2xs">
           <div className="flex items-center justify-between text-slate-500 text-xs mb-1 font-medium">
             <span>Rata-rata per Pegawai</span>
-            <Users className="w-4 h-4 text-purple-600" />
+            <Users className="w-4 h-4 text-teal-700" />
           </div>
           <div className="text-xl font-bold text-slate-900 mt-1">
             {formatRupiah(projection.avgPerEmployee)}
           </div>
           <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
             <span>{projection.totalStaffCount} Pegawai Terdaftar</span>
-            <span className="text-purple-700 font-semibold">{projection.guruCount} Guru / {projection.tendikCount} Tendik</span>
+            <span className="text-teal-800 font-semibold">{projection.guruCount} Guru / {projection.tendikCount} Tendik</span>
           </div>
         </div>
 
@@ -431,14 +431,14 @@ Jadwal Transfer: ${nextMonthInfo.cutoff.paymentLabel}`;
           <div className="flex items-center justify-between">
             <div>
               <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                <BarChart className="w-3.5 h-3.5 text-indigo-600" />
+                <BarChart className="w-3.5 h-3.5 text-emerald-700" />
                 Komparasi Nominal: Bulan Berjalan vs Proyeksi {nextMonthInfo.label}
               </h4>
               <p className="text-[11px] text-slate-500">
                 Visualisasi perbandingan pos pengeluaran berdasarkan skenario terpilih.
               </p>
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
               {projection.scenarioLabel}
             </span>
           </div>
@@ -481,7 +481,7 @@ Jadwal Transfer: ${nextMonthInfo.cutoff.paymentLabel}`;
                 <Bar 
                   dataKey="ProyeksiBulanDepan" 
                   name={`Proyeksi ${nextMonthInfo.monthName}`} 
-                  fill="#4f46e5" 
+                  fill="#059669" 
                   radius={[4, 4, 0, 0]} 
                 />
               </BarChart>
@@ -492,10 +492,10 @@ Jadwal Transfer: ${nextMonthInfo.cutoff.paymentLabel}`;
           <div className="p-3 bg-white rounded-xl border border-slate-200 text-xs space-y-2">
             <div className="flex items-center justify-between">
               <span className="font-bold text-slate-700 flex items-center gap-1.5">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-600" />
+                <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-700" />
                 Simulasi Penyesuaian Beban Mengajar / Kegiatan ({Math.round(customVariableMultiplier * 100)}%):
               </span>
-              <span className="font-mono font-bold text-indigo-600 text-xs">
+              <span className="font-mono font-bold text-emerald-700 text-xs">
                 {customVariableMultiplier > 1.0 ? `+${Math.round((customVariableMultiplier - 1.0) * 100)}%` : customVariableMultiplier < 1.0 ? `-${Math.round((1.0 - customVariableMultiplier) * 100)}%` : 'Standar'}
               </span>
             </div>
@@ -506,7 +506,7 @@ Jadwal Transfer: ${nextMonthInfo.cutoff.paymentLabel}`;
               step="0.05"
               value={customVariableMultiplier}
               onChange={(e) => setCustomVariableMultiplier(parseFloat(e.target.value))}
-              className="w-full accent-indigo-600 cursor-pointer"
+              className="w-full accent-emerald-700 cursor-pointer"
             />
             <div className="flex justify-between text-[10px] text-slate-400">
               <span>-20% (Pengurangan Jam)</span>
@@ -537,7 +537,7 @@ Jadwal Transfer: ${nextMonthInfo.cutoff.paymentLabel}`;
               </div>
               <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50">
                 <span className="text-slate-600">Honor Beban JP Mengajar</span>
-                <span className="font-bold text-indigo-700 font-mono">{formatRupiah(projection.projectedHonorJP)}</span>
+                <span className="font-bold text-emerald-800 font-mono">{formatRupiah(projection.projectedHonorJP)}</span>
               </div>
               <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50">
                 <span className="text-slate-600">Estimasi Lembur & Infal</span>
@@ -551,7 +551,7 @@ Jadwal Transfer: ${nextMonthInfo.cutoff.paymentLabel}`;
 
             <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
               <span className="text-slate-900">Total Kebutuhan Kas Bersih (THP):</span>
-              <span className="text-indigo-900 font-black text-sm font-mono">{formatRupiah(projection.projectedTHP)}</span>
+              <span className="text-emerald-950 font-black text-sm font-mono">{formatRupiah(projection.projectedTHP)}</span>
             </div>
           </div>
 

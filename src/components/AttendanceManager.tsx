@@ -343,15 +343,15 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                 availablePeriods={availablePeriods}
               />
             )}
-            <span className="bg-indigo-50 text-indigo-700 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-indigo-100 flex items-center gap-1">
-              <Cpu className="w-3 h-3 text-indigo-600" />
+            <span className="bg-emerald-50 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
+              <Cpu className="w-3 h-3 text-emerald-600" />
               <span>Biometric & RFID Engine</span>
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 mt-2">
             <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
               <span className="text-slate-500 font-medium">Periode Cut-Off:</span>
-              <strong className="text-indigo-900 font-mono">{cutoffInfo.cutoffLabelLong}</strong>
+              <strong className="text-emerald-900 font-mono">{cutoffInfo.cutoffLabelLong}</strong>
             </div>
             <div className="flex items-center gap-1.5 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 text-emerald-900">
               <span className="text-emerald-700 font-medium">Jadwal Penggajian:</span>
@@ -365,7 +365,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           <button
             onClick={handleSimulateSyncMachine}
             disabled={isSimulatingSync}
-            className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5"
+            className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isSimulatingSync ? 'animate-spin' : ''}`} />
             <span>{isSimulatingSync ? 'Menarik Data...' : 'Tarik Log Mesin Absensi'}</span>
@@ -373,7 +373,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
 
           <button
             onClick={onRefreshAndRecalculate}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Hitung Ulang & Sync Gaji</span>
@@ -388,14 +388,14 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>{syncFeedback}</span>
           </div>
-          <button onClick={() => setSyncFeedback(null)} className="text-emerald-700 hover:text-emerald-900 font-bold ml-2">×</button>
+          <button onClick={() => setSyncFeedback(null)} className="text-emerald-700 hover:text-emerald-900 font-bold ml-2 cursor-pointer">×</button>
         </div>
       )}
 
       {/* Metric Cards Banner */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
         <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center gap-3">
-          <div className="p-2 bg-indigo-50 text-indigo-700 rounded-lg">
+          <div className="p-2 bg-emerald-50 text-emerald-700 rounded-lg">
             <Clock className="w-4 h-4" />
           </div>
           <div>
@@ -439,17 +439,17 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
         </div>
       </div>
 
-      {/* Sub-Tab Switcher Navigation */}
-      <div className="border-b border-slate-200 flex flex-wrap items-center gap-1 sm:gap-2">
+      {/* Sub-Tab Switcher Navigation with Soft Green Aesthetic */}
+      <div className="border-b border-emerald-100 flex flex-wrap items-center gap-1 sm:gap-2">
         <button
           onClick={() => setActiveSubTab('input_harian')}
           className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition flex items-center gap-2 border-b-2 cursor-pointer ${
             activeSubTab === 'input_harian'
-              ? 'border-indigo-600 text-indigo-700 bg-indigo-50/70 shadow-2xs font-bold'
+              ? 'border-emerald-700 text-emerald-800 bg-emerald-50/80 shadow-2xs font-bold'
               : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <CalendarCheck className="w-3.5 h-3.5 text-indigo-600" />
+          <CalendarCheck className="w-3.5 h-3.5 text-emerald-700" />
           <span>Input Presensi Manual (Berdasarkan Hari)</span>
         </button>
 
@@ -457,11 +457,11 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           onClick={() => setActiveSubTab('infal')}
           className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition flex items-center gap-2 border-b-2 cursor-pointer ${
             activeSubTab === 'infal'
-              ? 'border-indigo-600 text-indigo-700 bg-indigo-50/70 font-bold'
+              ? 'border-emerald-700 text-emerald-800 bg-emerald-50/80 font-bold'
               : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <ArrowRightLeft className="w-3.5 h-3.5 text-indigo-600" />
+          <ArrowRightLeft className="w-3.5 h-3.5 text-emerald-700" />
           <span>Manajemen Infal / Guru Pengganti ({infalList.length})</span>
           <span className="bg-amber-400 text-slate-950 text-[10px] font-bold px-1.5 py-0.2 rounded-full">Rp 7.500/JP</span>
         </button>
@@ -470,11 +470,11 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           onClick={() => setActiveSubTab('rekap')}
           className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition flex items-center gap-2 border-b-2 cursor-pointer ${
             activeSubTab === 'rekap'
-              ? 'border-indigo-600 text-indigo-700 bg-indigo-50/70 font-bold'
+              ? 'border-emerald-700 text-emerald-800 bg-emerald-50/80 font-bold'
               : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <Layers className="w-3.5 h-3.5" />
+          <Layers className="w-3.5 h-3.5 text-emerald-700" />
           <span>Rekapitulasi Bulanan & Sinkronisasi Gaji</span>
         </button>
 
@@ -482,11 +482,11 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           onClick={() => setActiveSubTab('harian')}
           className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition flex items-center gap-2 border-b-2 cursor-pointer ${
             activeSubTab === 'harian'
-              ? 'border-indigo-600 text-indigo-700 bg-indigo-50/70 font-bold'
+              ? 'border-emerald-700 text-emerald-800 bg-emerald-50/80 font-bold'
               : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <Fingerprint className="w-3.5 h-3.5" />
+          <Fingerprint className="w-3.5 h-3.5 text-emerald-700" />
           <span>Log Presensi Individu & Terminal Biometrik ({dailyLogs.length})</span>
         </button>
 
@@ -494,11 +494,11 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           onClick={() => setActiveSubTab('cuti')}
           className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition flex items-center gap-2 border-b-2 cursor-pointer ${
             activeSubTab === 'cuti'
-              ? 'border-indigo-600 text-indigo-700 bg-indigo-50/70 font-bold'
+              ? 'border-emerald-700 text-emerald-800 bg-emerald-50/80 font-bold'
               : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <FileText className="w-3.5 h-3.5" />
+          <FileText className="w-3.5 h-3.5 text-emerald-700" />
           <span>Manajemen Cuti & Izin ({leaveRequests.length})</span>
         </button>
 
@@ -506,11 +506,11 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           onClick={() => setActiveSubTab('lembur')}
           className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition flex items-center gap-2 border-b-2 cursor-pointer ${
             activeSubTab === 'lembur'
-              ? 'border-indigo-600 text-indigo-700 bg-indigo-50/70 font-bold'
+              ? 'border-emerald-700 text-emerald-800 bg-emerald-50/80 font-bold'
               : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <Clock className="w-3.5 h-3.5" />
+          <Clock className="w-3.5 h-3.5 text-emerald-700" />
           <span>Klaim & Rekap Jam Lembur ({overtimeRecords.length})</span>
         </button>
 
@@ -518,11 +518,11 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           onClick={() => setActiveSubTab('mesin')}
           className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition flex items-center gap-2 border-b-2 cursor-pointer ${
             activeSubTab === 'mesin'
-              ? 'border-indigo-600 text-indigo-700 bg-indigo-50/70 font-bold'
+              ? 'border-emerald-700 text-emerald-800 bg-emerald-50/80 font-bold'
               : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <Cpu className="w-3.5 h-3.5" />
+          <Cpu className="w-3.5 h-3.5 text-emerald-700" />
           <span>Terminal Hardware & Importer CSV</span>
         </button>
       </div>
@@ -568,19 +568,19 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                 placeholder="Cari guru / tendik..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
               />
             </div>
             <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-800 font-semibold border border-indigo-100">
-                <CalendarCheck className="w-3.5 h-3.5 text-indigo-600" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200/80">
+                <CalendarCheck className="w-3.5 h-3.5 text-emerald-700" />
                 <span>Cut-Off: <strong>{cutoffInfo.cutoffLabelShort}</strong></span>
               </span>
               <span>Total <strong>{pegawaiList.length}</strong> pegawai</span>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead className="bg-slate-50 sticky top-0 border-b border-slate-200">
@@ -594,7 +594,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                     <th className="px-3 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Alpha</th>
                     <th className="px-3 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Terlambat</th>
                     <th className="px-3 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Jam Mengajar (JP)</th>
-                    <th className="px-3 py-3 text-[10px] font-bold text-indigo-700 bg-indigo-50/50 uppercase tracking-wider text-center" title={`Infal Guru Pengganti / Digantikan Periode Cut-Off: ${cutoffInfo.cutoffLabelShort} (23 s/d 22)`}>
+                    <th className="px-3 py-3 text-[10px] font-bold text-emerald-800 bg-emerald-50/60 uppercase tracking-wider text-center" title={`Infal Guru Pengganti / Digantikan Periode Cut-Off: ${cutoffInfo.cutoffLabelShort} (23 s/d 22)`}>
                       Infal (JP)
                     </th>
                     <th className="px-3 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Jam Lembur</th>
@@ -719,7 +719,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                                 value={editForm.dinasLuar ?? statDinasLuar}
                                 onChange={(e) => updateEditField({ dinasLuar: Number(e.target.value) })}
                                 onBlur={handleSaveRekap}
-                                className="w-10 text-center p-1 text-xs border rounded-md border-slate-300 focus:ring-1 focus:ring-indigo-500"
+                                className="w-10 text-center p-1 text-xs border rounded-md border-slate-300 focus:ring-1 focus:ring-emerald-500"
                               />
                             ) : (
                               statDinasLuar
@@ -749,7 +749,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                                 value={editForm.izin ?? statIzin}
                                 onChange={(e) => updateEditField({ izin: Number(e.target.value) })}
                                 onBlur={handleSaveRekap}
-                                className="w-10 text-center p-1 text-xs border rounded-md border-slate-300 focus:ring-1 focus:ring-indigo-500"
+                                className="w-10 text-center p-1 text-xs border rounded-md border-slate-300 focus:ring-1 focus:ring-emerald-500"
                               />
                             ) : (
                               statIzin
@@ -815,10 +815,10 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                                 value={editForm.jamMengajarRealisasi ?? (pres.jamMengajarRealisasi || 0)}
                                 onChange={(e) => updateEditField({ jamMengajarRealisasi: Number(e.target.value) })}
                                 onBlur={handleSaveRekap}
-                                className="w-12 text-center p-1 text-xs border rounded-md border-indigo-300 font-bold text-indigo-700 focus:ring-1 focus:ring-indigo-500"
+                                className="w-12 text-center p-1 text-xs border rounded-md border-emerald-300 font-bold text-emerald-800 focus:ring-1 focus:ring-emerald-500"
                               />
                             ) : (
-                              <span className="font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
+                              <span className="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">
                                 {pres.jamMengajarRealisasi || 0} JP
                               </span>
                             )}
@@ -911,7 +911,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                                   jamLemburTotal: statJamLembur,
                                   honorLemburTotal: statJamLembur * (peg.tarifLemburPerJam || 20000),
                                 })}
-                                className="p-1 rounded text-slate-500 hover:text-indigo-700 hover:bg-slate-100 transition cursor-pointer"
+                                className="p-1 rounded text-slate-500 hover:text-emerald-700 hover:bg-emerald-50/50 transition cursor-pointer"
                                 title="Ubah Data"
                               >
                                 <Edit3 className="w-3.5 h-3.5" />
@@ -962,7 +962,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
 
             <button
               onClick={() => setShowAddLogModal(true)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 self-start md:self-auto"
+              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-xs transition flex items-center gap-1.5 self-start md:self-auto cursor-pointer"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>Input Log Manual / Tap Terminal</span>
@@ -1025,7 +1025,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                                  : log.status === 'dinas_luar'
                                 ? 'bg-teal-50 text-teal-700 border-teal-200 font-bold'
                                 : log.status === 'pelatihan'
-                                ? 'bg-indigo-50 text-indigo-700 border-indigo-200 font-bold'
+                                ? 'bg-teal-50 text-teal-800 border-teal-200 font-bold'
                                 : log.status === 'sakit_skd'
                                 ? 'bg-blue-50 text-blue-700 border-blue-200'
                                 : log.status === 'alpha'
@@ -1103,7 +1103,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
 
             <button
               onClick={() => setShowAddLeaveModal(true)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto"
+              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-xs transition flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>Ajukan Cuti / Izin Baru</span>
@@ -1137,13 +1137,13 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                       <td className="py-3 px-3 text-center font-mono text-[11px] text-slate-600">
                         {req.tanggalMulai} {req.tanggalMulai !== req.tanggalSelesai ? `s/d ${req.tanggalSelesai}` : ''}
                       </td>
-                      <td className="py-3 px-3 text-center font-bold text-indigo-700">
+                      <td className="py-3 px-3 text-center font-bold text-emerald-800">
                         {req.jumlahHari} Hari
                       </td>
                       <td className="py-3 px-4 text-slate-600 text-[11px] max-w-xs">
                         <div>{req.alasan}</div>
                         {req.lampiranDokumenUrl && (
-                          <div className="text-[10px] text-indigo-600 font-semibold mt-0.5 flex items-center gap-1">
+                          <div className="text-[10px] text-emerald-700 font-semibold mt-0.5 flex items-center gap-1">
                             <FileText className="w-3 h-3" />
                             <span>Dokumen SKD Terlampir</span>
                           </div>
@@ -1235,7 +1235,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
 
             <button
               onClick={() => setShowAddOvertimeModal(true)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto"
+              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-xs transition flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>Input Penugasan Lembur</span>
@@ -1352,7 +1352,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
-                <Cpu className="w-4 h-4 text-indigo-600" />
+                <Cpu className="w-4 h-4 text-emerald-700" />
                 <h3 className="text-xs font-bold text-slate-800">Status Terminal Presensi Fisik</h3>
               </div>
               <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
@@ -1388,7 +1388,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
 
             <button
               onClick={handleSimulateSyncMachine}
-              className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg transition flex items-center justify-center gap-2"
+              className="w-full py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow-xs"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Sinkronisasi Seluruh Terminal Sekarang</span>
@@ -1398,18 +1398,18 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           {/* CSV File Parser Simulation */}
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-              <UploadCloud className="w-4 h-4 text-indigo-600" />
+              <UploadCloud className="w-4 h-4 text-emerald-700" />
               <h3 className="text-xs font-bold text-slate-800">Upload File Rekap / Raw Log (.CSV / .XLSX)</h3>
             </div>
 
-            <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-indigo-500 transition cursor-pointer bg-slate-50/50">
-              <UploadCloud className="w-8 h-8 text-indigo-500 mx-auto mb-2" />
+            <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-emerald-500 transition cursor-pointer bg-slate-50/50">
+              <UploadCloud className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
               <div className="text-xs font-bold text-slate-700">Drag & Drop file log mesin absensi di sini</div>
               <div className="text-[10px] text-slate-400 mt-1">Mendukung format standard Solution, Fingerspot, ZKTeco, & EasyLink</div>
             </div>
 
-            <div className="p-3 bg-indigo-50/60 rounded-lg border border-indigo-100 text-[11px] text-indigo-900 space-y-1">
-              <div className="font-bold text-indigo-950">Aturan Deteksi Otomatis:</div>
+            <div className="p-3 bg-emerald-50/60 rounded-lg border border-emerald-100 text-[11px] text-emerald-950 space-y-1">
+              <div className="font-bold text-emerald-950">Aturan Deteksi Otomatis:</div>
               <div>• Jam Masuk &gt; 07:00 WITA otomatis dihitung menit keterlambatan.</div>
               <div>• Tap Masuk &amp; Keluar tidak ditemukan dihitung sebagai Alpha (Denda Rp 50.000).</div>
               <div>• Jam Keluar &gt; 16:00 dihitung sebagai potensi jam lembur.</div>
@@ -1426,10 +1426,10 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4 border border-slate-200">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Fingerprint className="w-5 h-5 text-indigo-600" />
+                <Fingerprint className="w-5 h-5 text-emerald-700" />
                 <span>Catat Log Presensi Baru</span>
               </h3>
-              <button onClick={() => setShowAddLogModal(false)} className="text-slate-400 hover:text-slate-700 text-lg">×</button>
+              <button onClick={() => setShowAddLogModal(false)} className="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">×</button>
             </div>
 
             <form onSubmit={handleCreateDailyLog} className="space-y-3 text-xs">
@@ -1518,13 +1518,13 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAddLogModal(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg cursor-pointer transition"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-sm"
+                  className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-lg shadow-xs cursor-pointer transition"
                 >
                   Simpan Log Presensi
                 </button>
@@ -1542,10 +1542,10 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4 border border-slate-200">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-indigo-600" />
+                <FileText className="w-5 h-5 text-emerald-700" />
                 <span>Pengajuan Cuti / Izin / Sakit SKD</span>
               </h3>
-              <button onClick={() => setShowAddLeaveModal(false)} className="text-slate-400 hover:text-slate-700 text-lg">×</button>
+              <button onClick={() => setShowAddLeaveModal(false)} className="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">×</button>
             </div>
 
             <form onSubmit={handleCreateLeave} className="space-y-3 text-xs">
@@ -1632,13 +1632,13 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAddLeaveModal(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg cursor-pointer transition"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-sm"
+                  className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-lg shadow-xs cursor-pointer transition"
                 >
                   Kirim Pengajuan Cuti
                 </button>
@@ -1656,10 +1656,10 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
           <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4 border border-slate-200">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-indigo-600" />
+                <Clock className="w-5 h-5 text-emerald-700" />
                 <span>Form Penugasan Jam Lembur</span>
               </h3>
-              <button onClick={() => setShowAddOvertimeModal(false)} className="text-slate-400 hover:text-slate-700 text-lg">×</button>
+              <button onClick={() => setShowAddOvertimeModal(false)} className="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">×</button>
             </div>
 
             <form onSubmit={handleCreateOvertime} className="space-y-3 text-xs">
@@ -1731,7 +1731,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                     min={0.5}
                     value={newOvertime.durasiJam}
                     onChange={(e) => setNewOvertime({ ...newOvertime, durasiJam: Number(e.target.value) })}
-                    className="w-full p-2 border rounded-lg border-slate-200 font-bold text-indigo-700"
+                    className="w-full p-2 border rounded-lg border-slate-200 font-bold text-emerald-800"
                     required
                   />
                 </div>
@@ -1753,13 +1753,13 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAddOvertimeModal(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg cursor-pointer transition"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-sm"
+                  className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-lg shadow-xs cursor-pointer transition"
                 >
                   Simpan Klaim Lembur
                 </button>
