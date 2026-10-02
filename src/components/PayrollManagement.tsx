@@ -106,7 +106,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
   const enrichedRecords = useMemo(() => {
     if (!pegawaiList || pegawaiList.length === 0) return records;
 
-    return records.map((record) => {
+    const mapped = records.map((record) => {
       const matched = pegawaiList.find((p) => 
         p.id === record.pegawaiId || 
         (p.nip && record.pegawaiNip && (p.nip === record.pegawaiNip || p.niy === record.pegawaiNip)) ||
@@ -136,6 +136,15 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
         atasNamaRekening: matched.atasNamaRekening || record.atasNamaRekening,
       };
     });
+
+    const uniqueMap = new Map<string, PenggajianRecord>();
+    mapped.forEach((item, idx) => {
+      const uid = item.id || `pm-${idx}`;
+      if (!uniqueMap.has(uid)) {
+        uniqueMap.set(uid, item);
+      }
+    });
+    return Array.from(uniqueMap.values());
   }, [records, pegawaiList]);
 
   // Base Records: Seluruh Guru & Staf terdaftar
@@ -821,7 +830,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
 
                   return (
                     <tr 
-                      key={record.id} 
+                      key={`${record.id}-${idx}`} 
                       className={`hover:bg-emerald-50/20 transition divide-x divide-slate-100 ${
                         isSelected ? 'bg-emerald-50/40' : ''
                       }`}

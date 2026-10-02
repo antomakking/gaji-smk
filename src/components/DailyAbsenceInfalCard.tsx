@@ -640,9 +640,9 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
           </div>
         ) : (
           <div className="space-y-4">
-            {absentData.map((item) => (
+            {absentData.map((item, itemIdx) => (
               <div 
-                key={item.pegawai.id}
+                key={`${item.pegawai.id}-${itemIdx}`}
                 className="border border-slate-200 rounded-xl p-4 sm:p-5 hover:border-slate-300 transition bg-slate-50/30"
               >
                 {/* Employee Header Row */}
@@ -701,7 +701,7 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {item.teachingSlots.map(({ slot, replacement }, idx) => (
                         <div 
-                          key={slot.id || idx}
+                          key={`${slot.id || idx}-${idx}`}
                           className={`p-3.5 rounded-lg border transition flex flex-col justify-between ${
                             replacement 
                               ? 'bg-emerald-50/40 border-emerald-200' 
@@ -878,8 +878,8 @@ export const DailyAbsenceInfalCard: React.FC<DailyAbsenceInfalCardProps> = ({
                   className="w-full p-2.5 text-xs border rounded-lg border-slate-300 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 shadow-2xs"
                 >
                   <option value="">-- Pilih Guru Pengganti --</option>
-                  {activeCandidates.map((c) => (
-                    <option key={c.pegawai.id} value={c.pegawai.id}>
+                  {activeCandidates.map((c, cIdx) => (
+                    <option key={`${c.pegawai.id}-${cIdx}`} value={c.pegawai.id}>
                       {c.pegawai.nama} — [{c.isKosong ? `✅ Kosong Jam ${quickAssignModal.slot?.jamKe}` : `⚠️ ${c.conflictReason}`}] | Menggantikan: {c.kaliMenggantikan}x ({c.jpMenggantikan} JP) | Digantikan: {c.kaliDigantikan}x ({c.jpDigantikan} JP)
                     </option>
                   ))}

@@ -542,7 +542,7 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
                   const hasMissingJurusan = (!peg.jurusan || peg.jurusan === '-') && (peg.pendidikanTerakhir === 'S1' || peg.pendidikanTerakhir === 'S2' || peg.pendidikanTerakhir === 'D3');
                   
                   return (
-                    <tr key={peg.id} className="hover:bg-emerald-50/40 transition">
+                    <tr key={`${peg.id}-${index}`} className="hover:bg-emerald-50/40 transition">
                       <td className="py-3 px-3 text-center font-medium text-slate-500">
                         {index + 1}
                       </td>
@@ -676,12 +676,12 @@ export const EmployeeManager: React.FC<EmployeeManagerProps> = ({
       {/* GRID VIEW (Salary & Bank Account Card Snapshot) */}
       {viewMode === 'grid' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {filtered.map((peg) => {
+          {filtered.map((peg, idx) => {
             const isRevealed = showEncryptedAccounts[peg.id];
             const incomplete = isDataIncomplete(peg);
 
             return (
-              <div key={peg.id} className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition relative">
+              <div key={`${peg.id}-${idx}`} className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition relative">
                 {incomplete && (
                   <div className="absolute -top-2.5 -right-2.5 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" /> Lengkapi Data

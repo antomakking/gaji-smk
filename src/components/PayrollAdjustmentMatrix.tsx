@@ -243,13 +243,34 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
             };
           });
 
-          setMatrixRecords(mapped);
+          const uniqueMap = new Map<string, PenggajianRecord>();
+          mapped.forEach((item, idx) => {
+            const uid = item.id || `matrix-${idx}`;
+            if (!uniqueMap.has(uid)) {
+              uniqueMap.set(uid, item);
+            }
+          });
+          setMatrixRecords(Array.from(uniqueMap.values()));
         } else {
-          setMatrixRecords(records);
+          const uniqueMap = new Map<string, PenggajianRecord>();
+          records.forEach((item, idx) => {
+            const uid = item.id || `matrix-${idx}`;
+            if (!uniqueMap.has(uid)) {
+              uniqueMap.set(uid, item);
+            }
+          });
+          setMatrixRecords(Array.from(uniqueMap.values()));
         }
       } catch (err) {
         console.error('❌ Error fetching slip_gaji in PayrollAdjustmentMatrix:', err);
-        setMatrixRecords(records);
+        const uniqueMap = new Map<string, PenggajianRecord>();
+        records.forEach((item, idx) => {
+          const uid = item.id || `matrix-${idx}`;
+          if (!uniqueMap.has(uid)) {
+            uniqueMap.set(uid, item);
+          }
+        });
+        setMatrixRecords(Array.from(uniqueMap.values()));
       } finally {
         if (isMounted) setIsLoadingSupabase(false);
       }
@@ -681,15 +702,26 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
       })
       .filter(r => {
         const matchesSearch = 
-          r.pegawaiNama.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          r.pegawaiNip.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          r.pegawaiJabatan.toLowerCase().includes(searchQuery.toLowerCase());
+          !searchQuery ||
+          (r.pegawaiNama && r.pegawaiNama.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (r.pegawaiNip && r.pegawaiNip.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (r.pegawaiJabatan && r.pegawaiJabatan.toLowerCase().includes(searchQuery.toLowerCase()));
 
-        const matchesStatus = statusFilter === 'all' || r.pegawaiStatus === statusFilter;
+        // Point 4: Filter status dan tipe pegawai tetap menampilkan data jika nilai statusnya null/falsy atau filter bernilai 'all'
+        const matchesStatus = 
+          statusFilter === 'all' || 
+          !r.pegawaiStatus || 
+          r.pegawaiStatus === statusFilter;
 
-        const isGuru = r.pegawaiStatus === 'GTY' || r.pegawaiStatus === 'GTT' || r.pegawaiJabatan.toLowerCase().includes('guru');
+        const isGuru = 
+          !r.pegawaiStatus || 
+          r.pegawaiStatus === 'GTY' || 
+          r.pegawaiStatus === 'GTT' || 
+          (r.pegawaiJabatan && r.pegawaiJabatan.toLowerCase().includes('guru'));
+
         const matchesRole = 
           roleFilter === 'all' || 
+          !r.pegawaiStatus ||
           (roleFilter === 'guru' && isGuru) || 
           (roleFilter === 'tendik' && !isGuru);
 
@@ -1175,7 +1207,7 @@ $$;`;
 
                 return (
                   <tr 
-                    key={r.id} 
+                    key={`${r.id}-${index}`} 
                     className={`group transition-colors ${
                       isDirty 
                         ? 'bg-amber-50/50 hover:bg-amber-50/80' 

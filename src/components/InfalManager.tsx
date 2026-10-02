@@ -372,8 +372,8 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
-                {teacherInfalBalances.map(({ pegawai, jpDigantikan, nominalPotongan, jpMenggantikan, nominalHonor, netSaldo }) => (
-                  <tr key={pegawai.id} className="hover:bg-emerald-50/30 transition">
+                {teacherInfalBalances.map(({ pegawai, jpDigantikan, nominalPotongan, jpMenggantikan, nominalHonor, netSaldo }, idx) => (
+                  <tr key={`${pegawai.id}-${idx}`} className="hover:bg-emerald-50/30 transition">
                     <td className="py-2.5 px-3">
                       <div className="font-bold text-slate-900">{pegawai.nama}</div>
                       <div className="text-[10px] text-slate-400 font-mono">NIY: {pegawai.niy || pegawai.nip}</div>
@@ -468,8 +468,8 @@ export const InfalManager: React.FC<InfalManagerProps> = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
-                {filteredInfal.map((item) => (
-                  <tr key={item.id} className="hover:bg-emerald-50/30 transition">
+                {filteredInfal.map((item, idx) => (
+                  <tr key={`${item.id}-${idx}`} className="hover:bg-emerald-50/30 transition">
                     <td className="py-3 px-3">
                       <div className="font-bold text-slate-900">{item.tanggal}</div>
                       {item.jamKe && (

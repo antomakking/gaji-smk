@@ -665,14 +665,25 @@ export default function App() {
 
         if (staffRes.status === 'fulfilled' && staffRes.value && staffRes.value.length > 0) {
           console.log(`👥 [Supabase] Data staf dari tabel 'pegawai': ${staffRes.value.length} orang`, staffRes.value);
-          setPegawaiList(staffRes.value);
+          setPegawaiList(prev => {
+            const uniqueMap = new Map<string, Pegawai>();
+            staffRes.value!.forEach(p => {
+              if (p && p.id) uniqueMap.set(p.id, p);
+            });
+            return Array.from(uniqueMap.values());
+          });
         }
 
         if (payrollRes.status === 'fulfilled' && payrollRes.value && payrollRes.value.length > 0) {
           console.log(`📑 [Supabase] Rekap slip gaji dari tabel 'slip_gaji': ${payrollRes.value.length} rekaman`, payrollRes.value);
           setRecords(prev => {
             const others = prev.filter(r => !(r.bulan === bulan && r.tahun === tahun));
-            return [...others, ...payrollRes.value!];
+            const combined = [...others, ...payrollRes.value!];
+            const uniqueMap = new Map<string, PenggajianRecord>();
+            combined.forEach(r => {
+              if (r && r.id) uniqueMap.set(r.id, r);
+            });
+            return Array.from(uniqueMap.values());
           });
         }
 
@@ -757,7 +768,7 @@ export default function App() {
     const filtered = records.filter(r => r.bulan === selectedBulan && r.tahun === selectedTahun);
     if (filtered.length > 0) return filtered;
     // Fallback if not yet populated
-    return records.filter(r => r.bulan === 8 && r.tahun === 2026);
+    return records;
   }, [records, selectedBulan, selectedTahun]);
 
   // Active presensi for currently selected period

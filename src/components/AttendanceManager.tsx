@@ -605,7 +605,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                 <tbody className="divide-y divide-slate-100">
                   {pegawaiList
                     .filter(p => p.nama.toLowerCase().includes(searchTerm.toLowerCase()) || p.nip.includes(searchTerm))
-                    .map((peg) => {
+                    .map((peg, idx) => {
                       const pres = presensiList.find(p => p.pegawaiId === peg.id && p.bulan === selectedBulan && p.tahun === selectedTahun) || 
                         presensiList.find(p => p.pegawaiId === peg.id) || {
                         id: `prs-${peg.id}-${selectedBulan}-${selectedTahun}`,
@@ -687,7 +687,7 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                       const totalJpDigantikan = infalDigantikan.reduce((sum, item) => sum + (Number(item.jumlahJp) || 0), 0);
 
                       return (
-                        <tr key={peg.id} className="hover:bg-slate-50/70 transition text-xs">
+                        <tr key={`${peg.id}-${idx}`} className="hover:bg-slate-50/70 transition text-xs">
                           {/* Name */}
                           <td className="py-3 px-4">
                             <div className="font-bold text-slate-900">{peg.nama}</div>
@@ -994,10 +994,10 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                       </td>
                     </tr>
                   ) : (
-                    filteredDailyLogs.map(log => {
+                    filteredDailyLogs.map((log, idx) => {
                       const peg = pegawaiList.find(p => p.id === log.pegawaiId);
                       return (
-                        <tr key={log.id} className="hover:bg-slate-50/70 transition text-xs">
+                        <tr key={`${log.id}-${idx}`} className="hover:bg-slate-50/70 transition text-xs">
                           <td className="py-3 px-4 font-bold text-slate-900">
                             {peg ? peg.nama : log.pegawaiId}
                           </td>
@@ -1126,8 +1126,8 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {leaveRequests.map(req => (
-                    <tr key={req.id} className="hover:bg-slate-50/70 transition text-xs">
+                  {leaveRequests.map((req, idx) => (
+                    <tr key={`${req.id}-${idx}`} className="hover:bg-slate-50/70 transition text-xs">
                       <td className="py-3 px-4 font-bold text-slate-900">
                         {req.pegawaiNama}
                       </td>
@@ -1259,8 +1259,8 @@ export const AttendanceManager: React.FC<AttendanceManagerProps> = ({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {overtimeRecords.map(ot => (
-                    <tr key={ot.id} className="hover:bg-slate-50/70 transition text-xs">
+                  {overtimeRecords.map((ot, idx) => (
+                    <tr key={`${ot.id}-${idx}`} className="hover:bg-slate-50/70 transition text-xs">
                       <td className="py-3 px-4 font-bold text-slate-900">
                         {ot.pegawaiNama}
                       </td>

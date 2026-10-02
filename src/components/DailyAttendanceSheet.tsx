@@ -1024,7 +1024,7 @@ export const DailyAttendanceSheet: React.FC<DailyAttendanceSheetProps> = ({
                   const isAbsent = ['sakit_skd', 'sakit_tanpa_skd', 'izin_resmi', 'izin_pribadi', 'cuti_tahunan', 'cuti_khusus', 'libur_sekolah', 'alpha', 'bukan_hari_kerja'].includes(row.status);
 
                   return (
-                    <tr key={peg.id} className={`hover:bg-slate-50/70 transition ${isOffDay ? 'bg-slate-50/40' : ''}`}>
+                    <tr key={`${peg.id}-${idx}`} className={`hover:bg-slate-50/70 transition ${isOffDay ? 'bg-slate-50/40' : ''}`}>
                       {/* No */}
                       <td className="py-3.5 px-3 text-center text-slate-400 font-mono text-[11px]">
                         {idx + 1}

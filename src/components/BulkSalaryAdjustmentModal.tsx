@@ -564,13 +564,13 @@ export const BulkSalaryAdjustmentModal: React.FC<BulkSalaryAdjustmentModalProps>
                   </span>
                 </div>
                 <div className="max-h-56 overflow-y-auto divide-y divide-slate-800/60">
-                  {filteredPegawai.map((p) => {
+                  {filteredPegawai.map((p, idx) => {
                     const current = p.gajiPokokDefault || 0;
                     const next = computeBulkSalary(current);
                     const diff = next - current;
 
                     return (
-                      <div key={p.id} className="px-4 py-2.5 flex items-center justify-between text-xs hover:bg-slate-900/40 transition-colors">
+                      <div key={`${p.id}-${idx}`} className="px-4 py-2.5 flex items-center justify-between text-xs hover:bg-slate-900/40 transition-colors">
                         <div className="flex items-center gap-3">
                           <div className="w-7 h-7 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300 text-[11px]">
                             {p.nama.charAt(0)}
@@ -656,7 +656,7 @@ export const BulkSalaryAdjustmentModal: React.FC<BulkSalaryAdjustmentModalProps>
                           </td>
                         </tr>
                       ) : (
-                        personalTableList.map((pegawai) => {
+                        personalTableList.map((pegawai, idx) => {
                           const currentVal = pegawai.gajiPokokDefault || 0;
                           const editedVal = personalEdits[pegawai.id] !== undefined ? personalEdits[pegawai.id] : currentVal;
                           const isEdited = personalEdits[pegawai.id] !== undefined && personalEdits[pegawai.id] !== currentVal;
@@ -666,7 +666,7 @@ export const BulkSalaryAdjustmentModal: React.FC<BulkSalaryAdjustmentModalProps>
                           const isGuru = pegawai.statusPegawai === 'GTY' || pegawai.statusPegawai === 'GTT' || pegawai.jabatanUtama?.toLowerCase().includes('guru');
 
                           return (
-                            <tr key={pegawai.id} className="hover:bg-slate-900/40 transition-colors">
+                            <tr key={`${pegawai.id}-${idx}`} className="hover:bg-slate-900/40 transition-colors">
                               <td className="py-3 px-4">
                                 <div className="font-semibold text-white">{pegawai.nama}</div>
                                 <div className="text-[11px] text-slate-400 font-mono">
