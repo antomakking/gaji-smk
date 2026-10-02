@@ -688,36 +688,6 @@ export default function App() {
       }
     }
 
-    // 2. Supplementary check via Express API / local endpoints
-    try {
-      const [resPenggajian, resPegawai, resPresensi, resEmails] = await Promise.allSettled([
-        fetch(`/api/penggajian?bulan=${bulan}&tahun=${tahun}`).then(r => r.json()),
-        fetch('/api/pegawai').then(r => r.json()),
-        fetch(`/api/presensi?bulan=${bulan}&tahun=${tahun}`).then(r => r.json()),
-        fetch('/api/email-logs').then(r => r.json()),
-      ]);
-
-      if (resPenggajian.status === 'fulfilled' && Array.isArray(resPenggajian.value) && resPenggajian.value.length > 0) {
-        setRecords(prev => {
-          const others = prev.filter(r => !(r.bulan === bulan && r.tahun === tahun));
-          return [...others, ...resPenggajian.value];
-        });
-      }
-      if (resPegawai.status === 'fulfilled' && Array.isArray(resPegawai.value)) {
-        setPegawaiList(resPegawai.value);
-      }
-      if (resPresensi.status === 'fulfilled' && Array.isArray(resPresensi.value) && resPresensi.value.length > 0) {
-        setPresensiList(prev => {
-          const others = prev.filter(p => !(p.bulan === bulan && p.tahun === tahun));
-          return [...others, ...resPresensi.value];
-        });
-      }
-      if (resEmails.status === 'fulfilled' && Array.isArray(resEmails.value)) {
-        setEmailLogs(resEmails.value);
-      }
-    } catch (err) {
-      // Backend API connection fallback, using local state
-    }
   };
 
 
@@ -820,35 +790,12 @@ export default function App() {
   // Generate / Recalculate monthly payroll for target month/year
   const handleGeneratePayroll = async (targetBulan = selectedBulan, targetTahun = selectedTahun) => {
     const monthLabel = MONTH_NAMES_ID[targetBulan - 1] || `Bulan ${targetBulan}`;
-    try {
-      const res = await fetch('/api/penggajian/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bulan: targetBulan, tahun: targetTahun, forceOverwrite: true }),
-      });
-      const data = await res.json();
-      if (data.data && Array.isArray(data.data)) {
-        setRecords(prev => {
-          const others = prev.filter(r => !(r.bulan === targetBulan && r.tahun === targetTahun));
-          return [...others, ...data.data];
-        });
-      } else {
-        // Local recalculation
-        const fresh = generatePeriodPayrollRecords(targetBulan, targetTahun, pegawaiList, presensiList);
-        setRecords(prev => {
-          const others = prev.filter(r => !(r.bulan === targetBulan && r.tahun === targetTahun));
-          return [...others, ...fresh];
-        });
-      }
-      showToast(`Berhasil mengkalkulasi ulang data gaji periode ${monthLabel} ${targetTahun}!`);
-    } catch (err) {
-      const fresh = generatePeriodPayrollRecords(targetBulan, targetTahun, pegawaiList, presensiList);
-      setRecords(prev => {
-        const others = prev.filter(r => !(r.bulan === targetBulan && r.tahun === targetTahun));
-        return [...others, ...fresh];
-      });
-      showToast(`Kalkulasi penggajian periode ${monthLabel} ${targetTahun} berhasil diperbarui.`);
-    }
+    const fresh = generatePeriodPayrollRecords(targetBulan, targetTahun, pegawaiList, presensiList);
+    setRecords(prev => {
+      const others = prev.filter(r => !(r.bulan === targetBulan && r.tahun === targetTahun));
+      return [...others, ...fresh];
+    });
+    showToast(`Berhasil mengkalkulasi ulang data gaji periode ${monthLabel} ${targetTahun}!`);
 
     addAuditLog(
       'gaji',
@@ -1147,21 +1094,6 @@ export default function App() {
       }).catch(err => console.warn('Supabase approval update failed:', err));
     }
 
-    try {
-      await fetch(`/api/penggajian/${recordId}/approve`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          role: currentUser.role,
-          approverName: currentUser.nama,
-          catatan: notes,
-          action,
-        }),
-      });
-    } catch (e) {
-      // ignore
-    }
-
     setRecords((prev) =>
       prev.map((r) => {
         if (r.id === recordId) {
@@ -1219,18 +1151,6 @@ export default function App() {
         nomorReferensiTransfer: refNum,
         emailSent: true,
       }).catch(err => console.warn('Supabase transfer update failed:', err));
-    }
-
-    try {
-      await fetch(`/api/penggajian/${recordId}/transfer`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          transferredBy: currentUser.nama,
-        }),
-      });
-    } catch (e) {
-      // ignore
     }
 
     const targetRec = records.find(r => r.id === recordId);
@@ -1293,12 +1213,6 @@ export default function App() {
     const record = records.find(r => r.id === recordId);
     if (!record) return;
 
-    try {
-      await fetch(`/api/penggajian/${recordId}/send-email`, {
-        method: 'POST',
-      });
-    } catch (e) {}
-
     const now = new Date().toISOString();
     setRecords(prev => prev.map(r => r.id === recordId ? { ...r, emailSent: true, emailSentAt: now } : r));
 
@@ -1332,15 +1246,6 @@ export default function App() {
       });
     }
 
-
-    try {
-      await fetch('/api/penggajian/batch-approve', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids, role: currentUser.role, approverName: currentUser.nama }),
-      });
-    } catch (e) {}
-
     setRecords(prev =>
       prev.map(r => {
         if (ids.includes(r.id)) {
@@ -1366,13 +1271,6 @@ export default function App() {
 
   // Batch email
   const handleBatchEmail = async (ids: string[]) => {
-    try {
-      await fetch('/api/penggajian/batch-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids }),
-      });
-    } catch (e) {}
 
     const now = new Date().toISOString();
     setRecords(prev =>
@@ -1586,15 +1484,6 @@ export default function App() {
       showToast(`Gagal menyimpan ke Supabase: ${err?.message || 'Error koneksi'}`, 'error');
     }
 
-    // 3. Optional local express backend sync
-    try {
-      fetch('/api/pegawai', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newPeg),
-      }).catch(() => {});
-    } catch (e) {}
-
     addAuditLog(
       'pegawai',
       'ADD_PEGAWAI',
@@ -1629,15 +1518,6 @@ export default function App() {
       console.error('❌ [Supabase] Error saat update pegawai:', err);
       showToast(`Gagal memperbarui data di Supabase: ${err?.message || 'Error'}`, 'error');
     }
-
-    // 3. Optional local express backend sync
-    try {
-      fetch(`/api/pegawai/${updatedPeg.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedPeg)
-      }).catch(() => {});
-    } catch (e) {}
 
     // 4. Recalculate payroll records for this employee across all loaded periods
     setRecords(prev => prev.map(rec => {

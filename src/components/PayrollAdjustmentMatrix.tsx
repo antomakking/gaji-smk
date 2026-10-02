@@ -112,10 +112,34 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
           query = query.eq('bulan', selectedBulan).eq('tahun', selectedTahun);
         }
 
-        const { data, error } = await query;
+        let { data, error } = await query;
 
         if (error) {
           console.warn('⚠️ [Supabase Matrix Fetch] Query slip_gaji:', error.message);
+        }
+
+        // Fallback: Jika filter periode tidak mengembalikan data, muat seluruh data slip_gaji dari Supabase
+        if ((!data || data.length === 0) && client) {
+          const fallbackRes = await client
+            .from('slip_gaji')
+            .select(`
+              *,
+              pegawai:pegawai_id (
+                id,
+                nip,
+                niy,
+                nama_lengkap,
+                nama,
+                jabatan,
+                jabatan_utama,
+                status_pegawai,
+                jenis_pegawai,
+                status_induk
+              )
+            `);
+          if (fallbackRes.data && fallbackRes.data.length > 0) {
+            data = fallbackRes.data;
+          }
         }
 
         if (data && data.length > 0 && isMounted) {
