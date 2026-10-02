@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { PenggajianRecord, Pegawai, User, AuditCategory, AuditActionType } from '../types';
 import { formatRupiah } from '../utils/security';
-import { updatePayrollMatrixAdjustmentRPC } from '../lib/supabase';
+import { updatePayrollMatrixAdjustmentRPC, getSupabase } from '../lib/supabase';
 
 interface PayrollAdjustmentMatrixProps {
   records: PenggajianRecord[];
@@ -33,6 +33,7 @@ interface PayrollAdjustmentMatrixProps {
   onBatchUpdateRecords?: (updatedRecords: PenggajianRecord[]) => void;
   selectedBulan?: number;
   selectedTahun?: number;
+  selectedPeriodeId?: string;
   onClose?: () => void;
   showToast?: (msg: string, type?: 'success' | 'info' | 'error') => void;
   onAuditLog?: (category: AuditCategory, action: AuditActionType, actionLabel: string, target: string, details: string) => void;
@@ -48,12 +49,17 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
   onBatchUpdateRecords,
   selectedBulan = 9,
   selectedTahun = 2026,
+  selectedPeriodeId,
   onClose,
   showToast,
   onAuditLog,
   onInspectFormula,
   onViewSlip,
 }) => {
+  // Supabase fetched records state
+  const [matrixRecords, setMatrixRecords] = useState<PenggajianRecord[]>(records);
+  const [isLoadingSupabase, setIsLoadingSupabase] = useState(false);
+
   // Local state for draft modifications per record
   const [draftRecords, setDraftRecords] = useState<Record<string, PenggajianRecord>>({});
   const [dirtyRowIds, setDirtyRowIds] = useState<Set<string>>(new Set());
@@ -68,15 +74,177 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
   const [showSqlModal, setShowSqlModal] = useState(false);
   const [copiedSql, setCopiedSql] = useState(false);
 
-  // Initialize draft records from prop
+  // 1. Fetching initial data directly from Supabase slip_gaji table based on selected period
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchSupabaseSlipGaji = async () => {
+      const client = getSupabase();
+      if (!client) {
+        setMatrixRecords(records);
+        return;
+      }
+
+      setIsLoadingSupabase(true);
+
+      try {
+        let query = client
+          .from('slip_gaji')
+          .select(`
+            *,
+            pegawai:pegawai_id (
+              id,
+              nip,
+              niy,
+              nama_lengkap,
+              nama,
+              jabatan,
+              jabatan_utama,
+              status_pegawai,
+              jenis_pegawai,
+              status_induk
+            )
+          `);
+
+        if (selectedPeriodeId) {
+          query = query.eq('periode_id', selectedPeriodeId);
+        } else if (selectedBulan && selectedTahun) {
+          query = query.eq('bulan', selectedBulan).eq('tahun', selectedTahun);
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+          console.warn('⚠️ [Supabase Matrix Fetch] Query slip_gaji:', error.message);
+        }
+
+        if (data && data.length > 0 && isMounted) {
+          const mapped: PenggajianRecord[] = data.map((row: any): PenggajianRecord => {
+            const rawPeg = row.pegawai;
+            const joinedPeg = Array.isArray(rawPeg) ? rawPeg[0] : rawPeg;
+            const fallbackPeg = pegawaiList.find(p => p.id === row.pegawai_id);
+            const peg = joinedPeg || fallbackPeg || {};
+
+            const totalPenerimaan = Number(row.gaji_kotor || row.total_penerimaan || row.total_tambahan || 0);
+            const totalPotongan = Number(row.total_potongan || 0);
+            const thp = Number(row.take_home_pay || row.gaji_bersih || Math.max(0, totalPenerimaan - totalPotongan));
+
+            return {
+              id: String(row.id), // UUID ASLI DARI TABEL SLIP_GAJI SUPABASE
+              kodeSlip: String(row.kode_slip || `SLIP/${row.tahun || selectedTahun}/${String(row.bulan || selectedBulan).padStart(2, '0')}/${String(row.id).slice(0, 8)}`),
+              pegawaiId: String(row.pegawai_id || peg.id || ''),
+              pegawaiNama: String(peg.nama_lengkap || peg.nama || row.pegawai_nama || 'Pegawai'),
+              pegawaiNip: String(peg.nip || peg.niy || row.pegawai_nip || ''),
+              pegawaiJabatan: String(peg.jabatan || peg.jabatan_utama || row.pegawai_jabatan || '-'),
+              pegawaiStatus: (peg.status_pegawai || peg.jenis_pegawai || row.pegawai_status || 'GTT') as any,
+              pegawaiEmail: String(peg.email || row.pegawai_email || ''),
+              bulan: Number(row.bulan || selectedBulan),
+              tahun: Number(row.tahun || selectedTahun),
+              periodeLabel: String(row.periode_label || row.nama_periode || `${selectedBulan}-${selectedTahun}`),
+
+              tanggalCutoffMulai: String(row.tanggal_cutoff_mulai || ''),
+              tanggalCutoffSelesai: String(row.tanggal_cutoff_selesai || ''),
+              tanggalMulaiBayar: String(row.tanggal_mulai_bayar || ''),
+              periodeCutoffLabel: String(row.periode_cutoff_label || ''),
+
+              statusInduk: (peg.status_induk || row.status_induk || 'Induk') as any,
+              keteranganInduk: String(peg.keterangan_induk || row.keterangan_induk || ''),
+
+              presensiHadir: Number(row.presensi_hadir || 0),
+              presensiAlpha: Number(row.presensi_alpha || 0),
+              presensiIzin: Number(row.presensi_izin || 0),
+              presensiSakit: Number(row.presensi_sakit || 0),
+              presensiCuti: Number(row.presensi_cuti || 0),
+              presensiDinasLuar: Number(row.presensi_dinas_luar || 0),
+              presensiTerlambatMenit: Number(row.presensi_terlambat_menit || 0),
+              jamMengajarRealisasi: Number(row.realisasi_jp || row.jam_mengajar_realisasi || 0),
+              jamLembur: Number(row.jam_lembur || 0),
+
+              gajiPokok: Number(row.gaji_pokok_nominal || row.gaji_pokok || 0),
+              tunjanganJabatan: Number(row.tunjangan_jabatan || 0),
+              tunjanganKepsek: Number(row.tunjangan_kepsek || 0),
+              tunjanganWakasek: Number(row.tunjangan_wakasek || 0),
+              tunjanganWaliKelas: Number(row.tunjangan_wali_kelas || 0),
+              tunjanganItOfficer: Number(row.tunjangan_it_officer || 0),
+              tunjanganDkm: Number(row.tunjangan_dkm || 0),
+              tunjanganAsrama: Number(row.tunjangan_asrama || 0),
+              tunjanganBendahara: Number(row.tunjangan_bendahara || 0),
+              tunjanganPj: Number(row.tunjangan_pj || 0),
+
+              tunjanganIjazahJenjang: String(row.tunjangan_ijazah_jenjang || 'S1'),
+              tunjanganIjazah: Number(row.tunjangan_ijazah || 0),
+              isLinierKompetensi: Boolean(row.is_linier_kompetensi),
+              tunjanganKompetensi: Number(row.tunjangan_kompetensi || 0),
+              tahunPengalaman: Number(row.tahun_pengalaman || 0),
+              tunjanganPengalaman: Number(row.tunjangan_pengalaman || 0),
+              tahunMasaKerja: Number(row.tahun_masa_kerja || 0),
+              tunjanganMasaKerja: Number(row.tunjangan_masa_kerja || 0),
+              tunjanganKinerja: Number(row.tunjangan_kinerja || 0),
+              tunjanganKehadiran: Number(row.tunjangan_kehadiran || 0),
+              tunjanganKehadiranTransport: Number(row.tunjangan_kehadiran_transport || row.tunjangan_kehadiran || 0),
+              honorJamMengajar: Number(row.total_honor_jp || row.honor_jam_mengajar || 0),
+              honorLembur: Number(row.honor_lembur || 0),
+              honorInfal: Number(row.honor_inval || row.honor_infal || 0),
+              jpMenggantikan: Number(row.jp_menggantikan || 0),
+              insentifKajianMuslimah: Number(row.insentif_kajian_muslimah || 0),
+              koreksiPenerimaan: Number(row.koreksi_penerimaan || 0),
+              tunjanganVokasiIT: Number(row.tunjangan_vokasi_it || 0),
+              tunjanganLainnya: Number(row.tunjangan_lainnya || 0),
+              totalPenerimaan,
+              totalTambahan: totalPenerimaan,
+
+              potonganKeterlambatan: Number(row.potongan_terlambat || row.potongan_keterlambatan || 0),
+              potonganTidakMasuk: Number(row.potongan_tidak_masuk || row.potongan_alpha || 0),
+              potonganAlpha: Number(row.potongan_alpha || row.potongan_tidak_masuk || 0),
+              potonganIzin: Number(row.potongan_izin || 0),
+              potonganInfal: Number(row.potongan_diganti_jp || row.potongan_infal || 0),
+              jpDigantikan: Number(row.jp_digantikan || 0),
+              koreksiPotongan: Number(row.koreksi_potongan || 0),
+              potonganPinjaman: Number(row.potongan_pinjaman || row.potongan_kas_sekolah || 0),
+              potonganBpjsKesehatan: Number(row.potongan_bpjs_kesehatan || 0),
+              potonganBpjsKetenagakerjaan: Number(row.potongan_bpjs_ketenagakerjaan || 0),
+              potonganKasSekolah: Number(row.potongan_kas_sekolah || row.potongan_pinjaman || 0),
+              potonganKoperasi: Number(row.potongan_koperasi || 0),
+              potonganLainnya: Number(row.potongan_lainnya || 0),
+              totalPotongan,
+
+              takeHomePay: thp,
+              gajiBersih: thp,
+              status: (row.status_approval || row.status || 'draft') as any,
+              isEncrypted: true,
+              securityChecksum: String(row.security_checksum || 'sha256-verified-iqm-system'),
+              qrVerificationUrl: String(row.qr_verification_url || 'https://iqm.sch.id/verify'),
+              createdAt: String(row.created_at || new Date().toISOString()),
+              updatedAt: String(row.updated_at || new Date().toISOString()),
+            };
+          });
+
+          setMatrixRecords(mapped);
+        } else {
+          setMatrixRecords(records);
+        }
+      } catch (err) {
+        console.error('❌ Error fetching slip_gaji in PayrollAdjustmentMatrix:', err);
+        setMatrixRecords(records);
+      } finally {
+        if (isMounted) setIsLoadingSupabase(false);
+      }
+    };
+
+    fetchSupabaseSlipGaji();
+
+    return () => { isMounted = false; };
+  }, [selectedBulan, selectedTahun, selectedPeriodeId, records, pegawaiList]);
+
+  // Initialize draft records from matrixRecords
   useEffect(() => {
     const map: Record<string, PenggajianRecord> = {};
-    records.forEach(r => {
+    matrixRecords.forEach(r => {
       map[r.id] = { ...r };
     });
     setDraftRecords(map);
     setDirtyRowIds(new Set());
-  }, [records]);
+  }, [matrixRecords]);
 
   // Recalculate row totals automatically whenever any value changes
   const recalculateRow = (r: PenggajianRecord): PenggajianRecord => {
@@ -150,7 +318,7 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
 
   // Revert row changes to original record
   const handleResetRow = (recordId: string) => {
-    const original = records.find(r => r.id === recordId);
+    const original = matrixRecords.find(r => r.id === recordId);
     if (original) {
       setDraftRecords(prev => ({
         ...prev,
@@ -168,7 +336,7 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
   // Reset all edited rows
   const handleResetAll = () => {
     const map: Record<string, PenggajianRecord> = {};
-    records.forEach(r => {
+    matrixRecords.forEach(r => {
       map[r.id] = { ...r };
     });
     setDraftRecords(map);
@@ -176,7 +344,7 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
     showToast?.('Seluruh perubahan matriks dikembalikan ke data awal.', 'info');
   };
 
-  // Save single row via Supabase RPC
+  // 2. Save single row directly to Supabase using UUID asli (.eq('id', record.id))
   const handleSaveRow = async (recordId: string) => {
     const record = draftRecords[recordId];
     if (!record) return;
@@ -184,9 +352,55 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
     setSavingRowIds(prev => new Set(prev).add(recordId));
 
     try {
-      const result = await updatePayrollMatrixAdjustmentRPC(record, currentUser.nama);
+      const client = getSupabase();
+      if (!client) {
+        showToast?.('Gagal menyimpan: Supabase client belum terhubung.', 'error');
+        return;
+      }
 
-      if (result.success) {
+      // Query update ke tabel slip_gaji berdasarkan UUID asli
+      const updatePayload = {
+        gaji_pokok_nominal: Number(record.gajiPokok || 0),
+        gaji_pokok: Number(record.gajiPokok || 0),
+        tunjangan_kepsek: Number(record.tunjanganKepsek || 0),
+        tunjangan_wakasek: Number(record.tunjanganWakasek || 0),
+        tunjangan_wali_kelas: Number(record.tunjanganWaliKelas || 0),
+        tunjangan_kehadiran: Number(record.tunjanganKehadiran || 0),
+        tunjangan_jabatan: Number(record.tunjanganJabatan || 0),
+        tunjangan_ijazah: Number(record.tunjanganIjazah || 0),
+        tunjangan_kinerja: Number(record.tunjanganKinerja || 0),
+        total_honor_jp: Number(record.honorJamMengajar || 0),
+        honor_jam_mengajar: Number(record.honorJamMengajar || 0),
+        honor_inval: Number(record.honorInfal || 0),
+        honor_infal: Number(record.honorInfal || 0),
+        potongan_terlambat: Number(record.potonganKeterlambatan || 0),
+        potongan_keterlambatan: Number(record.potonganKeterlambatan || 0),
+        potongan_tidak_masuk: Number(record.potonganAlpha || 0),
+        potongan_alpha: Number(record.potonganAlpha || 0),
+        potongan_diganti_jp: Number(record.potonganInfal || 0),
+        potongan_infal: Number(record.potonganInfal || 0),
+        potongan_pinjaman: Number(record.potonganKasSekolah || 0),
+        potongan_kas_sekolah: Number(record.potonganKasSekolah || 0),
+        potongan_izin: Number(record.potonganIzin || 0),
+        potongan_bpjs_kesehatan: Number(record.potonganBpjsKesehatan || 0),
+        potongan_bpjs_ketenagakerjaan: Number(record.potonganBpjsKetenagakerjaan || 0),
+        tunjangan_lainnya: Number(record.tunjanganLainnya || 0),
+        potongan_lainnya: Number(record.potonganLainnya || 0),
+        total_penerimaan: Number(record.totalPenerimaan || 0),
+        gaji_kotor: Number(record.totalPenerimaan || 0),
+        total_tambahan: Number(record.totalPenerimaan || 0),
+        total_potongan: Number(record.totalPotongan || 0),
+        gaji_bersih: Number(record.gajiBersih || record.takeHomePay || 0),
+        take_home_pay: Number(record.takeHomePay || record.gajiBersih || 0),
+        updated_at: new Date().toISOString(),
+      };
+
+      const { error } = await client
+        .from('slip_gaji')
+        .update(updatePayload)
+        .eq('id', record.id); // UUID asli dari Supabase
+
+      if (!error) {
         onUpdateRecord?.(record);
         setDirtyRowIds(prev => {
           const next = new Set(prev);
@@ -194,18 +408,29 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
           return next;
         });
 
-        const method = result.viaRpc ? 'RPC Supabase' : 'Direct Supabase Table';
-        showToast?.(`Berhasil menyimpan penyesuaian gaji ${record.pegawaiNama} via ${method}!`, 'success');
+        showToast?.(`Berhasil menyimpan penyesuaian gaji ${record.pegawaiNama} ke Supabase!`, 'success');
 
         onAuditLog?.(
           'gaji',
           'UPDATE',
           'Penyesuaian Matriks Gaji',
           `${record.pegawaiNama} (${record.kodeSlip})`,
-          `Pembaruan matriks: Total Kotor Rp ${record.totalPenerimaan.toLocaleString('id-ID')}, Total Potongan Rp ${record.totalPotongan.toLocaleString('id-ID')}, THP Rp ${record.takeHomePay.toLocaleString('id-ID')} (${method}).`
+          `Pembaruan matriks: Total Kotor Rp ${record.totalPenerimaan.toLocaleString('id-ID')}, Total Potongan Rp ${record.totalPotongan.toLocaleString('id-ID')}, THP Rp ${record.takeHomePay.toLocaleString('id-ID')}.`
         );
       } else {
-        showToast?.(`Gagal menyimpan: ${result.error}`, 'error');
+        console.warn('⚠️ Direct update error, trying RPC:', error.message);
+        const rpcResult = await updatePayrollMatrixAdjustmentRPC(record, currentUser.nama);
+        if (rpcResult.success) {
+          onUpdateRecord?.(record);
+          setDirtyRowIds(prev => {
+            const next = new Set(prev);
+            next.delete(recordId);
+            return next;
+          });
+          showToast?.(`Berhasil menyimpan penyesuaian gaji ${record.pegawaiNama} via RPC!`, 'success');
+        } else {
+          showToast?.(`Gagal menyimpan: ${error.message || rpcResult.error}`, 'error');
+        }
       }
     } catch (err: any) {
       showToast?.(`Error saat menyimpan data: ${err.message || 'Unknown error'}`, 'error');
@@ -218,7 +443,7 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
     }
   };
 
-  // Batch Save all dirty rows via Supabase RPC
+  // Batch Save all dirty rows directly to Supabase
   const handleBatchSave = async () => {
     if (dirtyRowIds.size === 0) return;
 
@@ -227,12 +452,68 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
     let successCount = 0;
     let failCount = 0;
     const updatedList: PenggajianRecord[] = [];
+    const client = getSupabase();
 
     for (const id of rowIds) {
       const rec = draftRecords[id];
       if (!rec) continue;
 
       try {
+        if (client) {
+          const updatePayload = {
+            gaji_pokok_nominal: Number(rec.gajiPokok || 0),
+            gaji_pokok: Number(rec.gajiPokok || 0),
+            tunjangan_kepsek: Number(rec.tunjanganKepsek || 0),
+            tunjangan_wakasek: Number(rec.tunjanganWakasek || 0),
+            tunjangan_wali_kelas: Number(rec.tunjanganWaliKelas || 0),
+            tunjangan_kehadiran: Number(rec.tunjanganKehadiran || 0),
+            tunjangan_jabatan: Number(rec.tunjanganJabatan || 0),
+            tunjangan_ijazah: Number(rec.tunjanganIjazah || 0),
+            tunjangan_kinerja: Number(rec.tunjanganKinerja || 0),
+            total_honor_jp: Number(rec.honorJamMengajar || 0),
+            honor_jam_mengajar: Number(rec.honorJamMengajar || 0),
+            honor_inval: Number(rec.honorInfal || 0),
+            honor_infal: Number(rec.honorInfal || 0),
+            potongan_terlambat: Number(rec.potonganKeterlambatan || 0),
+            potongan_keterlambatan: Number(rec.potonganKeterlambatan || 0),
+            potongan_tidak_masuk: Number(rec.potonganAlpha || 0),
+            potongan_alpha: Number(rec.potonganAlpha || 0),
+            potongan_diganti_jp: Number(rec.potonganInfal || 0),
+            potongan_infal: Number(rec.potonganInfal || 0),
+            potongan_pinjaman: Number(rec.potonganKasSekolah || 0),
+            potongan_kas_sekolah: Number(rec.potonganKasSekolah || 0),
+            potongan_izin: Number(rec.potonganIzin || 0),
+            potongan_bpjs_kesehatan: Number(rec.potonganBpjsKesehatan || 0),
+            potongan_bpjs_ketenagakerjaan: Number(rec.potonganBpjsKetenagakerjaan || 0),
+            tunjangan_lainnya: Number(rec.tunjanganLainnya || 0),
+            potongan_lainnya: Number(rec.potonganLainnya || 0),
+            total_penerimaan: Number(rec.totalPenerimaan || 0),
+            gaji_kotor: Number(rec.totalPenerimaan || 0),
+            total_tambahan: Number(rec.totalPenerimaan || 0),
+            total_potongan: Number(rec.totalPotongan || 0),
+            gaji_bersih: Number(rec.gajiBersih || rec.takeHomePay || 0),
+            take_home_pay: Number(rec.takeHomePay || rec.gajiBersih || 0),
+            updated_at: new Date().toISOString(),
+          };
+
+          const { error } = await client
+            .from('slip_gaji')
+            .update(updatePayload)
+            .eq('id', rec.id); // UUID asli
+
+          if (!error) {
+            successCount++;
+            updatedList.push(rec);
+            onUpdateRecord?.(rec);
+            setDirtyRowIds(prev => {
+              const next = new Set(prev);
+              next.delete(id);
+              return next;
+            });
+            continue;
+          }
+        }
+
         const res = await updatePayrollMatrixAdjustmentRPC(rec, currentUser.nama);
         if (res.success) {
           successCount++;
@@ -345,7 +626,7 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
 
   // Filtered records enriched with pegawaiList
   const filteredRecords = useMemo(() => {
-    return records
+    return matrixRecords
       .map(r => {
         const draft = draftRecords[r.id] || r;
         if (!pegawaiList || pegawaiList.length === 0) return draft;
@@ -390,7 +671,7 @@ export const PayrollAdjustmentMatrix: React.FC<PayrollAdjustmentMatrixProps> = (
 
         return matchesSearch && matchesStatus && matchesRole;
       });
-  }, [records, draftRecords, pegawaiList, searchQuery, statusFilter, roleFilter]);
+  }, [matrixRecords, draftRecords, pegawaiList, searchQuery, statusFilter, roleFilter]);
 
   // Aggregate Calculations across filtered records
   const aggregates = useMemo(() => {
