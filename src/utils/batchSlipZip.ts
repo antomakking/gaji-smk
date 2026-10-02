@@ -178,29 +178,40 @@ export const generateSlipPdfDocument = (record: PenggajianRecord): jsPDF => {
     rowY += 4.5;
   };
 
-  addPenerimaanRow('Gaji Pokok', record.gajiPokok);
-  addPenerimaanRow('Tunjangan Jabatan / Struktural', record.tunjanganJabatan);
-  if ((record.tunjanganIjazah ?? 0) > 0) addPenerimaanRow(`Tunj. Ijazah (${record.tunjanganIjazahJenjang || 'S1'})`, record.tunjanganIjazah || 0);
-  if ((record.tunjanganKompetensi ?? 0) > 0) addPenerimaanRow('Tunj. Linieritas Kompetensi', record.tunjanganKompetensi || 0);
-  if ((record.tunjanganPengalaman ?? 0) > 0) addPenerimaanRow(`Tunj. Pengalaman (${record.tahunPengalaman} thn)`, record.tunjanganPengalaman || 0);
-  if ((record.tunjanganMasaKerja ?? 0) > 0) addPenerimaanRow(`Tunj. Masa Kerja / TMK (${record.tahunMasaKerja} thn)`, record.tunjanganMasaKerja || 0);
-  if ((record.tunjanganKinerja ?? 0) > 0) addPenerimaanRow('Tunj. Kinerja / Prestasi', record.tunjanganKinerja || 0);
-  addPenerimaanRow('Tunj. Transport & Kehadiran', record.tunjanganKehadiranTransport || record.tunjanganKehadiran);
-  if (record.honorJamMengajar > 0) addPenerimaanRow(`Honor Mengajar (${record.jamMengajarRealisasi} JP)`, record.honorJamMengajar, true);
-  if ((record.insentifKajianMuslimah ?? 0) > 0) addPenerimaanRow('Insentif Kajian Muslimah', record.insentifKajianMuslimah || 0);
-  if (record.honorLembur > 0) addPenerimaanRow(`Honor Lembur (${record.jamLembur} Jam)`, record.honorLembur);
-  if (record.honorInfal > 0) addPenerimaanRow(`Honor Infal (${record.jpMenggantikan || Math.round(record.honorInfal / 7500)} JP)`, record.honorInfal, true);
-  if ((record.koreksiPenerimaan ?? 0) > 0) addPenerimaanRow('Koreksi Tambahan', record.koreksiPenerimaan || 0);
-  if (record.tunjanganVokasiIT > 0) addPenerimaanRow('Tunj. Keahlian Vokasi IT', record.tunjanganVokasiIT);
+  const gp = record.gajiPokokNominal || record.gajiPokok || 0;
+  addPenerimaanRow('Gaji Pokok', gp);
+  if ((record.tunjanganKepsek ?? 0) > 0) addPenerimaanRow('Tunjangan Kepala Sekolah', record.tunjanganKepsek || 0);
+  if ((record.tunjanganWakasek ?? 0) > 0) addPenerimaanRow('Tunjangan Wakasek', record.tunjanganWakasek || 0);
+  if ((record.tunjanganWaliKelas ?? 0) > 0) addPenerimaanRow('Tunjangan Wali Kelas', record.tunjanganWaliKelas || 0);
+  if ((record.tunjanganAsrama ?? 0) > 0) addPenerimaanRow('Tunjangan Asrama / Musyrif', record.tunjanganAsrama || 0);
+  if ((record.tunjanganItOfficer ?? 0) > 0) addPenerimaanRow('Tunjangan IT Officer', record.tunjanganItOfficer || 0);
+  if ((record.tunjanganDkm ?? 0) > 0) addPenerimaanRow('Tunjangan DKM Masjid', record.tunjanganDkm || 0);
+  if ((record.tunjanganBendahara ?? 0) > 0) addPenerimaanRow('Tunjangan Bendahara', record.tunjanganBendahara || 0);
+  if ((record.tunjanganPj ?? 0) > 0) addPenerimaanRow('Tunjangan Penanggung Jawab (PJ)', record.tunjanganPj || 0);
+  
+  const tunjHadir = record.tunjanganKehadiran || record.tunjanganKehadiranTransport || 0;
+  addPenerimaanRow(`Tunj. Kehadiran (${record.presensiHadir} hr)`, tunjHadir);
+  
+  const jp = record.jumlahJp ?? record.jamMengajarRealisasi ?? 0;
+  const tarifJp = record.nominalPerJp || 18000;
+  const honorJp = record.totalHonorJp || record.honorJamMengajar || (jp * tarifJp);
+  if (honorJp > 0) addPenerimaanRow(`Honor Mengajar (${jp} JP × ${formatRupiah(tarifJp, false)})`, honorJp, true);
+  
+  const inval = record.honorInval ?? record.honorInfal ?? 0;
+  if (inval > 0) addPenerimaanRow(`Honor Inval / Pengganti (${record.jpMenggantikan || Math.round(inval / 7500)} JP)`, inval, true);
+  
+  const tambahanLain = record.tambahanLainnya || record.tunjanganLainnya || 0;
+  if (tambahanLain !== 0) addPenerimaanRow('Tambahan Lainnya / Workshop / Kajian', tambahanLain);
 
   // Total Penerimaan Bottom of Box
+  const totalTambahan = record.totalTambahan || record.totalPenerimaan || (gp + (record.tunjanganKepsek||0) + (record.tunjanganWakasek||0) + (record.tunjanganWaliKelas||0) + (record.tunjanganAsrama||0) + tunjHadir + honorJp + inval + tambahanLain);
   doc.setDrawColor(226, 232, 240);
   doc.line(col1X, currentY + boxHeight - 7, col1X + colWidth, currentY + boxHeight - 7);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7.5);
   doc.setTextColor(15, 23, 42);
-  doc.text('Total Penerimaan (A):', col1X + 3, currentY + boxHeight - 2.5);
-  doc.text(formatRupiah(record.totalPenerimaan, false), col1X + colWidth - 3, currentY + boxHeight - 2.5, { align: 'right' });
+  doc.text('Total Penerimaan / Bruto (A):', col1X + 3, currentY + boxHeight - 2.5);
+  doc.text(formatRupiah(totalTambahan, false), col1X + colWidth - 3, currentY + boxHeight - 2.5, { align: 'right' });
 
   // Box B: POTONGAN
   doc.setFillColor(255, 255, 255);
@@ -227,26 +238,30 @@ export const generateSlipPdfDocument = (record: PenggajianRecord): jsPDF => {
     rowY2 += 4.5;
   };
 
-  addPotonganRow('Potongan Absensi (Alpha)', record.potonganAlpha);
-  addPotonganRow('Potongan Keterlambatan', record.potonganKeterlambatan);
-  if (record.potonganInfal > 0) addPotonganRow(`Potongan Infal (${record.jpDigantikan || Math.round(record.potonganInfal / 7500)} JP)`, record.potonganInfal, true);
-  if ((record.potonganPinjaman ?? 0) > 0) addPotonganRow('Potongan Kasbon / Pinjaman', record.potonganPinjaman || 0);
-  if ((record.koreksiPotongan ?? 0) > 0) addPotonganRow('Koreksi Pengurang', record.koreksiPotongan || 0);
-  if (record.potonganBpjsKesehatan > 0) addPotonganRow('BPJS Kesehatan (1%)', record.potonganBpjsKesehatan);
-  if (record.potonganBpjsKetenagakerjaan > 0) addPotonganRow('BPJS Ketenagakerjaan (2%)', record.potonganBpjsKetenagakerjaan);
-  if (record.potonganKasSekolah > 0) addPotonganRow('Iuran Kas Yayasan', record.potonganKasSekolah);
-  if (record.potonganKoperasi > 0) addPotonganRow('Koperasi Pegawai', record.potonganKoperasi);
+  const potTerlambat = record.potonganTerlambat || record.potonganKeterlambatan || 0;
+  if (potTerlambat > 0) addPotonganRow(`Potongan Terlambat (${record.presensiTerlambatMenit || 0} mnt)`, potTerlambat);
+  
+  const potKas = record.potonganKas || record.potonganKasSekolah || record.potonganPinjaman || 0;
+  if (potKas > 0) addPotonganRow('Potongan Kas / Pinjaman', potKas);
+
+  const potLain = record.potonganLainnya || 0;
+  if (potLain > 0) addPotonganRow('Potongan Lainnya', potLain);
+
+  if ((record.potonganTidakMasuk ?? 0) > 0 && potLain === 0) addPotonganRow('Potongan Tidak Masuk', record.potonganTidakMasuk || 0);
+  if ((record.potonganInfal ?? 0) > 0 && potLain === 0) addPotonganRow(`Potongan Inval Digantikan (${record.jpDigantikan || 0} JP)`, record.potonganInfal || 0);
 
   // Total Potongan Bottom of Box
+  const totalPot = record.totalPotongan || (potTerlambat + potKas + potLain);
   doc.setDrawColor(226, 232, 240);
   doc.line(col2X, currentY + boxHeight - 7, col2X + colWidth, currentY + boxHeight - 7);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7.5);
   doc.setTextColor(159, 18, 57);
   doc.text('Total Potongan (B):', col2X + 3, currentY + boxHeight - 2.5);
-  doc.text(`-${formatRupiah(record.totalPotongan, false)}`, col2X + colWidth - 3, currentY + boxHeight - 2.5, { align: 'right' });
+  doc.text(`-${formatRupiah(totalPot, false)}`, col2X + colWidth - 3, currentY + boxHeight - 2.5, { align: 'right' });
 
   // 6. TOTAL GAJI BERSIH (TAKE HOME PAY)
+  const thp = record.takeHomePay || record.gajiBersih || (totalTambahan - totalPot);
   currentY += boxHeight + 4;
   doc.setFillColor(15, 23, 42); // Dark slate
   doc.roundedRect(margin, currentY, contentWidth, 16, 2, 2, 'F');
@@ -258,12 +273,12 @@ export const generateSlipPdfDocument = (record: PenggajianRecord): jsPDF => {
 
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(12);
-  doc.text(formatRupiah(record.gajiBersih, false), margin + 4, currentY + 11.5);
+  doc.text(formatRupiah(thp, false), margin + 4, currentY + 11.5);
 
   doc.setTextColor(226, 232, 240);
   doc.setFont('helvetica', 'italic');
   doc.setFontSize(6.5);
-  doc.text(`Terbilang: # ${terbilang(record.gajiBersih, false)} #`, margin + 4, currentY + 14.5);
+  doc.text(`Terbilang: # ${terbilang(thp, false)} #`, margin + 4, currentY + 14.5);
 
   // Status stamp right inside banner
   doc.setFillColor(5, 150, 105);

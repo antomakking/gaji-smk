@@ -338,22 +338,28 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
     currentUser.role === 'super_admin' || 
     currentUser.role === 'bendahara_yayasan';
 
-  // Batch Slip ZIP Export Handler
+  // Batch Slip ZIP Export Handler for Approved Records
   const handleDownloadBatchSlipsZip = async (useSelectedOnly = false) => {
-    const targetList = useSelectedOnly && selectedIds.length > 0
+    let targetList = useSelectedOnly && selectedIds.length > 0
       ? filteredRecords.filter(r => selectedIds.includes(r.id))
       : filteredRecords;
 
-    if (targetList.length === 0) {
-      showToast?.('Tidak ada slip gaji yang sesuai untuk diekspor.', 'info');
+    // Filter specifically for approved/transferred slips
+    const approvedList = targetList.filter(r => r.status === 'approved' || r.status === 'transferred');
+    
+    // Prioritize approved slips; if user hasn't approved any, allow downloading all available filtered slips
+    const listToExport = approvedList.length > 0 ? approvedList : targetList;
+
+    if (listToExport.length === 0) {
+      showToast?.('Tidak ada slip gaji yang berstatus Approved / Terbayar untuk diekspor.', 'info');
       return;
     }
 
     try {
       setIsDownloadingZip(true);
-      setZipProgress({ current: 0, total: targetList.length, name: 'Memulai proses...' });
+      setZipProgress({ current: 0, total: listToExport.length, name: 'Memulai proses...' });
 
-      const result = await exportBatchSlipsToZip(targetList, {
+      const result = await exportBatchSlipsToZip(listToExport, {
         onProgress: (current, total, name) => {
           setZipProgress({ current, total, name });
         },
@@ -370,15 +376,15 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
       URL.revokeObjectURL(url);
 
       const monthName = MONTH_NAMES_ID[selectedBulan - 1] || `Bulan ${selectedBulan}`;
-      showToast?.(`Sukses mengunduh ${result.count} slip gaji dalam file ZIP (${result.filename})!`, 'success');
+      showToast?.(`Sukses mengunduh ${result.count} berkas PDF Slip Gaji Approved dalam file ZIP (${result.filename})!`, 'success');
 
       if (onAuditLog) {
         onAuditLog(
           'gaji',
           'EXPORT_BACKUP',
-          'Cetak Semua Slip (Batch ZIP PDF)',
-          `Arsip ${result.count} Slip Gaji (${monthName} ${selectedTahun})`,
-          `Pengunduhan bundel PDF slip gaji terenkripsi per pegawai. Total nominal: ${formatRupiah(result.totalNominal)}.`
+          'Cetak Semua Slip Gaji (Batch ZIP PDF)',
+          `Arsip ${result.count} Slip Gaji Approved (${monthName} ${selectedTahun})`,
+          `Pengunduhan bundel PDF slip gaji terenkripsi per pegawai. Total nominal bersih: ${formatRupiah(result.totalNominal)}.`
         );
       }
     } catch (err: any) {
@@ -427,7 +433,7 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
             type="button"
             disabled={isDownloadingZip || filteredRecords.length === 0}
             onClick={() => handleDownloadBatchSlipsZip(false)}
-            title="Unduh seluruh slip gaji dari daftar yang difilter ke dalam file ZIP PDF terorganisir per pegawai"
+            title="Unduh seluruh slip gaji berstatus Approved / Terbayar ke dalam satu file ZIP berisi PDF terpisah per pegawai"
             className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isDownloadingZip ? (
@@ -436,7 +442,13 @@ export const PayrollManagement: React.FC<PayrollManagementProps> = ({
               <FolderArchive className="w-4 h-4 text-emerald-100" />
             )}
             <span>
-              {isDownloadingZip ? 'Mengemas ZIP...' : `Cetak Semua Slip (${filteredRecords.length} PDF)`}
+              {isDownloadingZip
+                ? 'Mengemas ZIP...'
+                : `Cetak Semua Slip (${
+                    filteredRecords.filter(r => r.status === 'approved' || r.status === 'transferred').length > 0
+                      ? `${filteredRecords.filter(r => r.status === 'approved' || r.status === 'transferred').length} PDF Approved`
+                      : `${filteredRecords.length} PDF`
+                  })`}
             </span>
           </button>
 
